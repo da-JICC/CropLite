@@ -1,0 +1,332 @@
+{
+  "casablanca": [
+    {
+      "date": "2025-12-01",
+      "mean_ndvi": 0.21,
+      "min_ndvi": 0.07,
+      "max_ndvi": 0.32,
+      "valid_pixels": 850,
+      "total_pixels": 1000,
+      "valid_percent": 85.0
+    },
+    {
+      "date": "2026-01-01",
+      "mean_ndvi": 0.27,
+      "min_ndvi": 0.13,
+      "max_ndvi": 0.38,
+      "valid_pixels": 862,
+      "total_pixels": 1000,
+      "valid_percent": 86.2
+    },
+    {
+      "date": "2026-02-01",
+      "mean_ndvi": 0.31,
+      "min_ndvi": 0.17,
+      "max_ndvi": 0.42,
+      "valid_pixels": 874,
+      "total_pixels": 1000,
+      "valid_percent": 87.4
+    },
+    {
+      "date": "2026-03-01",
+      "mean_ndvi": 0.44,
+      "min_ndvi": 0.3,
+      "max_ndvi": 0.55,
+      "valid_pixels": 886,
+      "total_pixels": 1000,
+      "valid_percent": 88.6
+    },
+    {
+      "date": "2026-04-01",
+      "mean_ndvi": 0.55,
+      "min_ndvi": 0.41,
+      "max_ndvi": 0.66,
+      "valid_pixels": 898,
+      "total_pixels": 1000,
+      "valid_percent": 89.8
+    },
+    {
+      "date": "2026-05-01",
+      "mean_ndvi": 0.64,
+      "min_ndvi": 0.5,
+      "max_ndvi": 0.75,
+      "valid_pixels": 910,
+      "total_pixels": 1000,
+      "valid_percent": 91.0
+    },
+    {
+      "date": "2026-06-01",
+      "mean_ndvi": 0.72,
+      "min_ndvi": 0.58,
+      "max_ndvi": 0.83,
+      "valid_pixels": 922,
+      "total_pixels": 1000,
+      "valid_percent": 92.2
+    },
+    {
+      "date": "2026-07-01",
+      "mean_ndvi": 0.69,
+      "min_ndvi": 0.55,
+      "max_ndvi": 0.8,
+      "valid_pixels": 934,
+      "total_pixels": 1000,
+      "valid_percent": 93.4
+    },
+    {
+      "date": "2026-08-01",
+      "mean_ndvi": 0.6,
+      "min_ndvi": 0.46,
+      "max_ndvi": 0.71,
+      "valid_pixels": 946,
+      "total_pixels": 1000,
+      "valid_percent": 94.6
+    },
+    {
+      "date": "2026-09-01",
+      "mean_ndvi": 0.43,
+      "min_ndvi": 0.29,
+      "max_ndvi": 0.54,
+      "valid_pixels": 958,
+      "total_pixels": 1000,
+      "valid_percent": 95.8
+    },
+    {
+      "date": "2026-10-01",
+      "mean_ndvi": 0.32,
+      "min_ndvi": 0.18,
+      "max_ndvi": 0.43,
+      "valid_pixels": 970,
+      "total_pixels": 1000,
+      "valid_percent": 97.0
+    },
+    {
+      "date": "2026-11-01",
+      "mean_ndvi": 0.24,
+      "min_ndvi": 0.1,
+      "max_ndvi": 0.35,
+      "valid_pixels": 982,
+      "total_pixels": 1000,
+      "valid_percent": 98.2
+    }
+  ],
+  "nuble": [
+    {
+      "date": "2025-12-01",
+      "mean_ndvi": 0.32,
+      "min_ndvi": 0.18,
+      "max_ndvi": 0.43,
+      "valid_pixels": 850,
+      "total_pixels": 1000,
+      "valid_percent": 85.0
+    },
+    {
+      "date": "2026-01-01",
+      "mean_ndvi": 0.4,
+      "min_ndvi": 0.26,
+      "max_ndvi": 0.51,
+      "valid_pixels": 862,
+      "total_pixels": 1000,
+      "valid_percent": 86.2
+    },
+    {
+      "date": "2026-02-01",
+      "mean_ndvi": 0.48,
+      "min_ndvi": 0.34,
+      "max_ndvi": 0.59,
+      "valid_pixels": 874,
+      "total_pixels": 1000,
+      "valid_percent": 87.4
+    },
+    {
+      "date": "2026-03-01",
+      "mean_ndvi": 0.54,
+      "min_ndvi": 0.4,
+      "max_ndvi": 0.65,
+      "valid_pixels": 886,
+      "total_pixels": 1000,
+      "valid_percent": 88.6
+    },
+    {
+      "date": "2026-04-01",
+      "mean_ndvi": 0.65,
+      "min_ndvi": 0.51,
+      "max_ndvi": 0.76,
+      "valid_pixels": 898,
+      "total_pixels": 1000,
+      "valid_percent": 89.8
+    },
+    {
+      "date": "2026-05-01",
+      "mean_ndvi": 0.75,
+      "min_ndvi": 0.61,
+      "max_ndvi": 0.86,
+      "valid_pixels": 910,
+      "total_pixels": 1000,
+      "valid_percent": 91.0
+    },
+    {
+      "date": "2026-06-01",
+      "mean_ndvi": 0.79,
+      "min_ndvi": 0.65,
+      "max_ndvi": 0.9,
+      "valid_pixels": 922,
+      "total_pixels": 1000,
+      "valid_percent": 92.2
+    },
+    {
+      "date": "2026-07-01",
+      "mean_ndvi": 0.73,
+      "min_ndvi": 0.59,
+      "max_ndvi": 0.84,
+      "valid_pixels": 934,
+      "total_pixels": 1000,
+      "valid_percent": 93.4
+    },
+    {
+      "date": "2026-08-01",
+      "mean_ndvi": 0.62,
+      "min_ndvi": 0.48,
+      "max_ndvi": 0.73,
+      "valid_pixels": 946,
+      "total_pixels": 1000,
+      "valid_percent": 94.6
+    },
+    {
+      "date": "2026-09-01",
+      "mean_ndvi": 0.45,
+      "min_ndvi": 0.31,
+      "max_ndvi": 0.56,
+      "valid_pixels": 958,
+      "total_pixels": 1000,
+      "valid_percent": 95.8
+    },
+    {
+      "date": "2026-10-01",
+      "mean_ndvi": 0.39,
+      "min_ndvi": 0.25,
+      "max_ndvi": 0.5,
+      "valid_pixels": 970,
+      "total_pixels": 1000,
+      "valid_percent": 97.0
+    },
+    {
+      "date": "2026-11-01",
+      "mean_ndvi": 0.31,
+      "min_ndvi": 0.17,
+      "max_ndvi": 0.42,
+      "valid_pixels": 982,
+      "total_pixels": 1000,
+      "valid_percent": 98.2
+    }
+  ],
+  "maule": [
+    {
+      "date": "2025-12-01",
+      "mean_ndvi": 0.28,
+      "min_ndvi": 0.14,
+      "max_ndvi": 0.39,
+      "valid_pixels": 850,
+      "total_pixels": 1000,
+      "valid_percent": 85.0
+    },
+    {
+      "date": "2026-01-01",
+      "mean_ndvi": 0.35,
+      "min_ndvi": 0.21,
+      "max_ndvi": 0.46,
+      "valid_pixels": 862,
+      "total_pixels": 1000,
+      "valid_percent": 86.2
+    },
+    {
+      "date": "2026-02-01",
+      "mean_ndvi": 0.39,
+      "min_ndvi": 0.25,
+      "max_ndvi": 0.5,
+      "valid_pixels": 874,
+      "total_pixels": 1000,
+      "valid_percent": 87.4
+    },
+    {
+      "date": "2026-03-01",
+      "mean_ndvi": 0.5,
+      "min_ndvi": 0.36,
+      "max_ndvi": 0.61,
+      "valid_pixels": 886,
+      "total_pixels": 1000,
+      "valid_percent": 88.6
+    },
+    {
+      "date": "2026-04-01",
+      "mean_ndvi": 0.63,
+      "min_ndvi": 0.49,
+      "max_ndvi": 0.74,
+      "valid_pixels": 898,
+      "total_pixels": 1000,
+      "valid_percent": 89.8
+    },
+    {
+      "date": "2026-05-01",
+      "mean_ndvi": 0.7,
+      "min_ndvi": 0.56,
+      "max_ndvi": 0.81,
+      "valid_pixels": 910,
+      "total_pixels": 1000,
+      "valid_percent": 91.0
+    },
+    {
+      "date": "2026-06-01",
+      "mean_ndvi": 0.74,
+      "min_ndvi": 0.6,
+      "max_ndvi": 0.85,
+      "valid_pixels": 922,
+      "total_pixels": 1000,
+      "valid_percent": 92.2
+    },
+    {
+      "date": "2026-07-01",
+      "mean_ndvi": 0.72,
+      "min_ndvi": 0.58,
+      "max_ndvi": 0.83,
+      "valid_pixels": 934,
+      "total_pixels": 1000,
+      "valid_percent": 93.4
+    },
+    {
+      "date": "2026-08-01",
+      "mean_ndvi": 0.57,
+      "min_ndvi": 0.43,
+      "max_ndvi": 0.68,
+      "valid_pixels": 946,
+      "total_pixels": 1000,
+      "valid_percent": 94.6
+    },
+    {
+      "date": "2026-09-01",
+      "mean_ndvi": 0.47,
+      "min_ndvi": 0.33,
+      "max_ndvi": 0.58,
+      "valid_pixels": 958,
+      "total_pixels": 1000,
+      "valid_percent": 95.8
+    },
+    {
+      "date": "2026-10-01",
+      "mean_ndvi": 0.33,
+      "min_ndvi": 0.19,
+      "max_ndvi": 0.44,
+      "valid_pixels": 970,
+      "total_pixels": 1000,
+      "valid_percent": 97.0
+    },
+    {
+      "date": "2026-11-01",
+      "mean_ndvi": 0.29,
+      "min_ndvi": 0.15,
+      "max_ndvi": 0.4,
+      "valid_pixels": 982,
+      "total_pixels": 1000,
+      "valid_percent": 98.2
+    }
+  ]
+}

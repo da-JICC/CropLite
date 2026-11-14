@@ -131,3 +131,26 @@ Suggested development order: (1) validate personas and rotation comparisons with
 ## Licenses
 
 Prototype source delivered for user modification. React/Leaflet/Recharts/Lucide and OpenStreetMap base-map tiles each retain their respective licenses and terms. The preview relies on no external assets.
+
+---
+
+## NEW — Live NDVI integration (Copernicus Sentinel-2)
+
+The React app now includes **Environmental Conditions → NDVI field explorer**, allowing field polygon drawing, a time-series chart, date controls and CSV export. It has two clearly separated modes: **simulated demo** (no account necessary) and **real Sentinel-2 L2A observations** (requires a configured Copernicus OAuth client on the backend). Other dashboard cards and crop recommendations remain simulated.
+
+**Quick start** (two terminals, from project root):
+
+```bash
+# Terminal 1 — NDVI backend
+cd backend
+python -m pip install -r requirements.txt
+# Copy .env.example to .env, then set CDSE_CLIENT_ID and CDSE_CLIENT_SECRET
+python -m uvicorn app:app --reload --port 8000
+
+# Terminal 2 — React app
+cd frontend
+npm install
+npm run dev
+```
+
+For detailed setup, troubleshooting, security and the API contract see **[`docs/ndvi-integration.md`](docs/ndvi-integration.md)**. The standalone `TerraAI_Interactive_Preview.html` is an older static demo and **does not include** the new NDVI integration; use the React project for this feature.
