@@ -1,0 +1,182 @@
+[
+  {
+    "id": "s0",
+    "name": "SMAP",
+    "institution": "NASA",
+    "variables": "Soil moisture",
+    "application": "Monitor seasonal root-zone moisture",
+    "url": "https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap",
+    "status": "Under evaluation",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s1",
+    "name": "ECOSTRESS",
+    "institution": "NASA / JPL",
+    "variables": "Surface temperature; evapotranspiration",
+    "application": "Identify plant water stress",
+    "url": "https://ecostress.jpl.nasa.gov/",
+    "status": "To be evaluated",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s2",
+    "name": "GPM",
+    "institution": "NASA / JAXA",
+    "variables": "Precipitation rate",
+    "application": "Compare rainfall patterns",
+    "url": "https://gpm.nasa.gov/data",
+    "status": "Under evaluation",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s3",
+    "name": "Landsat",
+    "institution": "NASA / USGS",
+    "variables": "Spectral reflectance; vegetation indices",
+    "application": "Examine vegetation conditions",
+    "url": "https://landsat.gsfc.nasa.gov/",
+    "status": "Selected",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s4",
+    "name": "MODIS",
+    "institution": "NASA",
+    "variables": "Vegetation indices; land temperature",
+    "application": "View regional patterns",
+    "url": "https://modis.gsfc.nasa.gov/",
+    "status": "To be evaluated",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s5",
+    "name": "NASA POWER",
+    "institution": "NASA",
+    "variables": "Weather and solar variables",
+    "application": "Provide climatic context",
+    "url": "https://power.larc.nasa.gov/",
+    "status": "Selected",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s6",
+    "name": "GRACE / GRACE-FO",
+    "institution": "NASA / GFZ",
+    "variables": "Terrestrial water storage",
+    "application": "Explore regional water trends",
+    "url": "https://grace.jpl.nasa.gov/",
+    "status": "To be evaluated",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s7",
+    "name": "SRTM",
+    "institution": "NASA / USGS",
+    "variables": "Terrain elevation",
+    "application": "Assess general topographic context",
+    "url": "https://www.earthdata.nasa.gov/data/instruments/srtm",
+    "status": "Pending integration",
+    "category": "NASA observations"
+  },
+  {
+    "id": "s8",
+    "name": "USGS EarthExplorer",
+    "institution": "USGS",
+    "variables": "Earth observation archive",
+    "application": "Access imagery catalogues",
+    "url": "https://earthexplorer.usgs.gov/",
+    "status": "To be evaluated",
+    "category": "Geospatial & climate"
+  },
+  {
+    "id": "s9",
+    "name": "Copernicus",
+    "institution": "European Commission / ESA",
+    "variables": "Earth observation and land cover",
+    "application": "Cross-reference regional imagery",
+    "url": "https://dataspace.copernicus.eu/",
+    "status": "To be evaluated",
+    "category": "Geospatial & climate"
+  },
+  {
+    "id": "s10",
+    "name": "GEDI",
+    "institution": "NASA",
+    "variables": "Canopy structure",
+    "application": "Explore vegetated landscapes",
+    "url": "https://gedi.umd.edu/",
+    "status": "To be evaluated",
+    "category": "Geospatial & climate"
+  },
+  {
+    "id": "s11",
+    "name": "PRISM",
+    "institution": "PRISM Climate Group",
+    "variables": "Gridded climatic observations (US)",
+    "application": "Regional US climate comparison",
+    "url": "https://prism.oregonstate.edu/",
+    "status": "To be evaluated",
+    "category": "Geospatial & climate"
+  },
+  {
+    "id": "s12",
+    "name": "USDA Web Soil Survey",
+    "institution": "USDA NRCS",
+    "variables": "Soil classification (US)",
+    "application": "Soil context for US farms",
+    "url": "https://websoilsurvey.nrcs.usda.gov/",
+    "status": "To be evaluated",
+    "category": "Soil & agriculture"
+  },
+  {
+    "id": "s13",
+    "name": "USDA Ag Data Commons",
+    "institution": "USDA",
+    "variables": "Agricultural datasets (US)",
+    "application": "Research crop and field parameters",
+    "url": "https://data.nal.usda.gov/",
+    "status": "To be evaluated",
+    "category": "Soil & agriculture"
+  },
+  {
+    "id": "s14",
+    "name": "USDA CropScape",
+    "institution": "USDA NASS",
+    "variables": "Cropland land-cover (US)",
+    "application": "Understand cropping patterns",
+    "url": "https://nassgeodata.gmu.edu/CropScape/",
+    "status": "To be evaluated",
+    "category": "Soil & agriculture"
+  },
+  {
+    "id": "s15",
+    "name": "USDA Soil Data",
+    "institution": "USDA NRCS",
+    "variables": "Soil properties (US)",
+    "application": "Inform representative field profiles",
+    "url": "https://sdmdataaccess.nrcs.usda.gov/",
+    "status": "To be evaluated",
+    "category": "Soil & agriculture"
+  },
+  {
+    "id": "s16",
+    "name": "USDA NAIP",
+    "institution": "USDA",
+    "variables": "Aerial imagery (US)",
+    "application": "Visualize sample field boundaries",
+    "url": "https://naip-usdaonline.opendata.arcgis.com/",
+    "status": "To be evaluated",
+    "category": "Soil & agriculture"
+  },
+  {
+    "id": "s17",
+    "name": "FAO GAEZ",
+    "institution": "FAO / IIASA",
+    "variables": "Agro-ecological suitability",
+    "application": "Screen crop suitability context",
+    "url": "https://gaez.fao.org/",
+    "status": "Under evaluation",
+    "category": "Soil & agriculture"
+  }
+]

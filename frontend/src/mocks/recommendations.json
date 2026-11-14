@@ -1,0 +1,113 @@
+{
+  "casablanca": [
+    {
+      "id": "R1",
+      "title": "Explore a legume phase",
+      "kind": "Soil health",
+      "severity": "Opportunity",
+      "reason": "This mock profile has low organic matter and cereal-dominant rotation.",
+      "variables": [
+        "Organic matter",
+        "Rotation diversity"
+      ],
+      "benefit": "Potential nitrogen cycling and soil diversity",
+      "risk": "Check planting window, local soils and seed cost",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "B"
+    },
+    {
+      "id": "R2",
+      "title": "Test a lower-water scenario",
+      "kind": "Water",
+      "severity": "Attention",
+      "reason": "Mock rainfall and irrigation constraints indicate seasonal pressure.",
+      "variables": [
+        "Soil moisture",
+        "Precipitation"
+      ],
+      "benefit": "May reduce seasonal irrigation demand",
+      "risk": "Verify marketing channels and regional crop suitability",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "C"
+    },
+    {
+      "id": "R3",
+      "title": "Keep soils covered between crops",
+      "kind": "Erosion",
+      "severity": "Opportunity",
+      "reason": "Bare soil can lose structure and moisture during rotation gaps.",
+      "variables": [
+        "Erosion exposure",
+        "Soil cover"
+      ],
+      "benefit": "May protect topsoil and support organic inputs",
+      "risk": "Termination may use water and machinery",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "B"
+    }
+  ],
+  "nuble": [
+    {
+      "id": "R1",
+      "title": "Plan winter soil cover",
+      "kind": "Erosion",
+      "severity": "Attention",
+      "reason": "Mock field profile indicates increased winter erosion exposure.",
+      "variables": [
+        "Erosion exposure",
+        "Soil cover"
+      ],
+      "benefit": "May reduce winter surface runoff",
+      "risk": "Monitor cover-crop termination and timing",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "B"
+    },
+    {
+      "id": "R2",
+      "title": "Diversify cereal phases",
+      "kind": "Soil health",
+      "severity": "Opportunity",
+      "reason": "Current maize-wheat sequence could benefit from a legume interruption.",
+      "variables": [
+        "Crop history",
+        "Nitrogen cycling"
+      ],
+      "benefit": "Potential nutrient cycling benefits",
+      "risk": "Fit local rotations and pest management",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "B"
+    }
+  ],
+  "maule": [
+    {
+      "id": "R1",
+      "title": "Diversify rooting systems",
+      "kind": "Soil health",
+      "severity": "Opportunity",
+      "reason": "Mock compaction concern merits more diverse crop-root profiles.",
+      "variables": [
+        "Compaction",
+        "Rooting depth"
+      ],
+      "benefit": "Potential soil structure improvement",
+      "risk": "May not replace required field compaction management",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "B"
+    },
+    {
+      "id": "R2",
+      "title": "Compare water demand by crop",
+      "kind": "Water",
+      "severity": "Attention",
+      "reason": "Seasonal canal irrigation availability is uncertain.",
+      "variables": [
+        "Water requirement",
+        "Irrigation"
+      ],
+      "benefit": "Supports conservative irrigation planning",
+      "risk": "Yield and market variability not modelled",
+      "uncertainty": "Illustrative — local validation required",
+      "strategy": "C"
+    }
+  ]
+}

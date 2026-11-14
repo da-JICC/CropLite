@@ -1,0 +1,215 @@
+{
+  "casablanca": [
+    {
+      "id": "A",
+      "title": "Current rotation",
+      "subtitle": "Business as usual",
+      "focus": "Existing practice",
+      "crops": [
+        "wheat",
+        "oats",
+        "wheat",
+        "oats"
+      ],
+      "soil": 43,
+      "water": 70,
+      "nutrients": 42,
+      "erosion": 45,
+      "drought": 38,
+      "market": 88,
+      "forage": 60,
+      "implementation": 92,
+      "benefit": "Uses familiar crops and equipment.",
+      "tradeoff": "Repeated cereals can limit nitrogen diversification.",
+      "why": "Baseline from your stated cropping history."
+    },
+    {
+      "id": "B",
+      "title": "Soil regeneration",
+      "subtitle": "Restore & diversify",
+      "focus": "Soil health",
+      "crops": [
+        "wheat",
+        "vetch",
+        "barley",
+        "lupin"
+      ],
+      "soil": 87,
+      "water": 55,
+      "nutrients": 89,
+      "erosion": 88,
+      "drought": 66,
+      "market": 58,
+      "forage": 64,
+      "implementation": 59,
+      "benefit": "Legume and cover-crop phases may enrich the rotation.",
+      "tradeoff": "Requires cover-crop termination and local seed availability.",
+      "why": "Responds to low organic matter and limited biological diversity."
+    },
+    {
+      "id": "C",
+      "title": "Water-smart rotation",
+      "subtitle": "Adapt to dry seasons",
+      "focus": "Water resilience",
+      "crops": [
+        "barley",
+        "chickpea",
+        "rye",
+        "sorghum"
+      ],
+      "soil": 72,
+      "water": 38,
+      "nutrients": 73,
+      "erosion": 77,
+      "drought": 90,
+      "market": 63,
+      "forage": 69,
+      "implementation": 55,
+      "benefit": "Illustrative lower-demand crops add dry-season flexibility.",
+      "tradeoff": "Market access and suitability of sorghum require verification.",
+      "why": "Responds to observed water constraints in this mock profile."
+    }
+  ],
+  "nuble": [
+    {
+      "id": "A",
+      "title": "Current rotation",
+      "subtitle": "Business as usual",
+      "focus": "Existing practice",
+      "crops": [
+        "maize",
+        "wheat",
+        "maize",
+        "oats"
+      ],
+      "soil": 49,
+      "water": 83,
+      "nutrients": 45,
+      "erosion": 38,
+      "drought": 42,
+      "market": 91,
+      "forage": 77,
+      "implementation": 91,
+      "benefit": "Established machinery and outlets.",
+      "tradeoff": "Maize phases have high illustrative water demand.",
+      "why": "Baseline from current cropping history."
+    },
+    {
+      "id": "B",
+      "title": "Soil regeneration",
+      "subtitle": "Restore & diversify",
+      "focus": "Soil health",
+      "crops": [
+        "maize",
+        "vetch",
+        "wheat",
+        "faba"
+      ],
+      "soil": 90,
+      "water": 65,
+      "nutrients": 88,
+      "erosion": 91,
+      "drought": 58,
+      "market": 68,
+      "forage": 70,
+      "implementation": 65,
+      "benefit": "Higher potential soil cover and nitrogen cycling.",
+      "tradeoff": "Sowing and termination windows require agronomic review.",
+      "why": "Responds to modelled winter erosion concern."
+    },
+    {
+      "id": "C",
+      "title": "Water-smart rotation",
+      "subtitle": "Adapt to dry seasons",
+      "focus": "Water resilience",
+      "crops": [
+        "barley",
+        "chickpea",
+        "rye",
+        "oats"
+      ],
+      "soil": 74,
+      "water": 45,
+      "nutrients": 72,
+      "erosion": 78,
+      "drought": 80,
+      "market": 65,
+      "forage": 72,
+      "implementation": 67,
+      "benefit": "Lower modelled seasonal water pressure.",
+      "tradeoff": "Changes production mix and potential earnings.",
+      "why": "Explores resilience under reduced rainfall."
+    }
+  ],
+  "maule": [
+    {
+      "id": "A",
+      "title": "Current rotation",
+      "subtitle": "Business as usual",
+      "focus": "Existing practice",
+      "crops": [
+        "barley",
+        "wheat",
+        "barley",
+        "oats"
+      ],
+      "soil": 51,
+      "water": 67,
+      "nutrients": 43,
+      "erosion": 49,
+      "drought": 57,
+      "market": 88,
+      "forage": 64,
+      "implementation": 95,
+      "benefit": "Existing market and equipment fit.",
+      "tradeoff": "Limited legume phases and winter soil cover.",
+      "why": "Baseline based on this mock rotation."
+    },
+    {
+      "id": "B",
+      "title": "Soil regeneration",
+      "subtitle": "Restore & diversify",
+      "focus": "Soil health",
+      "crops": [
+        "barley",
+        "vetch",
+        "wheat",
+        "lupin"
+      ],
+      "soil": 89,
+      "water": 58,
+      "nutrients": 90,
+      "erosion": 89,
+      "drought": 68,
+      "market": 62,
+      "forage": 70,
+      "implementation": 58,
+      "benefit": "Opportunity for organic matter and roots diversification.",
+      "tradeoff": "Compaction may need separate intervention.",
+      "why": "Targets simulated surface compaction and soil cover."
+    },
+    {
+      "id": "C",
+      "title": "Water-smart rotation",
+      "subtitle": "Adapt to dry seasons",
+      "focus": "Water resilience",
+      "crops": [
+        "barley",
+        "chickpea",
+        "rye",
+        "sorghum"
+      ],
+      "soil": 72,
+      "water": 40,
+      "nutrients": 74,
+      "erosion": 78,
+      "drought": 91,
+      "market": 61,
+      "forage": 74,
+      "implementation": 56,
+      "benefit": "Could lower illustrative growing-season water need.",
+      "tradeoff": "New crops require market and frost screening.",
+      "why": "Responds to seasonal irrigation uncertainty."
+    }
+  ]
+}

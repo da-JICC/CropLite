@@ -1,0 +1,47 @@
+{
+  "casablanca": {
+    "farmId": "casablanca",
+    "sections": [
+      "Farm profile",
+      "Environmental context",
+      "Crop rotation comparisons",
+      "Recommendations",
+      "Uncertainty and limitations"
+    ],
+    "exportFormats": [
+      "html",
+      "browser-print-pdf"
+    ],
+    "dataStatus": "simulated"
+  },
+  "nuble": {
+    "farmId": "nuble",
+    "sections": [
+      "Farm profile",
+      "Environmental context",
+      "Crop rotation comparisons",
+      "Recommendations",
+      "Uncertainty and limitations"
+    ],
+    "exportFormats": [
+      "html",
+      "browser-print-pdf"
+    ],
+    "dataStatus": "simulated"
+  },
+  "maule": {
+    "farmId": "maule",
+    "sections": [
+      "Farm profile",
+      "Environmental context",
+      "Crop rotation comparisons",
+      "Recommendations",
+      "Uncertainty and limitations"
+    ],
+    "exportFormats": [
+      "html",
+      "browser-print-pdf"
+    ],
+    "dataStatus": "simulated"
+  }
+}
