@@ -3,7 +3,7 @@
   "crops": [
     {
       "id": "wheat",
-      "name": "Trigo",
+      "name": "Wheat",
       "scientific_name": "Triticum aestivum",
       "thermal": {
         "gdd_base_c": 0.0,
@@ -15,7 +15,7 @@
         "optimal_climate_c": {
           "min": 15,
           "max": 23,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "cold_start_reference_c": {
@@ -73,20 +73,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "maize",
-      "name": "Maíz grano",
+      "name": "Maize",
       "scientific_name": "Zea mays",
       "thermal": {
         "gdd_base_c": 10.0,
@@ -98,7 +98,7 @@
         "optimal_climate_c": {
           "min": 18,
           "max": 33,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "cold_start_reference_c": {
@@ -156,20 +156,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12837853/"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "soybean",
-      "name": "Soja",
+      "name": "Soybean",
       "scientific_name": "Glycine max",
       "thermal": {
         "gdd_base_c": 10.0,
@@ -181,7 +181,7 @@
         "optimal_climate_c": {
           "min": 20,
           "max": 33,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.odepa.gob.cl/wp-content/uploads/2010/08/mapasProduccionBiocombustibles.pdf"
         },
         "cold_start_reference_c": {
@@ -239,20 +239,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "papa",
-      "name": "Papa",
+      "name": "Potato",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 2.0,
@@ -317,20 +317,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "girasol",
-      "name": "Girasol",
+      "name": "Sunflower",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 8.0,
@@ -395,20 +395,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "rice",
-      "name": "Arroz (inundado)",
+      "name": "Flooded rice",
       "scientific_name": "Oryza sativa",
       "thermal": {
         "gdd_base_c": 12.0,
@@ -420,7 +420,7 @@
         "optimal_climate_c": {
           "min": 25,
           "max": 35,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://ageconsearch.umn.edu/record/365817"
         },
         "cold_start_reference_c": {
@@ -478,20 +478,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "barley",
-      "name": "Cebada",
+      "name": "Barley",
       "scientific_name": "Hordeum vulgare",
       "thermal": {
         "gdd_base_c": 0.0,
@@ -503,7 +503,7 @@
         "optimal_climate_c": {
           "min": 15,
           "max": 20,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "cold_start_reference_c": {
@@ -561,20 +561,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "sorghum",
-      "name": "Sorgo grano",
+      "name": "Sorghum",
       "scientific_name": "Sorghum bicolor",
       "thermal": {
         "gdd_base_c": 10.0,
@@ -586,7 +586,7 @@
         "optimal_climate_c": {
           "min": 24,
           "max": 35,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "cold_start_reference_c": {
@@ -644,20 +644,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "poroto-seco",
-      "name": "Poroto seco",
+      "name": "Dry bean",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 10.0,
@@ -722,20 +722,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "arveja-verde",
-      "name": "Arveja verde",
+      "name": "Green pea",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 5.0,
@@ -800,20 +800,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "tomate",
-      "name": "Tomate",
+      "name": "Tomato",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 7.0,
@@ -881,20 +881,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "avena",
-      "name": "Avena",
+      "name": "Oats",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 0.0,
@@ -959,20 +959,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "mani",
-      "name": "Maní",
+      "name": "Peanut",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 10.0,
@@ -1034,20 +1034,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "cebolla-seca",
-      "name": "Cebolla seca",
+      "name": "Dry onion",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 4.5,
@@ -1106,20 +1106,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "repollo",
-      "name": "Repollo",
+      "name": "Cabbage",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 4.5,
@@ -1184,20 +1184,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "pimiento-dulce",
-      "name": "Pimiento dulce",
+      "name": "Sweet pepper",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 10.0,
@@ -1256,20 +1256,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "remolacha-azucarera",
-      "name": "Remolacha azucarera",
+      "name": "Sugar beet",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 5.0,
@@ -1334,20 +1334,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "algodon",
-      "name": "Algodón",
+      "name": "Cotton",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 12.5,
@@ -1412,20 +1412,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "alfalfa-heno",
-      "name": "Alfalfa (heno)",
+      "name": "Alfalfa (hay)",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 0.0,
@@ -1481,20 +1481,20 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     },
     {
       "id": "melon",
-      "name": "Melón",
+      "name": "Melon",
       "scientific_name": null,
       "thermal": {
         "gdd_base_c": 10.0,
@@ -1559,15 +1559,15 @@
         "potassium_kg_ha": null
       },
       "sources": {
-        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "thermal_and_kc": "TerraAI 20-crop satellite indicators CSV (crop-specific assumptions; local review required)",
         "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
         "thermal_references": null
       },
       "warnings": [
-        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
-        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
-        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+        "Operational ETc estimates require crop stage and planting date.",
+        "Allowable depletion p requires local soil field capacity and wilting point.",
+        "No universally validated thresholds for RH, radiation, wind, VPD, NDVI or NDMI exist for all crops."
       ]
     }
   ]

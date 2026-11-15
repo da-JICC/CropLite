@@ -9,7 +9,7 @@ import {timelineFor} from './components/phenology/phenologyEngine.mjs';
 import cropPhenologyCatalog from './data/cropPhenologyCatalog.json';
 import {getBackendStatus, getEnvironmentalRegion} from './services/regionAnalysisService.js';
 
-/** The map is intentionally the exact same FieldSelectionMap component as Fase 1.
+/** The map is intentionally the exact same FieldSelectionMap component as Phase 1.
  *  Region changes fetch observations once, irrespective of crop/tab/year view.
  */
 export default function App() {
@@ -63,8 +63,8 @@ export default function App() {
       } catch (error) {
         if (!controller.signal.aborted && requestSerial.current === current) {
           setMessage(error instanceof TypeError ?
-            'No se pudo conectar con FastAPI. Comprueba que el backend esté funcionando en el puerto 8000.' :
-            (error.message || 'No se pudieron recuperar los datos históricos.'));
+            'Could not connect to FastAPI. Make sure the backend is running on port 8000.' :
+            (error.message || 'Historical data could not be retrieved.'));
         }
       } finally {
         if (!controller.signal.aborted && requestSerial.current === current) setLoading(false);
@@ -82,26 +82,26 @@ export default function App() {
   return <div className="croplite-app app-shell">
     <div className="croplite-workspace app-main">
       <header className="croplite-topbar topbar" id="inicio">
-        <a className="croplite-brand" href="#inicio" aria-label="CropLite, inicio"><CropLiteBrand tagline/></a>
-        <div className="croplite-topbar-center"><span className="croplite-topbar-divider"/><span>Panel de inteligencia agrícola</span><ChevronRight size={13}/><strong>{region?'Campo seleccionado':'Explorar terreno'}</strong></div>
-        <div className="croplite-topbar-right"><span className="croplite-topbar-year"><CalendarRange size={15}/> Planificación anual</span><span className={`mode-pill ${backend?'':'offline'}`}><span/>{backend?'API conectada':'Sin conexión a API'}</span></div>
+        <a className="croplite-brand" href="#inicio" aria-label="CropLite, home"><CropLiteBrand tagline/></a>
+        <div className="croplite-topbar-center"><span className="croplite-topbar-divider"/><span>Agricultural intelligence dashboard</span><ChevronRight size={13}/><strong>{region?'Field selected':'Explore field'}</strong></div>
+        <div className="croplite-topbar-right"><span className="croplite-topbar-year"><CalendarRange size={15}/> Annual planning</span><span className={`mode-pill ${backend?'':'offline'}`}><span/>{backend?'API connected':'API disconnected'}</span></div>
       </header>
       <main className="croplite-content page-body">
-        <section id="mapa" className="croplite-map-section" aria-label="Mapa satelital del campo">
-          <div className="croplite-section-top"><div><span className="overline">01 · SELECCIÓN DEL TERRENO</span><h1>Define tu terreno <span>desde el espacio.</span></h1><p>Ubica y delimita tu parcela sobre imágenes reales para iniciar el análisis agrícola.</p></div><div className="croplite-data-pill"><Satellite size={15}/> Mapa satelital · Esri World Imagery</div></div>
+        <section id="mapa" className="croplite-map-section" aria-label="Satellite field map">
+          <div className="croplite-section-top"><div><span className="overline">01 · FIELD SELECTION</span><h1>Define your field <span>from space.</span></h1><p>Locate and outline your field on satellite imagery to begin the agricultural analysis.</p></div><div className="croplite-data-pill"><Satellite size={15}/> Satellite map · Esri World Imagery</div></div>
           <div className="croplite-map-frame"><FieldSelectionMap region={region} onRegionChange={setRegion}/></div>
           <div className="croplite-context-strip" role="status" aria-live="polite">
-            <div className="croplite-context-primary"><span className="croplite-context-icon"><MapPinned size={18}/></span><span><small>PARCELA ACTUAL</small><strong>{region?`${region.areaHectares?.toFixed(2) ?? '—'} hectáreas`:'Sin delimitar'}</strong></span></div>
-            <div><small>COORDENADAS</small><strong>{region?`${region.representativePoint.latitude.toFixed(4)}, ${region.representativePoint.longitude.toFixed(4)}`:'Selecciona tu región'}</strong></div>
-            <div><small>DATOS AMBIENTALES</small><strong>{loading?'Consultando fuentes…':analysis?(analysis.status==='error'?'Fuentes no disponibles':analysis.status==='partial'?'Datos parciales':'Datos 2025 disponibles'):region?'Pendiente de consulta':'Esperando polígono'}</strong></div>
-            <div><small>FUENTES DE INFORMACIÓN</small><strong>{backend?(backend.copernicus_configured?'NASA POWER · Copernicus':'NASA POWER · Copernicus sin configurar'):'Conecta el backend'}</strong></div>
+            <div className="croplite-context-primary"><span className="croplite-context-icon"><MapPinned size={18}/></span><span><small>CURRENT FIELD</small><strong>{region?`${region.areaHectares?.toFixed(2) ?? '—'} hectares`:'Not outlined'}</strong></span></div>
+            <div><small>COORDINATES</small><strong>{region?`${region.representativePoint.latitude.toFixed(4)}, ${region.representativePoint.longitude.toFixed(4)}`:'Select a region'}</strong></div>
+            <div><small>ENVIRONMENTAL DATA</small><strong>{loading?'Fetching observations…':analysis?(analysis.status==='error'?'Sources unavailable':analysis.status==='partial'?'Partial data':'2025 data available'):region?'Awaiting request':'Waiting for field outline'}</strong></div>
+            <div><small>DATA SOURCES</small><strong>{backend?(backend.copernicus_configured?'NASA POWER · Copernicus':'NASA POWER · Copernicus not configured'):'Connect the backend'}</strong></div>
           </div>
         </section>
         <section className="croplite-decision-wrap" id="decisiones"><AgriculturalDecisions region={region} cropId={cropId} onCropSelect={setCropId}/></section>
-        <section className="terra-history-panel croplite-environment-section" id="ambiente" aria-label="Histórico ambiental y fenología">
-          <div className="terra-history-heading"><span className="overline">03 · AMBIENTE Y FENOLOGÍA</span><h2>Ambiente observado y etapas del cultivo</h2><p>Explora observaciones de 2025 y abre la matriz de indicadores por fase solo cuando la necesites. Esta sección no representa un pronóstico.</p></div>
+        <section className="terra-history-panel croplite-environment-section" id="ambiente" aria-label="Historical environment and crop stages">
+          <div className="terra-history-heading"><span className="overline">03 · ENVIRONMENT & CROP GROWTH</span><h2>Environmental conditions and crop growth stages</h2><p>Explore 2025 observations and open the stage-by-stage indicator table when needed. This is not a forecast.</p></div>
           <CropSelectorBar cropId={cropId} onCropSelect={setCropId}/>
-          {message && <div className="field-alert error" role="alert">{message} <button className="terra-text-button" onClick={retry}>Reintentar</button></div>}
+          {message && <div className="field-alert error" role="alert">{message} <button className="terra-text-button" onClick={retry}>Retry</button></div>}
           <Daily2025Explorer region={region} analysis={analysis} loading={loading} onRetry={retry} timeline={timeline}/>
           <div className="croplite-phenology-grid">
             <PlantingDateControl sowDate={sowDate} onSowDateChange={setSowDate}/>
@@ -110,7 +110,7 @@ export default function App() {
           <CropIndicatorsTable analysis={analysis} cropId={cropId} sowDate={sowDate} loading={loading}/>
         </section>
       </main>
-      <footer className="app-footer croplite-footer"><span>CropLite · NASA Space Apps Challenge 2026</span><span>Datos estimados de NASA POWER y Copernicus · Imagen base satelital de Esri (no en tiempo real) · Planes orientativos sin predicción de rendimiento.</span></footer>
+      <footer className="app-footer croplite-footer"><span>CropLite · NASA Space Apps Challenge 2026</span><span>NASA POWER and Copernicus estimates · Esri satellite basemap (not live imagery) · Planning guidance, not yield predictions.</span></footer>
     </div>
   </div>;
 }

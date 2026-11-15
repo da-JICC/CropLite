@@ -96,5 +96,5 @@ def test_imerg_failure_falls_back_to_power_and_ndvi_failure_is_not_filled():
     assert result['datasets']['ndvi']['status']=='error'
     assert all(row['value'] is None for row in result['datasets']['ndvi']['monthly'])
     assert result['datasets']['precipitation']['source'].startswith('NASA POWER')
-    assert 'IMERG no disponible' in result['datasets']['precipitation']['metadata']['gpm_imerg_status']
+    assert 'IMERG unavailable' in result['datasets']['precipitation']['metadata']['gpm_imerg_status']
     assert result['datasets']['soil_moisture']['monthly'][0]['value']==0.21

@@ -24,13 +24,13 @@ SMAP_START = date(2015, 4, 1)
 _COPERNICUS_LIMIT = asyncio.Semaphore(2)
 
 VARIABLES = {
-    'temperature': {'source': 'NASA POWER · meteorología (reanálisis)', 'unit': '°C', 'aggregation': 'mean', 'key': 'mean_c', 'other': ('min_c','max_c'), 'method': 'Medias mensuales de temperaturas diarias mínima, media y máxima; referencias térmicas orientativas', 'resolution_note': 'Estimaciones meteorológicas regionales para un punto, no mediciones del campo'},
-    'humidity': {'source': 'NASA POWER · meteorología (reanálisis)', 'unit': '%', 'aggregation': 'mean', 'key': 'relative_humidity_pct', 'method': 'Media mensual de humedad relativa diaria', 'resolution_note': 'Humedad atmosférica a 2 m; no equivale a humedad del suelo'},
-    'precipitation': {'source': 'NASA POWER · precipitación corregida', 'unit': 'mm/mes', 'aggregation': 'sum', 'key': 'precipitation_mm', 'method': 'Suma mensual de precipitación diaria; solo meses completos', 'resolution_note': 'Estimaciones regionales, no pluviómetro del terreno'},
-    'radiation': {'source': 'NASA POWER · radiación solar', 'unit': 'MJ/m²/día', 'aggregation': 'mean', 'key': 'solar_radiation_mj_m2_day', 'method': 'Media mensual de la irradiación solar diaria', 'resolution_note': 'Producto de radiación satelital/modelado con resolución distinta de meteorología'},
-    'wind': {'source': 'NASA POWER · meteorología (reanálisis)', 'unit': 'm/s', 'aggregation': 'mean', 'key': 'wind_speed_ms', 'method': 'Media mensual de velocidad diaria a 2 m', 'resolution_note': 'Viento regional a 2 m, no medido dentro de la parcela'},
-    'soil_moisture': {'source': 'NASA POWER HY · humedad del suelo (SFMC)', 'unit': 'm³/m³', 'aggregation': 'mean', 'key': 'surface_moisture_m3_m3', 'method': 'Promedio mensual de contenido volumétrico en la capa superficial', 'resolution_note': 'Producto de modelo/asimilación, con cobertura a escala regional. La atribución a SMAP debe confirmarse en la respuesta de POWER.'},
-    'ndvi': {'source': 'Copernicus Sentinel-2 L2A', 'unit': 'NDVI', 'aggregation': 'mean', 'key': 'mean_ndvi', 'method': 'Promedio de composiciones estadísticas mensuales válidas', 'resolution_note': 'Estadísticas de píxeles válidos dentro del polígono (SCL 4/5), no mediciones diarias'},
+    'temperature': {'source': 'NASA POWER · meteorology (reanalysis)', 'unit': '°C', 'aggregation': 'mean', 'key': 'mean_c', 'other': ('min_c','max_c'), 'method': 'Monthly means of daily minimum, mean and maximum temperatures; indicative thermal references', 'resolution_note': 'Regional meteorological point estimates, not measurements taken in the field'},
+    'humidity': {'source': 'NASA POWER · meteorology (reanalysis)', 'unit': '%', 'aggregation': 'mean', 'key': 'relative_humidity_pct', 'method': 'Monthly mean daily relative humidity', 'resolution_note': 'Atmospheric humidity at 2 m; not soil moisture'},
+    'precipitation': {'source': 'NASA POWER · corrected precipitation', 'unit': 'mm/month', 'aggregation': 'sum', 'key': 'precipitation_mm', 'method': 'Sum of daily precipitation within complete months only', 'resolution_note': 'Regional estimates, not measurements from a field rain gauge'},
+    'radiation': {'source': 'NASA POWER · solar radiation', 'unit': 'MJ/m²/day', 'aggregation': 'mean', 'key': 'solar_radiation_mj_m2_day', 'method': 'Monthly mean daily solar irradiance', 'resolution_note': 'Satellite/modeled radiation product with a resolution different from meteorological estimates'},
+    'wind': {'source': 'NASA POWER · meteorology (reanalysis)', 'unit': 'm/s', 'aggregation': 'mean', 'key': 'wind_speed_ms', 'method': 'Monthly mean daily wind speed at 2 m', 'resolution_note': 'Regional wind at 2 m; not measured within the field'},
+    'soil_moisture': {'source': 'NASA POWER HY · soil moisture (SFMC)', 'unit': 'm³/m³', 'aggregation': 'mean', 'key': 'surface_moisture_m3_m3', 'method': 'Monthly mean volumetric surface soil moisture', 'resolution_note': 'Modeled/assimilated product at regional scale. SMAP attribution must be confirmed in the POWER response.'},
+    'ndvi': {'source': 'Copernicus Sentinel-2 L2A', 'unit': 'NDVI', 'aggregation': 'mean', 'key': 'mean_ndvi', 'method': 'Mean of valid monthly statistical composites', 'resolution_note': 'Statistics from valid pixels in the polygon (SCL 4/5), not daily measurements'},
 }
 
 
@@ -133,7 +133,7 @@ async def analyze_environment(polygon, copernicus, observations, *, today=None):
             try:
                 return year, await copernicus.statistics(polygon, date(year, 1, 1), date(year, 12, 31), 'P1M'), None
             except Exception as exc:
-                return year, None, str(exc) if hasattr(exc, 'status_code') else 'Error al recuperar NDVI.'
+                return year, None, str(exc) if hasattr(exc, 'status_code') else 'Error retrieving NDVI.'
 
     # Independent sources: failure of SMAP or IMERG must not stop meteorology or NDVI.
     met_params = tuple(p for p in WEATHER_PARAMETERS if p != 'ALLSKY_SFC_SW_DWN')
@@ -155,23 +155,23 @@ async def analyze_environment(polygon, copernicus, observations, *, today=None):
             extra = spec.get('other', ())
             series = monthly_aggregate(dataset_rows, spec['key'], spec['aggregation'], extra)
             data[name] = package_series(name, series, dataset_start, last,
-                                        metadata={'time_standard': 'LST', 'product_type': 'reanálisis / estimación meteorológica'})
+                                        metadata={'time_standard': 'LST', 'product_type': 'reanalysis / weather estimate'})
 
     # Preserve the full POWER record even when a higher-resolution IMERG series exists.
     data['precipitation_power'] = data['precipitation']
 
     if isinstance(imerg, Exception):
         # Explicit fallback instead of pretending POWER coarse precipitation is GPM.
-        data['precipitation']['metadata']['gpm_imerg_status'] = f'IMERG no disponible: {imerg}'
+        data['precipitation']['metadata']['gpm_imerg_status'] = f'IMERG unavailable: {imerg}'
     else:
         gpm_series = monthly_aggregate(imerg, 'imerg_precipitation_mm', 'sum')
         if any(valid_number(r['value']) for r in gpm_series):
             data['precipitation'] = package_series('precipitation', gpm_series, IMERG_START, last,
-                source_override='NASA GPM IMERG · precipitación satelital vía POWER HY',
-                metadata={'time_standard': 'UTC', 'product_type': 'multisatélite; IMERG Final/Late según fecha',
+                source_override='NASA GPM IMERG · satellite precipitation via POWER HY',
+                metadata={'time_standard': 'UTC', 'product_type': 'multisatellite; IMERG Final/Late depending on date',
                           'fallback_available': not isinstance(weather, Exception)})
         else:
-            data['precipitation']['metadata']['gpm_imerg_status'] = 'IMERG no entregó meses válidos; se muestran estimaciones POWER.'
+            data['precipitation']['metadata']['gpm_imerg_status'] = 'IMERG returned no valid months; POWER estimates are shown.'
 
     if isinstance(soil, Exception):
         data['soil_moisture'] = unavailable('soil_moisture', SMAP_START, last, str(soil))
@@ -179,7 +179,7 @@ async def analyze_environment(polygon, copernicus, observations, *, today=None):
         soil_rows = monthly_aggregate(soil, 'surface_moisture_m3_m3', 'mean', ('rootzone_moisture_m3_m3',))
         data['soil_moisture'] = package_series('soil_moisture', soil_rows, SMAP_START, last,
             metadata={'time_standard': 'UTC', 'product_type': 'POWER HY, verificar origen SMAP L4 de alias SFMC/RZMC',
-                      'resolution_note': 'SMAP L4 ~9 km solo si POWER confirma modo de alta resolución.'})
+                      'resolution_note': 'SMAP L4 ~9 km only if POWER confirms high-resolution mode.'})
 
     ndvi_rows = []
     ndvi_failures = {}
@@ -196,10 +196,10 @@ async def analyze_environment(polygon, copernicus, observations, *, today=None):
                 ndvi_rows.append(bymonth.get(month_id, {'date': month_id + '-01', 'mean_ndvi': None,
                     'valid_pixels': 0, 'total_pixels': 0, 'valid_percent': 0}))
     ndvi_rows.sort(key=lambda r: r['date'])
-    error = f"Fallaron {len(ndvi_failures)} años de Copernicus: {', '.join(ndvi_failures)}" if ndvi_failures else None
+    error = f"Copernicus failed for {len(ndvi_failures)} years: {', '.join(ndvi_failures)}" if ndvi_failures else None
     data['ndvi'] = package_series('ndvi', ndvi_monthly(ndvi_rows), SENTINEL_START, last, error=error,
         metadata={'cloud_mask': 'SCL 4/5', 'resolution_m': 10,
-                  'failed_years': ndvi_failures, 'product_type': 'índice calculado desde reflectancias satelitales'})
+                  'failed_years': ndvi_failures, 'product_type': 'index calculated from satellite reflectance'})
 
     if not any(d['status'] in ('success','partial') for d in data.values()):
         overall = 'error'
@@ -208,7 +208,7 @@ async def analyze_environment(polygon, copernicus, observations, *, today=None):
     else:
         overall = 'success'
     return {'status': overall, 'region': region, 'period': {'end': last.isoformat(), 'auto_selected': True,
-        'note': 'Cobertura diferenciada por fuente; únicamente años completos para reducir sesgos estacionales.'},
+        'note': 'Coverage varies by source; only complete calendar years are used to reduce seasonal bias.'},
         'datasets': data, 'soil_chemistry': {'status': 'unavailable', 'variables': ['pH','N','P','K'],
-            'reason': 'SoilGrids REST no está disponible para uso productivo estable. pH y N son mapas modelados; P y K disponibles para plantas no son medidas satelitales directas.'},
-        'note': 'Serie ambiental por fuente, sin predicciones ni datos inventados. El perfil estacional resume meses históricos válidos; cada pestaña identifica su escala.'}
+            'reason': 'SoilGrids REST is not currently suitable for stable production use. pH and N are modeled maps; plant-available P and K are not directly measured by satellite.'},
+        'note': 'Environmental series are reported by source, with no predictions or invented values. Seasonal profiles summarize valid historical months and each tab identifies its scale.'}

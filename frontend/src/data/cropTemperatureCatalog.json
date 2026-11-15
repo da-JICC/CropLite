@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "disclaimer": "Óptimos climáticos, umbrales térmicos GDD y referencias de estrés en reproducción/helada tienen definiciones distintas; no deben confundirse. El daño real depende de variedad, fenología y duración.",
+  "disclaimer": "Climatic optimum ranges, GDD thermal thresholds and reproductive heat/frost references have different definitions and should not be conflated. Actual crop damage depends on variety, growth stage and exposure duration.",
   "crops": [
     {
       "id": "wheat",
-      "name": "Trigo",
+      "name": "Wheat",
       "scientificName": "Triticum aestivum",
-      "csvCropName": "Trigo",
+      "csvCropName": "Wheat",
       "image": "/crops/wheat.png",
       "thermal": {
         "gddBaseC": 0,
@@ -14,18 +14,18 @@
         "optimumClimateC": {
           "min": 15,
           "max": 23,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "heatReproductiveReferenceC": 32,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://academic.oup.com/jxb/article/71/2/555/5574893",
         "coldFloweringReferenceC": -1,
         "coldFloweringRangeC": {
           "min": -2,
           "max": -1
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1
@@ -33,9 +33,9 @@
     },
     {
       "id": "maize",
-      "name": "Maíz",
+      "name": "Maize",
       "scientificName": "Zea mays",
-      "csvCropName": "Maíz grano",
+      "csvCropName": "Maize",
       "image": "/crops/maize.png",
       "thermal": {
         "gddBaseC": 10,
@@ -43,18 +43,18 @@
         "optimumClimateC": {
           "min": 18,
           "max": 33,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "heatReproductiveReferenceC": 35,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12837853/",
         "coldFloweringReferenceC": -1,
         "coldFloweringRangeC": {
           "min": -2,
           "max": -1
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1
@@ -62,9 +62,9 @@
     },
     {
       "id": "rice",
-      "name": "Arroz",
+      "name": "Flooded rice",
       "scientificName": "Oryza sativa",
-      "csvCropName": "Arroz (inundado)",
+      "csvCropName": "Flooded rice",
       "image": "/crops/rice.png",
       "thermal": {
         "gddBaseC": 12,
@@ -72,18 +72,18 @@
         "optimumClimateC": {
           "min": 25,
           "max": 35,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://ageconsearch.umn.edu/record/365817"
         },
         "heatReproductiveReferenceC": 35,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://academic.oup.com/jxb/article/71/2/555/5574893",
         "coldFloweringReferenceC": -0.5,
         "coldFloweringRangeC": {
           "min": -1,
           "max": -0.5
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -0.5
@@ -91,9 +91,9 @@
     },
     {
       "id": "soybean",
-      "name": "Soja",
+      "name": "Soybean",
       "scientificName": "Glycine max",
-      "csvCropName": "Soja",
+      "csvCropName": "Soybean",
       "image": "/crops/soybean.png",
       "thermal": {
         "gddBaseC": 10,
@@ -101,18 +101,18 @@
         "optimumClimateC": {
           "min": 20,
           "max": 33,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.odepa.gob.cl/wp-content/uploads/2010/08/mapasProduccionBiocombustibles.pdf"
         },
         "heatReproductiveReferenceC": 30,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://academic.oup.com/jxb/article/71/2/555/5574893",
         "coldFloweringReferenceC": -2,
         "coldFloweringRangeC": {
           "min": -3,
           "max": -2
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -2
@@ -120,9 +120,9 @@
     },
     {
       "id": "sorghum",
-      "name": "Sorgo",
+      "name": "Sorghum",
       "scientificName": "Sorghum bicolor",
-      "csvCropName": "Sorgo grano",
+      "csvCropName": "Sorghum",
       "image": "/crops/sorghum.png",
       "thermal": {
         "gddBaseC": 10,
@@ -130,18 +130,18 @@
         "optimumClimateC": {
           "min": 24,
           "max": 35,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "heatReproductiveReferenceC": 37.4,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://academic.oup.com/jxb/article/71/2/555/5574893",
         "coldFloweringReferenceC": -1,
         "coldFloweringRangeC": {
           "min": -2,
           "max": -1
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1
@@ -149,9 +149,9 @@
     },
     {
       "id": "barley",
-      "name": "Cebada",
+      "name": "Barley",
       "scientificName": "Hordeum vulgare",
-      "csvCropName": "Cebada",
+      "csvCropName": "Barley",
       "image": "/crops/barley.svg",
       "thermal": {
         "gddBaseC": 0,
@@ -159,18 +159,18 @@
         "optimumClimateC": {
           "min": 15,
           "max": 20,
-          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "basis": "Indicative climatic range (not the optimum for every growth stage)",
           "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
         },
         "heatReproductiveReferenceC": 30,
-        "heatReproductiveBasis": "Referencia de estrés térmico durante reproducción; depende de etapa, variedad y duración",
+        "heatReproductiveBasis": "Heat-stress reference during reproduction; depends on growth stage, variety and exposure duration",
         "heatReproductiveSourceUrl": "https://academic.oup.com/jxb/article/71/2/555/5574893",
         "coldFloweringReferenceC": -1,
         "coldFloweringRangeC": {
           "min": -2,
           "max": -1
         },
-        "coldFloweringBasis": "Rango crítico de helada en floración (FAO, Protección contra heladas, tabla 4.5). Orientativo; depende de fenología, duración y aclimatación.",
+        "coldFloweringBasis": "Critical frost range at flowering (FAO frost protection, Table 4.5). Indicative; depends on growth stage, duration and acclimation.",
         "coldFloweringSource": "FAO, Frost protection: fundamentals, practice, and economics, Tabla 4.5; coincide con CSV de TerraAI",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1
@@ -178,9 +178,9 @@
     },
     {
       "id": "papa",
-      "name": "Papa",
+      "name": "Potato",
       "scientificName": "Solanum tuberosum",
-      "csvCropName": "Papa",
+      "csvCropName": "Potato",
       "image": "/crops/papa.png",
       "thermal": {
         "gddBaseC": 2.0,
@@ -188,7 +188,7 @@
         "optimumClimateC": {
           "min": 15,
           "max": 25,
-          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "basis": "FAO ECOCROP favourable climatic range; not a daily damage threshold or growth-stage optimum",
           "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
         },
         "heatReproductiveReferenceC": null,
@@ -197,16 +197,16 @@
           "min": -2.0,
           "max": -1.0
         },
-        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringBasis": "Reference from original CSV; actual flowering was not observed",
         "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "girasol",
-      "name": "Girasol",
+      "name": "Sunflower",
       "scientificName": "Helianthus annuus",
-      "csvCropName": "Girasol",
+      "csvCropName": "Sunflower",
       "image": "/crops/girasol.png",
       "thermal": {
         "gddBaseC": 8.0,
@@ -214,7 +214,7 @@
         "optimumClimateC": {
           "min": 17,
           "max": 34,
-          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "basis": "FAO ECOCROP favourable climatic range; not a daily damage threshold or growth-stage optimum",
           "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
         },
         "heatReproductiveReferenceC": null,
@@ -223,16 +223,16 @@
           "min": -3.0,
           "max": -2.0
         },
-        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringBasis": "Reference from original CSV; actual flowering was not observed",
         "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "poroto-seco",
-      "name": "Poroto seco",
+      "name": "Dry bean",
       "scientificName": "Phaseolus vulgaris",
-      "csvCropName": "Poroto seco",
+      "csvCropName": "Dry bean",
       "image": "/crops/poroto-seco.png",
       "thermal": {
         "gddBaseC": 10.0,
@@ -240,7 +240,7 @@
         "optimumClimateC": {
           "min": 16,
           "max": 25,
-          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "basis": "FAO ECOCROP favourable climatic range; not a daily damage threshold or growth-stage optimum",
           "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
         },
         "heatReproductiveReferenceC": null,
@@ -249,16 +249,16 @@
           "min": -3.0,
           "max": -2.0
         },
-        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringBasis": "Reference from original CSV; actual flowering was not observed",
         "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "repollo",
-      "name": "Repollo",
+      "name": "Cabbage",
       "scientificName": "Brassica oleracea var. capitata",
-      "csvCropName": "Repollo",
+      "csvCropName": "Cabbage",
       "image": "/crops/repollo.svg",
       "thermal": {
         "gddBaseC": 4.5,
@@ -266,7 +266,7 @@
         "optimumClimateC": {
           "min": 15,
           "max": 24,
-          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "basis": "FAO ECOCROP favourable climatic range; not a daily damage threshold or growth-stage optimum",
           "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
         },
         "heatReproductiveReferenceC": null,
@@ -275,16 +275,16 @@
           "min": -3.0,
           "max": -2.0
         },
-        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringBasis": "Reference from original CSV; actual flowering was not observed",
         "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "arveja-verde",
-      "name": "Arveja verde",
+      "name": "Green pea",
       "scientificName": "Pisum sativum",
-      "csvCropName": "Arveja verde",
+      "csvCropName": "Green pea",
       "image": "/crops/arveja-verde.png",
       "thermal": {
         "gddBaseC": 5.0,
@@ -292,7 +292,7 @@
         "optimumClimateC": {
           "min": 10,
           "max": 24,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -303,17 +303,17 @@
           "min": -3.0,
           "max": -2.0
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -2.0
       }
     },
     {
       "id": "tomate",
-      "name": "Tomate",
+      "name": "Tomato",
       "scientificName": "Solanum lycopersicum",
-      "csvCropName": "Tomate",
+      "csvCropName": "Tomato",
       "image": "/crops/tomate.png",
       "thermal": {
         "gddBaseC": 7.0,
@@ -321,7 +321,7 @@
         "optimumClimateC": {
           "min": 20,
           "max": 27,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -332,17 +332,17 @@
           "min": -1.0,
           "max": 0.0
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": 0.0
       }
     },
     {
       "id": "avena",
-      "name": "Avena",
+      "name": "Oats",
       "scientificName": "Avena sativa",
-      "csvCropName": "Avena",
+      "csvCropName": "Oats",
       "image": "/crops/avena.svg",
       "thermal": {
         "gddBaseC": 0.0,
@@ -350,7 +350,7 @@
         "optimumClimateC": {
           "min": 16,
           "max": 20,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -361,17 +361,17 @@
           "min": -2.0,
           "max": -1.0
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1.0
       }
     },
     {
       "id": "mani",
-      "name": "Maní",
+      "name": "Peanut",
       "scientificName": "Arachis hypogaea",
-      "csvCropName": "Maní",
+      "csvCropName": "Peanut",
       "image": "/crops/mani.svg",
       "thermal": {
         "gddBaseC": 10.0,
@@ -379,7 +379,7 @@
         "optimumClimateC": {
           "min": 22,
           "max": 32,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -390,17 +390,17 @@
           "min": null,
           "max": null
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "cebolla-seca",
-      "name": "Cebolla seca",
+      "name": "Dry onion",
       "scientificName": "Allium cepa",
-      "csvCropName": "Cebolla seca",
+      "csvCropName": "Dry onion",
       "image": "/crops/cebolla-seca.svg",
       "thermal": {
         "gddBaseC": 4.5,
@@ -408,7 +408,7 @@
         "optimumClimateC": {
           "min": 12,
           "max": 25,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -419,17 +419,17 @@
           "min": null,
           "max": null
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "pimiento-dulce",
-      "name": "Pimiento dulce",
+      "name": "Sweet pepper",
       "scientificName": "Capsicum annuum",
-      "csvCropName": "Pimiento dulce",
+      "csvCropName": "Sweet pepper",
       "image": "/crops/pimiento-dulce.svg",
       "thermal": {
         "gddBaseC": 10.0,
@@ -437,7 +437,7 @@
         "optimumClimateC": {
           "min": 17,
           "max": 30,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -448,17 +448,17 @@
           "min": null,
           "max": null
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "remolacha-azucarera",
-      "name": "Remolacha azucarera",
+      "name": "Sugar beet",
       "scientificName": "Beta vulgaris",
-      "csvCropName": "Remolacha azucarera",
+      "csvCropName": "Sugar beet",
       "image": "/crops/remolacha-azucarera.svg",
       "thermal": {
         "gddBaseC": 5.0,
@@ -466,7 +466,7 @@
         "optimumClimateC": {
           "min": 15,
           "max": 25,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -477,17 +477,17 @@
           "min": -3.0,
           "max": -2.0
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -2.0
       }
     },
     {
       "id": "algodon",
-      "name": "Algodón",
+      "name": "Cotton",
       "scientificName": "Gossypium hirsutum",
-      "csvCropName": "Algodón",
+      "csvCropName": "Cotton",
       "image": "/crops/algodon.png",
       "thermal": {
         "gddBaseC": 12.5,
@@ -495,7 +495,7 @@
         "optimumClimateC": {
           "min": 22,
           "max": 36,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -506,17 +506,17 @@
           "min": -2.0,
           "max": -1.0
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1.0
       }
     },
     {
       "id": "alfalfa-heno",
-      "name": "Alfalfa (heno)",
+      "name": "Alfalfa (hay)",
       "scientificName": "Medicago sativa",
-      "csvCropName": "Alfalfa (heno)",
+      "csvCropName": "Alfalfa (hay)",
       "image": "/crops/alfalfa-heno.svg",
       "thermal": {
         "gddBaseC": 0.0,
@@ -524,7 +524,7 @@
         "optimumClimateC": {
           "min": 21,
           "max": 27,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -535,17 +535,17 @@
           "min": null,
           "max": null
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": null
       }
     },
     {
       "id": "melon",
-      "name": "Melón",
+      "name": "Melon",
       "scientificName": "Cucumis melo",
-      "csvCropName": "Melón",
+      "csvCropName": "Melon",
       "image": "/crops/melon.png",
       "thermal": {
         "gddBaseC": 10.0,
@@ -553,7 +553,7 @@
         "optimumClimateC": {
           "min": 18,
           "max": 30,
-          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "basis": "Favourable climate range from the project reference matrix; indicative, not optimal at every growth stage.",
           "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
         },
         "heatReproductiveReferenceC": null,
@@ -564,8 +564,8 @@
           "min": -1.0,
           "max": -0.5
         },
-        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
-        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringBasis": "Indicative critical range during flowering or reproduction; depends on growth stage, exposure duration and acclimation.",
+        "coldFloweringSource": "Project thermal reference matrix based on FAO/EcoCrop sources and local review.",
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -0.5
       }

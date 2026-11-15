@@ -18,18 +18,18 @@ function inside([x,y],ring) {
   return yes;
 }
 export function buildRegion(vertices) {
-  if(vertices.length<3 || vertices.length>40) throw new Error('Dibuja entre 3 y 40 vértices.');
-  if(vertices.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isFinite(n))||Math.abs(p[0])>180||Math.abs(p[1])>90)) throw new Error('Hay coordenadas inválidas.');
-  if(new Set(vertices.map(p=>p.join(','))).size!==vertices.length) throw new Error('No repitas vértices.');
+  if(vertices.length<3 || vertices.length>40) throw new Error('Draw between 3 and 40 vertices.');
+  if(vertices.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isFinite(n))||Math.abs(p[0])>180||Math.abs(p[1])>90)) throw new Error('Some coordinates are invalid.');
+  if(new Set(vertices.map(p=>p.join(','))).size!==vertices.length) throw new Error('Do not repeat vertices.');
   const xs=vertices.map(p=>p[0]),ys=vertices.map(p=>p[1]);
-  if(Math.max(...xs)-Math.min(...xs)>0.1||Math.max(...ys)-Math.min(...ys)>0.1) throw new Error('Para esta etapa, dibuja un campo menor a unos 10 km.');
+  if(Math.max(...xs)-Math.min(...xs)>0.1||Math.max(...ys)-Math.min(...ys)>0.1) throw new Error('For this prototype, draw a field smaller than approximately 10 km.');
   for(let i=0;i<vertices.length;i++) for(let j=i+1;j<vertices.length;j++) {
     if(Math.abs(i-j)===1||(i===0&&j===vertices.length-1)) continue;
-    if(intersects(vertices[i],vertices[(i+1)%vertices.length],vertices[j],vertices[(j+1)%vertices.length])) throw new Error('Los bordes del polígono se cruzan. Corrige su forma.');
+    if(intersects(vertices[i],vertices[(i+1)%vertices.length],vertices[j],vertices[(j+1)%vertices.length])) throw new Error('The polygon edges intersect. Correct its shape.');
   }
   const ring=[...vertices,vertices[0]];
   const doubleArea=vertices.reduce((v,a,i)=>v+cross([0,0],a,vertices[(i+1)%vertices.length]),0);
-  if(Math.abs(doubleArea)<1e-10) throw new Error('El polígono no tiene superficie válida.');
+  if(Math.abs(doubleArea)<1e-10) throw new Error('The polygon has no valid area.');
   let longitude=vertices.reduce((v,a,i)=>v+(a[0]+vertices[(i+1)%vertices.length][0])*cross([0,0],a,vertices[(i+1)%vertices.length]),0)/(3*doubleArea);
   let latitude=vertices.reduce((v,a,i)=>v+(a[1]+vertices[(i+1)%vertices.length][1])*cross([0,0],a,vertices[(i+1)%vertices.length]),0)/(3*doubleArea);
   if(!inside([longitude,latitude],vertices)) {

@@ -32,12 +32,12 @@ export const RECOMMENDATION_METHODOLOGY = Object.freeze({
   sowing_step_days:14,
   transition_buffer_days:14,
   limitations:[
-    'Comparación retrospectiva con datos de 2025; NO es pronóstico climático de un próximo año.',
-    'El orden es un índice interno relativo, no probabilidad de éxito ni predicción de rendimiento.',
-    'FAO Kc/fases son calendarios aproximados; floración no fue observada.',
-    'La lluvia frente a ETc no mide déficit hídrico real: no incluye riego, escorrentía ni reservas del suelo.',
-    'NDVI y humedad SMAP no permiten identificar por sí solos el cultivo futuro ni la fertilidad de una parcela.',
-    'Sin pH, nutrientes, manejo del terreno, enfermedades, agua de riego y validación local no se puede certificar una rotación.',
+    'Retrospective comparison using 2025 data; NOT a forecast for the next growing year.',
+    'Ranking is a relative internal index, not a probability of success or a yield forecast.',
+    'FAO Kc/stages are approximate calendars; flowering was not observed.',
+    'Rainfall versus ETc is not measured water deficit: irrigation, runoff and soil storage are excluded.',
+    'NDVI and SMAP moisture cannot independently identify future crops or field fertility.',
+    'A rotation cannot be certified without pH, nutrients, field management, disease, irrigation supply and local validation.',
   ]
 });
 
@@ -90,24 +90,24 @@ export function evaluatePlanting(analysis,crop,thermal,sowDate){
   const vulnerabilities=[];
   const positives=[];
   if(finite(optimumFraction)){
-    if(optimumFraction>=0.65)positives.push('Buena coincidencia con la banda climática térmica orientativa durante el ciclo simulado.');
-    else vulnerabilities.push('Varias temperaturas medias quedan fuera de la banda climática orientativa.');
+    if(optimumFraction>=0.65)positives.push('Good match with the indicative thermal climate band during the simulated crop cycle.');
+    else vulnerabilities.push('Several mean temperatures fall outside the indicative climatic band.');
   }
   if(finite(gddProgress)){
-    if(gddProgress>=0.98)positives.push('Acumulación térmica cercana o superior al objetivo mínimo orientativo del ciclo.');
-    else vulnerabilities.push('Acumulación térmica inferior al objetivo mínimo de GDD del catálogo.');
+    if(gddProgress>=0.98)positives.push('Accumulated heat is near or above the indicative minimum for the growing cycle.');
+    else vulnerabilities.push('Accumulated heat is below the catalog’s minimum GDD target.');
   }
   const coldDays=indicators.stages.reduce((sum,stage)=>sum+stage.potential_cold_days,0);
-  if(coldDays>0)vulnerabilities.push(`${coldDays} día(s) cruzan referencias de frío para fases posibles; no indican daño confirmado.`);
+  if(coldDays>0)vulnerabilities.push(`${coldDays} day(s) cross indicative cold references during potential stages; no damage is confirmed.`);
   if(waterComplete){
-    if(rainEtcRatio<0.7)vulnerabilities.push('Lluvia del escenario menor que ETc estimada; se desconoce riego y agua almacenada.');
-    else positives.push('Precipitación del escenario relativamente próxima a la ETc estimada; no implica suficiencia hídrica.');
-  }else vulnerabilities.push('Cobertura insuficiente o distinta referencia horaria de lluvia/ET₀; comparación hídrica no evaluable.');
-  if(crop.id==='rice')vulnerabilities.push('Arroz inundado: no se ha verificado disponibilidad de agua ni manejo de inundación.');
+    if(rainEtcRatio<0.7)vulnerabilities.push('Scenario rainfall is below estimated ETc; irrigation and stored water are unknown.');
+    else positives.push('Scenario precipitation is relatively close to estimated ETc; water sufficiency is not established.');
+  }else vulnerabilities.push('Insufficient coverage or inconsistent rainfall/ET₀ time references; water comparison unavailable.');
+  if(crop.id==='rice')vulnerabilities.push('Flooded rice: water availability and flooding management have not been verified.');
   return {
     cropId:crop.id, cropName:crop.name, family:BOTANICAL_FAMILIES[crop.id]||null,
     sowDate, harvestDate:timeline.estimated_maturity_date,cycleDays:expected,
-    score,rankingBasis:'temperatura media frente a banda climática general y GDD mínimo; no ML',
+    score,rankingBasis:'mean temperature versus general climatic band and minimum GDD; not ML',
     scoreComponents:{optimumFraction:round(optimumFraction,3),gddProgress:round(gddProgress,3)},
     climateCoverage:round(temperatureCoverage,3),waterCoverage:round(Math.min(rain.valid,cropWater.valid_days)/expected,3),
     gdd:finite(gdd.value)?round(gdd.value):null,gddTarget:target||null,
@@ -119,15 +119,15 @@ export function evaluatePlanting(analysis,crop,thermal,sowDate){
       vpdValidDays:vpdContext.valid,radiationValidDays:radiationContext.valid,soilValidDays:rootzoneContext.valid},
     positives,vulnerabilities, timeline,
     provenance:{temperature:'NASA POWER daily 2025 · regional estimate',
-      water:'NASA POWER PRECTOTCORR (LST) preferida + ET₀ FAO-56; lluvia no equivale a disponibilidad de agua',
-      crop:'TerraAI CSV de cultivos + calendario por etapa FAO/JICA',
-      rainfall:rainData==='precipitation_power'?'NASA POWER PRECTOTCORR (LST)':'GPM IMERG (UTC; distinta referencia diaria)'}
+      water:'NASA POWER PRECTOTCORR (LST) preferred + FAO-56 ET₀; rainfall does not equal available water',
+      crop:'TerraAI crop CSV + FAO/JICA stage calendar',
+      rainfall:rainData==='precipitation_power'?'NASA POWER PRECTOTCORR (LST)':'GPM IMERG (UTC; different daily time reference)'}
   };
 }
 
 /** Calendar dates refer solely to historical 2025. Do not relabel them as future forecasts. */
 export function buildCropRecommendations(analysis,crops,thermalCrops){
-  if(!analysis?.datasets) return {status:'unavailable',ranked:[],rotations:[],coverage:'Sin datos ambientales'};
+  if(!analysis?.datasets) return {status:'unavailable',ranked:[],rotations:[],coverage:'No environmental data'};
   const thermalById=new Map(thermalCrops.map(c=>[c.id,c]));
   const evaluated=[];
   for(const crop of crops){
@@ -141,7 +141,7 @@ export function buildCropRecommendations(analysis,crops,thermalCrops){
     .sort((a,b)=>b.score-a.score||a.sowDate.localeCompare(b.sowDate))[0]||null)
     .filter(Boolean).sort((a,b)=>b.score-a.score||a.cropName.localeCompare(b.cropName));
   if(!ranked.length)return {status:'insufficient',ranked:[],rotations:[],
-    coverage:'No hay temperatura diaria suficiente para clasificar escenarios completos de 2025.',
+    coverage:'Insufficient daily temperature data to rank complete 2025 scenarios.',
     methodology:RECOMMENDATION_METHODOLOGY};
   const rotations=[];
   // Reuse valid single-season windows; only cross-family sequences and a documented
@@ -155,9 +155,9 @@ export function buildCropRecommendations(analysis,crops,thermalCrops){
       const gap=dayIndex(b.sowDate)-dayIndex(a.harvestDate)-1;
       rotations.push({id:`${a.cropId}-${a.sowDate}_${b.cropId}-${b.sowDate}`,
         crops:[a,b],gapDays:gap,meanCompatibility:round((a.score+b.score)/2,0),
-        label:`${a.cropName} → ${b.cropName}`,source:'Calendario 2025 · ensayo retrospectivo',
-        warnings:['La alternancia de familias no garantiza protección fitosanitaria.',
-          'Suelo, labores de preparación, reservas de agua y mercado no evaluados.']});
+        label:`${a.cropName} → ${b.cropName}`,source:'2025 calendar · retrospective assessment',
+        warnings:['Alternating botanical families does not guarantee disease prevention.',
+          'Soil conditions, preparation, stored water and market access were not evaluated.']});
     }
   }
   rotations.sort((a,b)=>b.meanCompatibility-a.meanCompatibility||a.gapDays-b.gapDays);
@@ -169,7 +169,7 @@ export function buildCropRecommendations(analysis,crops,thermalCrops){
     if(bestRotations.length===3)break;
   }
   return {status:'screened',ranked,rotations:bestRotations,evaluatedCount:evaluated.length,
-    coverage:'Serie diaria 2025 · fechas de siembra analizadas cada 14 días; escenarios con cobertura térmica >=90%.',
+    coverage:'2025 daily series · planting dates evaluated every 14 days; scenarios require at least 90% thermal coverage.',
     methodology:RECOMMENDATION_METHODOLOGY,
     missingCrops:crops.filter(c=>!ranked.some(r=>r.cropId===c.id)).map(c=>c.name)};
 }

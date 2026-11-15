@@ -32,9 +32,9 @@ async def historical_decision_climate(polygon, observations, thermal_catalog):
             return [], f'{label}: {type(exc).__name__}: {exc}'
 
     (weather, weather_error), (solar, solar_error), (soil, soil_error), (imerg, imerg_error) = await asyncio.gather(
-        source('NASA POWER meteorología', 1981, DAILY_WEATHER_PARAMETERS),
-        source('NASA POWER radiación', 1984, ('ALLSKY_SFC_SW_DWN',)),
-        source('SMAP humedad del suelo', 2015, SMAP_PARAMETERS, 'HY', 'UTC'),
+        source('NASA POWER meteorology', 1981, DAILY_WEATHER_PARAMETERS),
+        source('NASA POWER radiation', 1984, ('ALLSKY_SFC_SW_DWN',)),
+        source('SMAP soil moisture', 2015, SMAP_PARAMETERS, 'HY', 'UTC'),
         source('GPM IMERG', 2000, IMERG_PARAMETERS, 'HY', 'UTC'),
     )
     year = date.today().year + 1
@@ -72,7 +72,7 @@ async def historical_decision_climate(polygon, observations, thermal_catalog):
 async def historical_ndvi_context(polygon, copernicus):
     if not copernicus.configured:
         return {'status':'unavailable','source':'Copernicus Sentinel-2 L2A',
-                'reason':'Faltan credenciales OAuth; NDVI histórico no consultado.', 'annual':[]}
+                'reason':'OAuth credentials are missing; historical NDVI was not requested.', 'annual':[]}
     async def one_year(year):
         async with _ndvi_limiter:
             try:
@@ -87,5 +87,5 @@ async def historical_ndvi_context(polygon, copernicus):
     annual = await asyncio.gather(*(one_year(y) for y in range(_NDVI_EARLIEST_YEAR,_LAST_COMPLETE_YEAR+1)))
     return {'source':'Copernicus Sentinel-2 L2A','status':'partial' if any(x['status']=='error' for x in annual) else 'observed',
             'annual':annual,'year_range':[_NDVI_EARLIEST_YEAR,_LAST_COMPLETE_YEAR],
-            'interpretation':'NDVI de la cobertura existente, no de un cultivo futuro; promedio de mosaicos mensuales, no predicción de rendimiento.',
-            'geometry':'polígono seleccionado','clouds':'SCL 4/5 según configuración existente'}
+            'interpretation':'NDVI measures existing vegetation, not a future crop; averages of monthly mosaics are not yield predictions.',
+            'geometry':'selected polygon','clouds':'SCL 4/5 according to current configuration'}

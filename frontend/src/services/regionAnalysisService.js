@@ -6,10 +6,10 @@ export async function analyzeSelectedRegion({geometry,start,end,interval='P10D'}
   const data=await res.json().catch(()=>null);
   if(!res.ok) {
     const detail=data?.detail;
-    const message=typeof detail==='string'?detail:Array.isArray(detail)?detail.map(x=>x.msg).join('; '):`El servidor devolvió HTTP ${res.status}`;
+    const message=typeof detail==='string'?detail:Array.isArray(detail)?detail.map(x=>x.msg).join('; '):`Server returned HTTP ${res.status}`;
     throw new Error(message);
   }
-  if(!data?.datasets||!data?.region)throw new Error('El servidor entregó una respuesta incompleta.');
+  if(!data?.datasets||!data?.region)throw new Error('Server returned an incomplete response.');
   return data;
 }
 export async function getBackendStatus(signal) {
@@ -43,10 +43,10 @@ export async function getHistoricalRegion(polygon, signal) {
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
     const detail = payload?.detail;
-    throw new Error(typeof detail === 'string' ? detail : `Error del servidor (HTTP ${response.status})`);
+    throw new Error(typeof detail === 'string' ? detail : `Server error (HTTP ${response.status})`);
   }
   if (!payload?.region || !payload?.datasets || !payload?.period?.years) {
-    throw new Error('La respuesta histórica del backend está incompleta.');
+    throw new Error('Historical backend response is incomplete.');
   }
   return payload;
 }
@@ -58,7 +58,7 @@ export async function getEnvironmentalRegion(polygon, signal) {
     body: JSON.stringify({polygon}), signal,
   });
   const payload=await response.json().catch(()=>null);
-  if(!response.ok) throw new Error(typeof payload?.detail==='string'?payload.detail:`El servidor respondió HTTP ${response.status}`);
-  if(!payload?.datasets || !payload?.region) throw new Error('El backend devolvió una respuesta ambiental incompleta.');
+  if(!response.ok) throw new Error(typeof payload?.detail==='string'?payload.detail:`Server responded with HTTP ${response.status}`);
+  if(!payload?.datasets || !payload?.region) throw new Error('Backend returned incomplete environmental data.');
   return payload;
 }

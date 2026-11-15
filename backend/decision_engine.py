@@ -75,9 +75,9 @@ def select_analogue_years(summaries, baseline_year=2025):
     warm = max(eligible, key=lambda r: (r['mean_temperature_c'], r['year']))
     dry = min(eligible, key=lambda r: (r['rainfall_mm'], -r['year']))
     return {
-        'typical': {'year': typical['year'], 'label': 'Temporada histórica habitual', 'basis': 'Año real más próximo a las medianas históricas de temperatura y lluvia'},
-        'warm': {'year': warm['year'], 'label': 'Temporada histórica cálida', 'basis': 'Año real con mayor temperatura media anual, entre los completos'},
-        'dry': {'year': dry['year'], 'label': 'Temporada histórica seca', 'basis': 'Año real con menor precipitación anual, entre los completos'},
+        'typical': {'year': typical['year'], 'label': 'Typical historical season', 'basis': 'Observed year closest to historical medians for temperature and rainfall'},
+        'warm': {'year': warm['year'], 'label': 'Warm historical season', 'basis': 'Complete observed year with the highest mean annual temperature'},
+        'dry': {'year': dry['year'], 'label': 'Dry historical season', 'basis': 'Complete observed year with the lowest annual precipitation'},
     }
 
 
@@ -289,17 +289,17 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
         'criteria':{
             'survival_exposure':{'status':'not_evaluable' if not hazard_valid else 'reference_crossed' if hazard_days else 'no_reference_crossing',
                 'reference_crossing_days':hazard_days if hazard_valid else None,'evaluated_days':hazard_valid,
-                'note':'Exposición a referencias térmicas del catálogo; no es daño observado.'},
+                'note':'Exposure to catalog thermal references; not observed crop damage.'},
             'development_temperature':{'status':'observed_compatibility','in_band_fraction':rnd(thermal_fit,3)},
             'cycle_thermal_completion':{'status':'estimated_gdd' if has_gdd_target else 'not_evaluable','gdd_fraction':rnd(completion_fit,3) if has_gdd_target else None},
             'rainfed_water':{'status':'estimated' if real(water_fit) else 'not_evaluable',
-                'water_fit_fraction':rnd(water_fit,3), 'note':'Precipitación frente a demanda teórica en secano; no hay balance de humedad del suelo.'},
+                'water_fit_fraction':rnd(water_fit,3), 'note':'Rainfall versus theoretical rainfed demand; no soil-moisture balance is available.'},
         },
         'cold_reference_crossings':cold_crossings if cold_evaluable else None,
         'heat_reference_crossings':heat_crossings if heat_evaluable else None,
         'hazard_days_evaluated':hazard_valid,
         'rain_mm':rnd(precipitation) if rainfall_complete else None,
-        'etc_mm':rnd(actual_etc), 'etc_source':'FAO-56 ETo×Kc' if real(actual_etc) else 'Rango de ETc por ciclo (Excel)',
+        'etc_mm':rnd(actual_etc), 'etc_source':'FAO-56 ETo×Kc' if real(actual_etc) else 'Full-cycle ETc range (Excel)',
         'water_benchmark_mm':rnd(water_benchmark),'rain_etc_ratio':rnd(ratio,2),
         'max_dry_spell_days':max_dry_spell if rainfall_complete else None,
         'stage_water_context':stage_water,
@@ -365,12 +365,12 @@ def _rotations(candidate_by_crop, planning_year):
                 'root_contrast_count':root_contrast,
                 'legume_present':any(x['family']=='Fabaceae' for x in duo),
                 'species_count':2,
-                'basis':'Dos cultivos sucesivos dentro del mismo año calendario, con distinta familia y sin solapamientos.',
+                'basis':'Two successive crops within the same calendar year, from different families and without overlapping cycles.',
                 'reasons':[
-                    f"Ambos ciclos de siembra y cosecha caben en {planning_year}, sin cruzar al año siguiente.",
-                    f"Se alternan las familias {first['family']} y {second['family']}.",
-                    f"Hay {gap} días entre cosecha y siguiente siembra (mínimo supuesto: {TRANSITION_DAYS}).",
-                    'La diversidad de raíces es orientativa; no se han medido los efectos sobre el suelo.'
+                    f"Both planting-to-harvest cycles fit within {planning_year}, without extending into the following year.",
+                    f"The rotation alternates the {first['family']} and {second['family']} botanical families.",
+                    f"There are {gap} days between harvest and the next planting (assumed minimum: {TRANSITION_DAYS}).",
+                    'Root diversity is indicative; soil effects have not been measured.'
                 ]
             })
     # Distinct crop orders; avoid a list of duplicates differing only in weeks.
@@ -434,10 +434,10 @@ def rank_crops(rows, solar_rows, scenarios, thermal_catalog, target_year, latitu
                 'water_weak_stage':next((v['water_weak_stage'] for v in per_year.values() if v.get('water_weak_stage')),None),
                 'water_context_available':bool(water_values),
                 'eligible_for_rainfed_plan':crop['id'] != 'rice',
-                'eligibility_reason':'Arroz inundado: requiere abastecimiento y manejo hídrico, no evaluables como secano.' if crop['id']=='rice' else None,
-                'rain_vs_water_demand_basis':('Proxy solo del ciclo completo cuando faltan Kc por etapa; sin balance edáfico.' if crop['id']=='alfalfa-heno' else '70 % del ajuste lluvia/ETc por ciclo y 30 % del ajuste de la etapa con menor relación lluvia/ETc (Kc por etapa). Proxy en secano sin balance edáfico.'),
-                'not_evaluated':['Disponibilidad real de riego','pH y nutrientes de la parcela','Sanidad, variedad y manejo'],
-                'basis':'Compatibilidad térmica, GDD, exposición condicional y agua de lluvia frente a demanda teórica; índice relativo de secano.'
+                'eligibility_reason':'Flooded rice requires a reliable water supply and management that cannot be evaluated as rainfed farming.' if crop['id']=='rice' else None,
+                'rain_vs_water_demand_basis':('Full-cycle proxy only where stage-specific Kc is missing; no soil-water balance.' if crop['id']=='alfalfa-heno' else '70% rainfall/ETc fit across the cycle and 30% fit during the stage with the lowest rainfall/ETc ratio (stage Kc); rainfed proxy without a soil-water balance.'),
+                'not_evaluated':['Actual irrigation availability','Field pH and nutrients','Crop health, variety and management'],
+                'basis':'Relative rainfed index based on thermal suitability, GDD, conditional exposure and rainfall versus theoretical demand.'
             }
             if crop['id'] != 'rice':pool[crop['id']].append(candidate)
             if best is None or candidate['score']>best['score']:best=candidate
@@ -471,22 +471,22 @@ def build_decision_report(weather_rows,solar_rows,thermal_catalog,*,reference_ye
         'coverage':{'met_years_received':len(summary),'baseline_valid_years':len(historical),
                     'baseline_first':min(selected) if selected else None,'baseline_last':max(selected) if selected else None,
                     'sampled_years':evaluation_years,'solar_years_with_data':len(solar_years),
-                    'ndvi_handling':'NDVI del polígono como contexto: no identifica productividad de cultivos futuros'},
+                    'ndvi_handling':'Field NDVI is context only; it does not identify productivity of future crops'},
         'recent_comparison':recent,'annual_summary':summary,
         'seasonal_profile':month_profile(weather_rows,set(selected)),
         'recent_monthly':month_profile(weather_rows,{reference_year}),
         'analogues':analogues or {},'ranked':ranked,'rotations':rotations,
-        'decision_dimensions':['Temperatura','Calor acumulado','Exposición térmica (si existe referencia)','Lluvia frente a ETc en secano'],
+        'decision_dimensions':['Temperature','Accumulated heat','Thermal exposure (if a reference exists)','Rainfall versus ETc under rainfed conditions'],
         'planning_assumptions':{'rainfed':True,'soil_measured':False,'irrigation_confirmed':False,
                                 'years':ROTATION_YEARS,'transition_days':TRANSITION_DAYS,
                                 'family_change_between_seasons':True,'distinct_crop_species_in_same_year':True,
-                                'stages':'duraciones aproximadas del catálogo, no simulación dinámica de madurez'},
+                                'stages':'approximate catalog durations, not a dynamic crop-maturity simulation'},
         'limitations':[
-            'El próximo año agrícola se planifica con ciclos completos dentro del mismo año calendario; no es un pronóstico meteorológico.',
-            'La compatibilidad hídrica supone secano: 70 % lluvia/ETc del ciclo + 30 % peor etapa Kc. No equivale a estrés hídrico ni conoce infiltración, riego o reservas del suelo.',
-            'Se utilizan hasta doce años históricos elegidos con criterios climáticos y temporales; no una probabilidad de rendimiento.',
-            'La evaluación individual puede mostrar ciclos que cruzan de año; el plan de rotación anual excluye esos cruces.',
-            'El motor NO puntúa pH, nutrientes, VPD o radiación sin referencias comparables y datos locales verificables.',
-            'Las referencias diarias de frío/calor y las duraciones fenológicas no equivalen a pérdidas ni cosechas reales.',
-            'La alternancia de familias, las especies distintas, profundidad radicular y espacio entre campañas son criterios de planificación, no garantía de recuperación del suelo.'
+            'The next growing year is planned using complete cycles within one calendar year; this is not a weather forecast.',
+            'Water suitability assumes rainfed production: 70% cycle rainfall/ETc and 30% weakest stage. It does not measure water stress, infiltration, irrigation or soil storage.',
+            'Up to twelve historical years are selected by climate and time criteria; results are not yield probabilities.',
+            'Individual assessments may include cycles extending across calendar years, but the annual rotation planner excludes them.',
+            'The engine does NOT score pH, nutrients, VPD or radiation without comparable references and verifiable local data.',
+            'Daily cold/heat references and estimated stage lengths are not measured crop damage or actual harvests.',
+            'Alternating families and species, root depth and transitions between cycles are planning criteria, not guarantees of soil recovery.'
         ]}

@@ -1,79 +1,79 @@
 [
   {
     "id": "VPD",
-    "name": "Déficit de presión de vapor",
+    "name": "Vapour pressure deficit",
     "unit": "kPa",
     "dependencies": "T2M_MAX T2M_MIN T2MDEW",
-    "formula_or_method": "FAO-56 presión de saturación media, e_a a partir de punto de rocío",
+    "formula_or_method": "FAO-56 average saturation vapour pressure, e_a derived from dew point",
     "status": "calculable",
-    "limitation": "Aproximado por punto de rocío diario; no VPD horario ni promedio exacto"
+    "limitation": "Approximation from daily dew point, not hourly VPD or exact daily mean"
   },
   {
     "id": "ET0",
-    "name": "Evapotranspiración referencia FAO-56",
-    "unit": "mm/día",
+    "name": "FAO-56 reference evapotranspiration",
+    "unit": "mm/day",
     "dependencies": "T2M T2M_MIN T2M_MAX T2MDEW WS2M PS ALLSKY_SFC_SW_DWN latitud",
-    "formula_or_method": "FAO56 Penman-Monteith + geometría solar",
+    "formula_or_method": "FAO-56 Penman-Monteith and solar geometry",
     "status": "calculable",
-    "limitation": "Estimación con radiación diaria y elevación derivada de PS; no es producto ET0 observado"
+    "limitation": "Estimated from daily radiation and elevation inferred from surface pressure; not directly observed ET₀"
   },
   {
     "id": "ETc",
-    "name": "Evapotranspiración del cultivo",
-    "unit": "mm/día",
-    "dependencies": "ET0 Kc etapa fenológica",
-    "formula_or_method": "ET0 × Kc según etapa",
+    "name": "Crop evapotranspiration",
+    "unit": "mm/day",
+    "dependencies": "ET₀, Kc and growth stage",
+    "formula_or_method": "ET₀ × stage-specific Kc",
     "status": "escenario",
-    "limitation": "Sin siembra/fenología: solo escenario Kc medio, no ETc real"
+    "limitation": "Without planting/growth-stage data: average-Kc scenario only, not measured ETc"
   },
   {
     "id": "GDD",
-    "name": "Grados día crecimiento",
-    "unit": "°C·día",
+    "name": "Growing degree days",
+    "unit": "°C·day",
     "dependencies": "T2M Tbase Tupper",
-    "formula_or_method": "máx(0,min(Tmedia,Tupper)-Tbase)",
+    "formula_or_method": "max(0, min(Tmean,Tupper)-Tbase)",
     "status": "calculable",
     "limitation": "No implica conocer ciclo o fecha de siembra"
   },
   {
-    "id": "Precipitación acumulada",
-    "name": "Lluvia desde 1 enero",
+    "id": "Accumulated precipitation",
+    "name": "Rainfall since January 1",
     "unit": "mm",
     "dependencies": "PRECTOTCORR o IMERG_PRECTOT",
     "formula_or_method": "suma progresiva diaria validada",
     "status": "calculable",
-    "limitation": "Si falta día, acumulado queda null a partir de ese día"
+    "limitation": "If a day is missing, the cumulative series is null from that day onward"
   },
   {
-    "id": "Indicador térmico",
-    "name": "Cruce de referencia térmica",
+    "id": "Thermal indicator",
+    "name": "Thermal reference crossing",
     "unit": "booleano",
-    "dependencies": "T2M_MIN T2M_MAX umbrales cultivo",
-    "formula_or_method": "comparación diaria por etapa no conocida",
+    "dependencies": "T2M_MIN, T2M_MAX, crop thresholds",
+    "formula_or_method": "Daily comparison against reference; actual growth stage unknown",
     "status": "condicional",
-    "limitation": "Advertencia visual, no prueba daño"
+    "limitation": "Visual warning; not proof of damage"
   },
   {
-    "id": "Indicador de demanda climática",
+    "id": "Climate demand indicator",
     "name": "P - ETc de escenario",
-    "unit": "mm/día",
+    "unit": "mm/day",
     "dependencies": "PRECTOTCORR ETc escenario",
     "formula_or_method": "diferencia diaria",
     "status": "escenario",
-    "limitation": "No equivale estrés hídrico real: falta riego/almacenamiento"
+    "limitation": "Not actual water stress: irrigation and storage data are missing"
   },
   {
-    "id": "Indicador humedad raíz",
-    "name": "Humedad volumétrica radicular",
+    "id": "Root-zone moisture indicator",
+    "name": "Volumetric root-zone moisture",
     "unit": "m³/m³",
     "dependencies": "RZMC",
     "formula_or_method": "variable modelada",
     "status": "observable",
-    "limitation": "No convertir m³/m³ a estrés sin capacidad de campo"
+    "limitation": "Do not infer water stress from m³/m³ without field capacity"
   },
   {
     "id": "NDVI",
-    "name": "Índice vegetación",
+    "name": "Vegetation index",
     "unit": "adimensional",
     "dependencies": "B08 B04 SCL",
     "formula_or_method": "(B08-B04)/(B08+B04)",
@@ -82,29 +82,29 @@
   },
   {
     "id": "NDMI",
-    "name": "Índice humedad vegetación",
+    "name": "Vegetation moisture index",
     "unit": "adimensional",
     "dependencies": "B08 B11 SCL",
     "formula_or_method": "(B08-B11)/(B08+B11)",
     "status": "observado",
-    "limitation": "No mide humedad suelo, distinto de SMAP; B11 nativo 20 m"
+    "limitation": "Does not measure soil moisture; unlike SMAP, native B11 is 20 m"
   },
   {
-    "id": "Estrés hídrico real",
-    "name": "Agotamiento de agua del cultivo",
+    "id": "Actual water stress",
+    "name": "Crop water depletion",
     "unit": "adimensional",
     "dependencies": "RZMC capacidad de campo punto marchitez profundidad riego etapa",
-    "formula_or_method": "balance hídrico raíz y TAW",
+    "formula_or_method": "Root-zone water balance and total available water (TAW)",
     "status": "no calculable",
-    "limitation": "No hay textura/FC/PWP, riego ni fenología del terreno"
+    "limitation": "Field soil texture, field capacity/wilting point, irrigation and growth stages unavailable"
   },
   {
-    "id": "Estrés por viento",
-    "name": "Daño mecánico",
+    "id": "Wind stress",
+    "name": "Mechanical damage",
     "unit": "adimensional",
     "dependencies": "racha viento especie etapa",
-    "formula_or_method": "referencia umbral específico",
+    "formula_or_method": "Specific threshold reference",
     "status": "no calculable",
-    "limitation": "WS2M medio no es racha ni umbral de daño"
+    "limitation": "Mean WS2M is not a gust speed or damage threshold"
   }
 ]

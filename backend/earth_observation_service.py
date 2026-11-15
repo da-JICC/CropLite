@@ -48,7 +48,7 @@ def build_daily_rows(payload: dict, names: tuple[str, ...], start: date, end: da
         if any(not isinstance(source.get(p), dict) for p in names):
             raise KeyError('parameter series missing')
     except (KeyError, TypeError, AttributeError) as exc:
-        raise ObservationError('NASA POWER no devolvió las variables solicitadas.') from exc
+        raise ObservationError('NASA POWER did not return the requested variables.') from exc
     rows = []
     current = start
     while current <= end:
@@ -71,7 +71,7 @@ class EarthObservationClient:
                     parameters: tuple[str, ...] = WEATHER_PARAMETERS, community='AG', time_standard='LST'):
         """Fetch decade-sized chunks and merge. Cached per source, coordinates and interval."""
         if start > end:
-            raise ObservationError('Rango temporal inválido.')
+            raise ObservationError('Invalid time range.')
         coordinates = (round(latitude, 3), round(longitude, 3))
         key = (coordinates, str(start), str(end), parameters, community, time_standard)
         now = time.monotonic()

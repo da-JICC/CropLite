@@ -45,7 +45,7 @@ def test_crop_catalog_20_and_null_thresholds_preserved():
     path=Path(__file__).resolve().parents[1]/'data/crop_agronomic_parameters.json'
     crops=json.loads(path.read_text(encoding='utf-8'))['crops']
     assert len(crops)==20
-    wheat=next(c for c in crops if c['name']=='Trigo')
+    wheat=next(c for c in crops if c['id']=='wheat')
     assert wheat['thermal']['gdd_base_c']==0
     assert wheat['water']['kc_by_stage']['mid']==1.15
     assert wheat['water']['cycle_days']=={'min':120,'max':150}

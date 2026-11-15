@@ -125,7 +125,7 @@ def test_eto_is_missing_not_invented_without_radiation():
     weather,solar=synthetic()
     result=build_decision_report(weather,[],THERMAL)
     assert result['status']=='evaluated'
-    assert all(s['etc_mm'] is None and s['etc_source']=='Rango de ETc por ciclo (Excel)'
+    assert all(s['etc_mm'] is None and s['etc_source']=='Full-cycle ETc range (Excel)'
                for c in result['ranked'] for s in c['scenario_results'].values())
     # A documented reference ETc is usable as a screening benchmark; it is NOT
     # silently reported as a weather-derived evapotranspiration measurement.

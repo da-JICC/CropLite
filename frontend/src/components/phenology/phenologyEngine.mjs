@@ -36,7 +36,7 @@ export function timelineFor(crop, sowDate) {
   });
   return {sow_date:sowDate,estimated_maturity_date:shiftDay(sowDate,offset-1),
     estimated_cycle_days:offset,stages,beyond_2025:shiftDay(sowDate,offset-1)>YEAR_END,
-    basis:'Duraciones referenciales FAO/JICA por fase; no son hitos fenológicos observados ni pronóstico térmico.'};
+    basis:'Indicative FAO/JICA stage durations; these are not observed growth milestones or thermal forecasts.'};
 }
 
 export function cropIndicators(analysis, crop, sowDate) {
@@ -86,14 +86,14 @@ export function cropIndicators(analysis, crop, sowDate) {
     stage.gdd_accumulated_from_sowing={value:observedGdd?+totalGdd.toFixed(2):null,valid_days:observedGdd};
   }
   return {...timeline,stages,source:'FAO stage lengths + crop CSV + NASA POWER daily datasets',
-    rainfall_source:rainKind==='precipitation_power'?'NASA POWER PRECTOTCORR (LST)':'GPM IMERG (UTC; fechas pueden diferir)',
+    rainfall_source:rainKind==='precipitation_power'?'NASA POWER PRECTOTCORR (LST)':'GPM IMERG (UTC; dates may differ)',
     total:{gdd:sum(stages.flatMap(s=>s.rows),'gdd'),eto:sum(stages.flatMap(s=>s.rows),'eto'),
       etc:sum(stages.flatMap(s=>s.rows),'etc'),precipitation:sum(stages.flatMap(s=>s.rows),'precipitation')},
     limitations:[
-      'Etapas FAO aproximadas basadas en días, no floración o maduración detectadas por sensores.',
-      'Kc es referencial por fase y ETc es una estimación bajo condiciones estándar; no ET medida.',
-      'Precipitación − ETc es un balance climático parcial, NO una evaluación de estrés hídrico ni incorpora riego.',
-      'Las referencias de frío inicial y floración no garantizan daño. La fase media solo puede contener floración.',
-      'Los totales parciales no reemplazan días sin datos; revisar días válidos antes de interpretarlos.'
+      'Approximate day-based FAO stages; flowering and maturity were not detected by sensors.',
+      'Kc is an indicative stage value and ETc is an estimate under standard conditions, not measured evapotranspiration.',
+      'Precipitation minus ETc is a partial climatic balance, NOT a water-stress assessment; it excludes irrigation.',
+      'Initial growth and flowering cold references do not confirm damage. The mid-season phase may include flowering.',
+      'Partial totals do not replace missing days; review valid-day counts before interpretation.'
     ]};
 }

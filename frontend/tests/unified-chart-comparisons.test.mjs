@@ -54,7 +54,7 @@ test('stage comparisons remain unrated where stage targets absent; cold uses sta
  assert.equal(groups[1].metrics[6].status,'no_reference'); // no stage-specific cold reference
  assert.equal(groups[4].metrics[0].status,'incomplete'); // no full-cycle observation
  assert.equal(groups[4].metrics[1].status,'incomplete'); // no full-cycle ETc
- assert.match(groups[4].metrics[2].reference,/sin rango comparable/i);
+ assert.match(groups[4].metrics[2].reference,/no comparable rainfall range/i);
 });
 test('sowing near year end retains dates in 2026 without any invented comparison',()=>{
  const t=timelineFor(wheat,'2025-12-31');
@@ -80,6 +80,6 @@ test('full observed cycle compares GDD and ETc only with matching full-cycle ref
   assert.equal(result.total.gdd.value,2400);
   assert.equal(groups[4].metrics[0].status,'above'); // full cycle reference max 2300
   assert.equal(groups[4].metrics[1].status,'below'); // total ETc 380 vs expected 450-650
-  assert.equal(groups[4].metrics[0].coverage,'120/120 días');
+  assert.equal(groups[4].metrics[0].coverage,'120/120 days');
   assert.equal(groups[0].metrics[0].status,'no_reference'); // never invent stage GDD target
 });

@@ -32,7 +32,7 @@ function MapClick({drawing,onVertex}) {
 }
 function MapFocusButton({region}) {
   const map=useMap();
-  return <button type="button" className="croplite-map-recenter" title="Volver al campo o a la ubicación inicial" aria-label="Volver al campo" onClick={()=>{
+  return <button type="button" className="croplite-map-recenter" title="Return to the field or starting location" aria-label="Return to field" onClick={()=>{
     const pts=region?.geometry?.coordinates?.[0]?.slice(0,-1);
     if(pts?.length){const bounds=L.latLngBounds(pts.map(([lng,lat])=>[lat,lng]));map.fitBounds(bounds.pad(.38),{maxZoom:17});}
     else map.flyTo(DEFAULT_CENTER,10);
@@ -59,7 +59,7 @@ export default function FieldSelectionMap({region,onRegionChange}) {
   function updateVertex(index,latlng) {
     const edited=vertices.map((p,i)=>i===index?[latlng.lng,latlng.lat]:p);
     try {onRegionChange(buildRegion(edited));setError('');}
-    catch(e) {setError(`No se pudo mover el vértice: ${e.message}`);}
+    catch(e) {setError(`Could not move vertex: ${e.message}`);}
   }
   async function searchLocation(e) {
     e.preventDefault();if(!query.trim())return;
@@ -67,12 +67,12 @@ export default function FieldSelectionMap({region,onRegionChange}) {
     setSearching(true);setError('');
     try {
       const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query.trim())}`;
-      const response=await fetch(url,{signal:controller.signal,headers:{'Accept-Language':'es'}});
-      if(!response.ok)throw new Error('El servicio de búsqueda no está disponible. Puedes mover el mapa manualmente.');
+      const response=await fetch(url,{signal:controller.signal,headers:{'Accept-Language':'en'}});
+      if(!response.ok)throw new Error('Location search is unavailable. You can navigate the map manually.');
       const results=await response.json();
-      if(!results.length)throw new Error('No se encontró la ubicación. Prueba con una ciudad o comuna cercana.');
+      if(!results.length)throw new Error('Location not found. Try a nearby city or town.');
       if(!controller.signal.aborted)setFlyTarget({lat:Number(results[0].lat),lng:Number(results[0].lon),zoom:14});
-    } catch(e) {if(e.name!=='AbortError')setError(e.message||'Falló la búsqueda.');}
+    } catch(e) {if(e.name!=='AbortError')setError(e.message||'Search failed.');}
     finally {if(!controller.signal.aborted)setSearching(false);}
   }
   return <div className="field-map-component croplite-field-map">
@@ -92,24 +92,24 @@ export default function FieldSelectionMap({region,onRegionChange}) {
       </MapContainer>
       <div className="field-map-toolbar">
         <form className="field-location-search" onSubmit={searchLocation}>
-          <Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Buscar comuna, ciudad o localidad…" aria-label="Buscar ubicación"/>
-          <button type="submit" disabled={searching||!query.trim()}>{searching?'Buscando…':'Buscar'}</button>
+          <Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search for a town, city or place…" aria-label="Search location"/>
+          <button type="submit" disabled={searching||!query.trim()}>{searching?'Searching…':'Search'}</button>
         </form>
         <div className="field-map-actions">
-          <button type="button" className={mode==='draw'?'active':''} onClick={()=>{setMode('draw');setDraft([]);setError('');}}><Pencil size={15}/> {vertices.length?'Redibujar':'Dibujar campo'}</button>
-          <button type="button" className={mode==='edit'?'active':''} disabled={!vertices.length} onClick={()=>{setMode(mode==='edit'?'idle':'edit');setError('');}}><Move size={15}/> {mode==='edit'?'Terminar':'Editar'}</button>
-          <button type="button" disabled={!vertices.length} onClick={()=>{onRegionChange(null);setMode('idle');setDraft([]);setError('');}}><Trash2 size={15}/><span>Eliminar</span></button>
+          <button type="button" className={mode==='draw'?'active':''} onClick={()=>{setMode('draw');setDraft([]);setError('');}}><Pencil size={15}/> {vertices.length?'Redraw':'Draw field'}</button>
+          <button type="button" className={mode==='edit'?'active':''} disabled={!vertices.length} onClick={()=>{setMode(mode==='edit'?'idle':'edit');setError('');}}><Move size={15}/> {mode==='edit'?'Finish':'Edit'}</button>
+          <button type="button" disabled={!vertices.length} onClick={()=>{onRegionChange(null);setMode('idle');setDraft([]);setError('');}}><Trash2 size={15}/><span>Delete</span></button>
         </div>
       </div>
-      <div className="croplite-map-switch" role="group" aria-label="Capa base del mapa">
-        <button type="button" className={basemap==='satellite'?'active':''} aria-pressed={basemap==='satellite'} onClick={()=>setBasemap('satellite')}><Satellite size={15}/> Satélite</button>
-        <button type="button" className={basemap==='streets'?'active':''} aria-pressed={basemap==='streets'} onClick={()=>setBasemap('streets')}><MapIcon size={15}/> Calles</button>
+      <div className="croplite-map-switch" role="group" aria-label="Map basemap">
+        <button type="button" className={basemap==='satellite'?'active':''} aria-pressed={basemap==='satellite'} onClick={()=>setBasemap('satellite')}><Satellite size={15}/> Satellite</button>
+        <button type="button" className={basemap==='streets'?'active':''} aria-pressed={basemap==='streets'} onClick={()=>setBasemap('streets')}><MapIcon size={15}/> Streets</button>
       </div>
-      <div className="croplite-map-label"><Layers3 size={14}/>{basemap==='satellite'?'Imagen satelital real · mosaico de distintas fechas':'Mapa cartográfico de OpenStreetMap'}</div>
-      {mode==='draw'&&<div className="field-draw-bar"><span>{draft.length} vértices · Haz clic en cada esquina del terreno</span><button type="button" disabled={draft.length<3} onClick={()=>commit(draft)}><Check size={16}/> Confirmar campo</button><button type="button" className="secondary" onClick={()=>{setMode('idle');setDraft([]);setError('');}}><X size={15}/> Cancelar</button></div>}
-      {mode==='edit'&&<div className="field-map-help"><Move size={15}/> Arrastra los puntos verdes y luego selecciona «Terminar».</div>}
+      <div className="croplite-map-label"><Layers3 size={14}/>{basemap==='satellite'?'Satellite imagery · mosaic from multiple dates':'OpenStreetMap street map'}</div>
+      {mode==='draw'&&<div className="field-draw-bar"><span>{draft.length} vertices · Click each corner of the field</span><button type="button" disabled={draft.length<3} onClick={()=>commit(draft)}><Check size={16}/> Confirm field</button><button type="button" className="secondary" onClick={()=>{setMode('idle');setDraft([]);setError('');}}><X size={15}/> Cancel</button></div>}
+      {mode==='edit'&&<div className="field-map-help"><Move size={15}/> Drag the green points, then select “Finish”.</div>}
     </div>
     {error&&<p className="field-map-error" role="alert">{error}</p>}
-    <div className="field-map-attribution"><MapPin size={14}/>{vertices.length?'Campo delimitado · revisa el perímetro antes de analizar.':'Sin campo · busca un lugar y dibuja un polígono de al menos 3 puntos.'}<span>La imagen de fondo no es un índice NDVI ni una observación en tiempo real.</span></div>
+    <div className="field-map-attribution"><MapPin size={14}/>{vertices.length?'Field outlined · Review the boundary before analysis.':'No field selected · Find a location and draw a polygon with at least three points.'}<span>The basemap is not an NDVI layer or a real-time observation.</span></div>
   </div>;
 }

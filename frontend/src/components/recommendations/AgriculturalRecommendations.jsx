@@ -20,20 +20,20 @@ function ScenarioBar({scenario}){
 }
 function RankingCard({scenario,ordinal,selected,onPick}){
   return <button className={`terra-rec-card${selected?' active':''}`} type="button" onClick={()=>onPick(scenario.cropId)}
-    aria-pressed={selected} aria-label={`Explorar ${scenario.cropName} en el análisis ambiental`}>
+    aria-pressed={selected} aria-label={`Explore ${scenario.cropName} in the environmental analysis`}>
     <div className="terra-rec-card-head"><CropIcon cropId={scenario.cropId} decorative/>
       <span className="terra-rec-rank">{ordinal}º</span><div><strong>{scenario.cropName}</strong><small>{scenario.family} · Escenario 2025</small></div></div>
-    <div className="terra-rec-card-dates"><CalendarDays size={13}/>{formatDate(scenario.sowDate)} – {formatDate(scenario.harvestDate)}<span>{scenario.cycleDays} días</span></div>
+    <div className="terra-rec-card-dates"><CalendarDays size={13}/>{formatDate(scenario.sowDate)} – {formatDate(scenario.harvestDate)}<span>{scenario.cycleDays} days</span></div>
     <ScenarioBar scenario={scenario}/>
     <div className="terra-rec-context" aria-label="Indicadores ambientales descriptivos">
       <span>VPD: <b>{scenario.context.vpdMeanKpa ?? '—'} kPa</b></span>
-      <span>Radiación: <b>{scenario.context.solarRadiationMjM2 ?? '—'} MJ/m²</b></span>
-      <span>Humedad radicular: <b>{scenario.context.rootzoneMoistureMean ?? '—'} m³/m³</b></span>
-      <span>Lluvia / ETc: <b>{scenario.waterComplete ? `${scenario.rainEtcRatio}×`:'—'}</b></span>
+      <span>Radiation: <b>{scenario.context.solarRadiationMjM2 ?? '—'} MJ/m²</b></span>
+      <span>Root-zone moisture: <b>{scenario.context.rootzoneMoistureMean ?? '—'} m³/m³</b></span>
+      <span>Rainfall / ETc: <b>{scenario.waterComplete ? `${scenario.rainEtcRatio}×`:'—'}</b></span>
     </div>
-    <div className="terra-rec-card-explain"><span className="terra-rec-card-positive"><CheckCircle2 size={14}/>{scenario.positives[0]||'Se pudo evaluar el comportamiento térmico.'}</span>
+    <div className="terra-rec-card-explain"><span className="terra-rec-card-positive"><CheckCircle2 size={14}/>{scenario.positives[0]||'Thermal conditions could be assessed.'}</span>
       {scenario.vulnerabilities[0]&&<span className="terra-rec-card-caution"><AlertTriangle size={14}/>{scenario.vulnerabilities[0]}</span>}</div>
-    <span className="terra-rec-card-action">Ver referencias e indicadores <ArrowRight size={14}/></span>
+    <span className="terra-rec-card-action">View references and indicators <ArrowRight size={14}/></span>
   </button>;
 }
 function RotationDisplay({plan}){
@@ -45,7 +45,7 @@ function RotationDisplay({plan}){
       <div className="terra-rec-year-body"><ScenarioBar scenario={crop}/></div>
       <span className="terra-rec-year-dates">{formatDate(crop.sowDate)} – {formatDate(crop.harvestDate)}</span>
     </div>)}
-    <div className="terra-rec-rotation-foot"><Info size={15}/><span>Transición prevista: al menos {RECOMMENDATION_METHODOLOGY.transition_buffer_days} días. Las cuatro tonalidades indican etapas estimadas; no son observaciones fenológicas.</span></div>
+    <div className="terra-rec-rotation-foot"><Info size={15}/><span>Planned transition: at least {RECOMMENDATION_METHODOLOGY.transition_buffer_days} days. The four colors indicate estimated stages, not observed growth stages.</span></div>
   </div>;
 }
 
@@ -56,31 +56,31 @@ export function AgriculturalRecommendations({region,analysis,loading,cropId,onCr
   const output=useMemo(()=>buildCropRecommendations(analysis,phenologyCatalog.crops,cropThermalCatalog.crops),[analysis]);
   const rotations=output.rotations||[];
   const plan=rotations[Math.min(activePlan,rotations.length-1)]||null;
-  return <section className="terra-recommendation-section" aria-label="Recomendación inteligente de cultivos">
-    <header className="terra-rec-header"><div><span className="overline">02 / DECISIONES AGRÍCOLAS</span><h2>¿Qué cultivo podría adaptarse mejor?</h2>
-      <p>Compara opciones para tu terreno y explora rotaciones posibles con la meteorología de 2025.</p></div>
-      <span className="terra-rec-method-pill"><Leaf size={14}/> Evaluación experimental · No ML entrenado</span>
+  return <section className="terra-recommendation-section" aria-label="Intelligent crop recommendations">
+    <header className="terra-rec-header"><div><span className="overline">02 / AGRICULTURAL DECISIONS</span><h2>Which crops might fit this field?</h2>
+      <p>Compare crop options and potential rotations using observed 2025 weather data.</p></div>
+      <span className="terra-rec-method-pill"><Leaf size={14}/> Experimental assessment · No trained ML</span>
     </header>
-    {!region ? <div className="terra-rec-empty"><Sun size={22}/><strong>Selecciona un terreno en el mapa</strong><span>La comparación aparecerá aquí, antes de los gráficos, al disponer de registros meteorológicos válidos.</span></div>
-    :loading ? <div className="terra-rec-empty" role="status"><span className="terra-loader"/><strong>Analizando condiciones de tu región</strong><span>Se utilizarán los mismos datos ya solicitados por el explorador ambiental.</span></div>
-    :output.status!=='screened' ? <div className="terra-rec-empty" role="status"><ShieldAlert size={22}/><strong>Sin evidencia suficiente para recomendar cultivos</strong><span>{output.coverage||'No fue posible evaluar la serie térmica.'}</span><button onClick={onRetry} type="button"><RefreshCcw size={14}/> Reintentar datos ambientales</button></div>
+    {!region ? <div className="terra-rec-empty"><Sun size={22}/><strong>Select a field on the map</strong><span>Results will appear here when valid weather records are available.</span></div>
+    :loading ? <div className="terra-rec-empty" role="status"><span className="terra-loader"/><strong>Analyzing local conditions</strong><span>This uses environmental data already retrieved for the selected field.</span></div>
+    :output.status!=='screened' ? <div className="terra-rec-empty" role="status"><ShieldAlert size={22}/><strong>Insufficient evidence for crop recommendations</strong><span>{output.coverage||'The temperature series could not be evaluated.'}</span><button onClick={onRetry} type="button"><RefreshCcw size={14}/> Retry environmental data</button></div>
     : <>
-      <div className="terra-rec-warning"><Info size={18}/><span><strong>Comparación histórica, no pronóstico.</strong> Las fechas y las clasificaciones representan escenarios hipotéticos utilizando exclusivamente el clima registrado en 2025. No predicen el clima ni el rendimiento de una temporada futura.</span></div>
-      <div className="terra-rec-subheading"><div><h3>Alternativas de cultivo</h3><p>Ordenadas por coincidencia térmica y acumulación GDD en ventanas completas. Agua, VPD, radiación y suelo aparecen como contexto descriptivo, sin umbrales no validados.</p></div><span>{output.ranked.length} / {cropThermalCatalog.crops.length} evaluables</span></div>
+      <div className="terra-rec-warning"><Info size={18}/><span><strong>Historical comparison, not a forecast.</strong> Dates and rankings are hypothetical scenarios based only on observed 2025 weather. They do not predict future weather or yield.</span></div>
+      <div className="terra-rec-subheading"><div><h3>Crop options</h3><p>Ranked using thermal suitability and accumulated GDD in complete planting windows. Water, VPD, radiation and soil data provide context without using unvalidated thresholds.</p></div><span>{output.ranked.length} / {cropThermalCatalog.crops.length} assessable</span></div>
       <div className="terra-rec-cards">{output.ranked.map((scenario,index)=><RankingCard key={scenario.cropId} scenario={scenario} ordinal={index+1} selected={scenario.cropId===cropId} onPick={onCropSelect}/>)}</div>
-      {output.missingCrops?.length>0&&<p className="terra-rec-missing">Sin cobertura suficiente para: {output.missingCrops.join(', ')}.</p>}
-      <div className="terra-rec-rotation-area"><div className="terra-rec-subheading"><div><h3>Rotación anual · escenarios compatibles en calendario</h3><p>Se combinan familias diferentes cuando caben dos ciclos completos en 2025, con un margen para transición. La viabilidad real requiere validar suelo, riego, sanidad y manejo.</p></div></div>
-        {rotations.length?<><div className="terra-rec-plan-options" role="group" aria-label="Alternativas de rotación">
+      {output.missingCrops?.length>0&&<p className="terra-rec-missing">Insufficient coverage for: {output.missingCrops.join(', ')}.</p>}
+      <div className="terra-rec-rotation-area"><div className="terra-rec-subheading"><div><h3>Annual rotation · compatible calendar scenarios</h3><p>Different botanical families are paired when two full cycles fit within 2025, with a transition gap. Field feasibility requires validating soils, irrigation, plant health and management.</p></div></div>
+        {rotations.length?<><div className="terra-rec-plan-options" role="group" aria-label="Rotation options">
           {rotations.map((item,index)=><button key={item.id} type="button" className={index===Math.min(activePlan,rotations.length-1)?'active':''} aria-pressed={index===Math.min(activePlan,rotations.length-1)} onClick={()=>setActivePlan(index)}>{index+1}. {item.label}</button>)}
         </div><RotationDisplay plan={plan}/>
-        <div className="terra-rec-rotation-notice"><AlertTriangle size={15}/><span>No se garantiza que el terreno permita esta secuencia. Las rotaciones necesitan planificación plurianual y evaluación de enfermedades, insumos y disponibilidad hídrica.</span></div></>
-        :<div className="terra-rec-rotation-none"><Info size={18}/><span>No se identificó una combinación de dos cultivos de familias diferentes que completara ambos ciclos con las condiciones de evaluación de 2025. Se muestran alternativas individuales arriba; no se forzará una rotación.</span></div>}
+        <div className="terra-rec-rotation-notice"><AlertTriangle size={15}/><span>A calendar fit does not guarantee field feasibility. Crop rotation also requires evaluating diseases, inputs, water supply and longer-term management.</span></div></>
+        :<div className="terra-rec-rotation-none"><Info size={18}/><span>No combination of crops from different families can complete both cycles under the evaluated 2025 conditions. Individual crop options are shown instead.</span></div>}
       </div>
-      <button type="button" className="terra-rec-method-toggle" onClick={()=>setShowMethod(v=>!v)} aria-expanded={showMethod}><Info size={15}/>{showMethod?'Ocultar metodología':'Cómo se calculan estas recomendaciones'}</button>
+      <button type="button" className="terra-rec-method-toggle" onClick={()=>setShowMethod(v=>!v)} aria-expanded={showMethod}><Info size={15}/>{showMethod?'Hide methodology':'How these recommendations are calculated'}</button>
       {showMethod&&<div className="terra-rec-method-details">
-        <p><strong>Motor:</strong> reglas agronómicas interpretables, sin red neuronal ni entrenamiento. Evalúa ventanas de siembra cada 14 días de 2025, solo ciclos completos, con al menos 90 % de datos de temperatura. Ordena mediante la proporción de temperaturas medias dentro de la banda climática orientativa y el avance respecto del GDD mínimo del catálogo.</p>
-        <p><strong>Otras variables:</strong> se muestran lluvia/ETc, VPD, radiación y humedad radicular como contexto, sin asignarles automáticamente la categoría «favorable». NDVI histórico del terreno no revela qué cultivo debería sembrarse. La familia botánica es un filtro de rotación, no un certificado de sanidad del suelo.</p>
-        <p><strong>Para una predicción futura de IA:</strong> se necesitarán varias temporadas, validación temporal y geográfica independiente, datos de rendimiento reales y condiciones de suelo/manejo. No se presenta el puntaje interno como probabilidad de cosecha exitosa.</p>
+        <p><strong>Engine:</strong> interpretable agronomic rules, without a trained neural network. Planting windows are evaluated every 14 days in 2025, only for complete cycles with at least 90% temperature coverage. Ranking uses the share of mean temperatures within the indicative climatic band and progress toward the minimum catalog GDD.</p>
+        <p><strong>Other variables:</strong> rainfall/ETc, VPD, radiation and root-zone moisture are presented as context without automatically classifying them as favourable. Historical NDVI does not reveal which crop should be planted. Botanical family is a rotation filter, not a soil health certificate.</p>
+        <p><strong>For future AI-based forecasting:</strong> multiple seasons, independent temporal and geographic validation, real yield data and soil/management information would be needed. The internal score is not a probability of harvest success.</p>
         <ul>{RECOMMENDATION_METHODOLOGY.limitations.map((limitation,i)=><li key={i}>{limitation}</li>)}</ul>
       </div>}
     </>}

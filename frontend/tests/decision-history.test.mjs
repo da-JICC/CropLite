@@ -24,9 +24,9 @@ test('historic API calls depend on polygon, never on crop or scenario state',()=
 });
 test('historical NDVI is identified as independent retrospective context',()=>{
  const component=read('components/recommendations/AgriculturalDecisions.jsx');
- assert.match(component,/nunca como etiqueta del cultivo futuro/);
- assert.match(component,/Evaluación basada en reglas/);
- assert.match(component,/No predice el rendimiento/i);
+ assert.match(component,/not the identity of a future crop/);
+ assert.match(component,/Rule-based assessment/);
+ assert.match(component,/does not predict yield/i);
 });
 test('twenty crop catalog and 4 phases with no invented stage-level GDD',()=>{
  const crop=JSON.parse(read('data/cropPhenologyCatalog.json'));

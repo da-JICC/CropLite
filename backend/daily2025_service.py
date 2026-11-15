@@ -158,15 +158,15 @@ async def analyze_daily_2025(polygon, copernicus, observations):
         datasets[identifier]=package(identifier,name,unit,source,dayrows(mapping,key,extra),
                                     kind=kind,method=method,limits=limits,time_standard=standard,resolution=resolution,
                                     metadata={'error':error} if error else {})
-    resmet='NASA POWER: estimaciones gridded meteorológicas puntuales; no mediciones de la parcela.'
-    add('temperature','Temperatura del aire','°C','NASA POWER · MET',wr,'mean_c',extra=('min_c','max_c'),error=weather_error,method='T2M; extremos diarios T2M_MIN y T2M_MAX',resolution=resmet)
+    resmet='NASA POWER: point-based gridded meteorological estimates, not measurements taken in the field.'
+    add('temperature','Air temperature','°C','NASA POWER · MET',wr,'mean_c',extra=('min_c','max_c'),error=weather_error,method='T2M; daily extremes T2M_MIN and T2M_MAX',resolution=resmet)
     add('humidity','Humedad relativa','%','NASA POWER · MET',wr,'relative_humidity_pct',error=weather_error,method='RH2M promedio diario',resolution=resmet)
-    add('precipitation_power','Precipitación corregida','mm/día','NASA POWER · MET',wr,'precipitation_mm',error=weather_error,method='PRECTOTCORR',resolution=resmet)
-    add('wind','Viento a 2 m','m/s','NASA POWER · MET',wr,'wind_speed_ms',error=weather_error,method='WS2M media diaria; no son ráfagas',resolution=resmet)
-    add('pressure','Presión superficial','kPa','NASA POWER · MET',wr,'surface_pressure_kpa',error=weather_error,method='PS',resolution=resmet)
-    add('radiation','Radiación solar','MJ/m²/día','NASA POWER · SOL',rr,'solar_radiation_mj_m2_day',error=radiation_error,kind='satélite/modelo',method='ALLSKY_SFC_SW_DWN; comunidad AG',resolution='Radiación diaria modelada/observada; escala regional')
-    add('soil_moisture','Humedad superficial','m³/m³','NASA POWER HY / SMAP L4',sr,'surface_moisture_m3_m3',extra=('rootzone_moisture_m3_m3',),error=soil_error,kind='asimilación',method='SFMC (0–5 cm); RZMC (0–100 cm)',resolution='SMAP L4 ~9 km; no representa humedad exacta del lote')
-    add('precipitation','Precipitación GPM IMERG','mm/día','NASA POWER HY / GPM IMERG',ir,'imerg_precipitation_mm',error=imerg_error,kind='multisatélite',method='IMERG_PRECTOT (diario UTC)',resolution='~0.1°; no equivale pluviómetro',standard='UTC')
+    add('precipitation_power','Corrected precipitation','mm/day','NASA POWER · MET',wr,'precipitation_mm',error=weather_error,method='PRECTOTCORR',resolution=resmet)
+    add('wind','Wind at 2 m','m/s','NASA POWER · MET',wr,'wind_speed_ms',error=weather_error,method='Daily mean WS2M; not wind gusts',resolution=resmet)
+    add('pressure','Surface pressure','kPa','NASA POWER · MET',wr,'surface_pressure_kpa',error=weather_error,method='PS',resolution=resmet)
+    add('radiation','Solar radiation','MJ/m²/day','NASA POWER · SOL',rr,'solar_radiation_mj_m2_day',error=radiation_error,kind='satellite/model',method='ALLSKY_SFC_SW_DWN; comunidad AG',resolution='Daily modeled/observed solar radiation; regional scale')
+    add('soil_moisture','Surface soil moisture','m³/m³','NASA POWER HY / SMAP L4',sr,'surface_moisture_m3_m3',extra=('rootzone_moisture_m3_m3',),error=soil_error,kind='assimilation',method='SFMC (0–5 cm); RZMC (0–100 cm)',resolution='SMAP L4 ~9 km; does not measure the exact field moisture')
+    add('precipitation','GPM IMERG precipitation','mm/day','NASA POWER HY / GPM IMERG',ir,'imerg_precipitation_mm',error=imerg_error,kind='multisatellite',method='IMERG_PRECTOT (daily UTC)',resolution='~0.1°; not a field rain gauge',standard='UTC')
     if datasets['precipitation']['status']=='unavailable' and datasets['precipitation_power']['status']!='unavailable':
         # Fallback is explicitly labelled, not a stitched signal.
         datasets['precipitation']={**datasets['precipitation_power'],'id':'precipitation',
@@ -174,9 +174,9 @@ async def analyze_daily_2025(polygon, copernicus, observations):
     ndvi,ndmi,cop_errors=daily_ndvi_rows(cop_results)
     for index,rows in (('ndvi',ndvi),('ndmi',ndmi)):
         datasets[index]=package(index,index.upper(),'adimensional','Copernicus Sentinel-2 L2A',rows,
-            kind='satélite/polígono',method=('(B08-B04)/(B08+B04)' if index=='ndvi' else '(B08-B11)/(B08+B11)')+' · máscara SCL 4/5',
-            resolution='20 m para el análisis conjunto; B11 nativa 20 m',time_standard='UTC',
-            limits='Solo días con imágenes válidas libres de nubes. NDMI indica humedad vegetación, NO humedad del suelo.',
+            kind='satellite/polygon',method=('(B08-B04)/(B08+B04)' if index=='ndvi' else '(B08-B11)/(B08+B11)')+' · SCL 4/5 masking',
+            resolution='20 m for combined analysis; native B11 at 20 m',time_standard='UTC',
+            limits='Only days with cloud-free valid imagery. NDMI indicates vegetation moisture, NOT soil moisture.',
             metadata={'failed_months':cop_errors,'cloud_mask':'SCL 4/5','native_B11_m':20})
     # FAO-56 daily VPD and ETo: derived only from valid, mutually compatible inputs.
     vpd_rows=[]; eto_rows=[]; cumulative=[]; running=0.0; broken=False
@@ -193,21 +193,21 @@ async def analyze_daily_2025(polygon, copernicus, observations):
         if not real(p):broken=True
         if not broken:running+=p
         cumulative.append({'date':day,'value':round(running,3) if not broken else None})
-    datasets['vpd']=package('vpd','Déficit de presión vapor','kPa','Calculado · NASA POWER',vpd_rows,
-       method='FAO-56: [e°(Tmax)+e°(Tmin)]/2 − e°(Tdew)',kind='derivado',
-       limits='Aproximación diaria basada en punto de rocío, no VPD horario.')
-    datasets['eto']=package('eto','ET₀ referencia FAO-56','mm/día','Calculado · NASA POWER',eto_rows,
-       method='FAO-56 Penman–Monteith; Rs, T, viento, rocío, presión y geometría solar',kind='derivado',
-       limits='ET0 modelada, no ET real ni ETc. La elevación se aproxima desde presión atmosférica; revisar en terrenos montañosos.')
-    datasets['rain_cumulative']=package('rain_cumulative','Precipitación acumulada 2025','mm','Derivado · NASA POWER PRECTOTCORR',cumulative,
-       method='Suma desde 1 enero; un día faltante invalida los acumulados siguientes',kind='derivado',
-       limits='Acumulado meteorológico; no cuenta riego, infiltración ni escorrentía.')
+    datasets['vpd']=package('vpd','Vapour pressure deficit','kPa','Calculated · NASA POWER',vpd_rows,
+       method='FAO-56: [e°(Tmax)+e°(Tmin)]/2 − e°(Tdew)',kind='derived',
+       limits='Daily approximation based on dew point, not hourly VPD.')
+    datasets['eto']=package('eto','FAO-56 reference ET₀','mm/day','Calculated · NASA POWER',eto_rows,
+       method='FAO-56 Penman–Monteith; Rs, T, wind, dew point, pressure and solar geometry',kind='derived',
+       limits='Modeled ET₀, not measured ET or crop ETc. Elevation is approximated from atmospheric pressure; review mountainous terrain.')
+    datasets['rain_cumulative']=package('rain_cumulative','Cumulative precipitation 2025','mm','Derived · NASA POWER PRECTOTCORR',cumulative,
+       method='Sum since January 1; one missing day invalidates all later cumulative values',kind='derived',
+       limits='Meteorological accumulation; excludes irrigation, infiltration and runoff.')
     return {
        'region':region,'period':{'start':str(START),'end':str(END),'interval':'daily','user_selected_dates':False},
        'datasets':datasets,'status':'partial' if any(v['status']!='success' for v in datasets.values()) else 'success',
-       'scope':'2025 (365 fechas). Las imágenes Sentinel-2 no garantizan observación diaria.',
-       'sources':{'meteorology':'NASA POWER','soil_moisture':'SMAP L4 vía NASA POWER HY','optical':'Sentinel-2 L2A'},
-       'soil_chemistry':{'pH':'no disponible','N':'no disponible','P':'no disponible','K':'no disponible'},
-       'limitations':['No se deduce estrés hídrico real sin riego, fecha de siembra, etapa y capacidad de agua disponible del suelo.',
-                      'Los cruces de umbral térmico son referencias condicionadas por etapa fenológica; no predicen daños.']
+       'scope':'2025 (365 dates). Sentinel-2 imagery does not guarantee daily observations.',
+       'sources':{'meteorology':'NASA POWER','soil_moisture':'SMAP L4 via NASA POWER HY','optical':'Sentinel-2 L2A'},
+       'soil_chemistry':{'pH':'unavailable','N':'unavailable','P':'unavailable','K':'unavailable'},
+       'limitations':['Actual water stress cannot be inferred without irrigation, planting date, stage and available soil water capacity.',
+                      'Thermal threshold crossings are conditional on growth stage and do not predict damage.']
     }

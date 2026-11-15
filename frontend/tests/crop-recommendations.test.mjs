@@ -47,7 +47,7 @@ test('no water information can be silently interpreted as sufficient rainfall',(
  const c=phenology.crops[1],t=thermal.crops.find(item=>item.id===c.id);
  const result=evaluatePlanting(sample,c,t,'2025-02-01');
  assert.ok(result);assert.equal(result.waterComplete,false);assert.equal(result.rainEtcRatio,null);
- assert.match(result.vulnerabilities.join(' '),/Cobertura insuficiente/);
+ assert.match(result.vulnerabilities.join(' '),/Insufficient coverage/);
 });
 test('missing temperature invalidates ranking even if other series exist',()=>{
  const sample=climate();sample.datasets.temperature.daily=sample.datasets.temperature.daily.map((row,i)=>i<20?row:{...row,value:null});

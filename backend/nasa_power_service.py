@@ -64,7 +64,7 @@ class PowerClient:
                     response.raise_for_status()
                     payload = response.json()
             except httpx.TimeoutException as exc:
-                raise PowerError('NASA POWER no respondió a tiempo al solicitar el histórico. Intenta de nuevo.', 504) from exc
+                raise PowerError('NASA POWER timed out while retrieving historical data. Please try again.', 504) from exc
             except httpx.HTTPStatusError as exc:
                 raise PowerError(f'NASA POWER returned HTTP {exc.response.status_code}.', 502) from exc
             except (httpx.HTTPError, ValueError) as exc:

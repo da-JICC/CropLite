@@ -71,7 +71,7 @@ async def analyze_history(polygon: dict, copernicus, power, *, today: date | Non
                 return year, result, None
             except Exception as exc:
                 # No fabricated observations: preserve error in the specific year.
-                return year, None, str(exc) if hasattr(exc, 'status_code') else 'No se pudo consultar Copernicus este año.'
+                return year, None, str(exc) if hasattr(exc, 'status_code') else 'Copernicus data could not be retrieved for this year.'
 
     # Run independently: NASA must not be withheld because Copernicus fails.
     ndvi_years, climate_result = await asyncio.gather(
@@ -104,13 +104,13 @@ async def analyze_history(polygon: dict, copernicus, power, *, today: date | Non
         'source': 'Copernicus Sentinel-2 L2A', 'status': ndvi_status,
         'sampling_method': 'selected_polygon', 'error': '; '.join(f'{year}: {detail}' for year, detail in failures.items()) or None,
         'data': {'source': 'Copernicus Sentinel-2 L2A', 'interval': NDVI_INTERVAL,
-                 'interval_explanation': 'mosaicos estadísticos mensuales, no observaciones diarias ni imágenes individuales',
+                 'interval_explanation': 'monthly statistical mosaics, not daily observations or individual images',
                  'resolution_m': 10, 'cloud_mask': 'SCL 4 y 5', 'observations': ndvi_observations,
                  'annual': ndvi_year_summaries, 'errors_by_year': failures},
     }
 
     if isinstance(climate_result, Exception):
-        message = str(climate_result) if hasattr(climate_result, 'status_code') else 'No se pudo consultar NASA POWER.'
+        message = str(climate_result) if hasattr(climate_result, 'status_code') else 'NASA POWER data could not be retrieved.'
         temperature = {'source': 'NASA POWER Daily API', 'status': 'error',
                        'sampling_method': 'representative_point', 'error': message, 'data': None}
     else:
@@ -132,5 +132,5 @@ async def analyze_history(polygon: dict, copernicus, power, *, today: date | Non
         'period': {'start': start.isoformat(), 'end': end.isoformat(), 'years': years,
                    'basis': 'six_last_complete_calendar_years', 'auto_selected': True},
         'datasets': {'ndvi': ndvi, 'temperature': temperature},
-        'note': 'Seis últimos años calendario completos. Copernicus: estadísticas mensuales de un polígono; NASA POWER: temperaturas diarias estimadas para un punto. La calidad y cobertura varían por año.',
+        'note': 'The six most recent complete calendar years. Copernicus provides monthly polygon statistics; NASA POWER estimates daily temperatures at a representative point. Quality and coverage vary by year.',
     }

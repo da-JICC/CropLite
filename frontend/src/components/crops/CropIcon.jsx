@@ -29,6 +29,6 @@ const ILLUSTRATIONS = {
 export default function CropIcon({cropId, name, className='', decorative=false}) {
   const src=ILLUSTRATIONS[cropId];
   return <img className={`terra-crop-icon ${className}`.trim()}
-    src={src || '/crops/wheat.png'} alt={decorative ? '' : (name || cropId || 'Cultivo')}
+    src={src || '/crops/wheat.png'} alt={decorative ? '' : (name || cropId || 'Crop')}
     aria-hidden={decorative ? true : undefined}/>;
 }

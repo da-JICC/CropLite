@@ -5,16 +5,16 @@ import {STAGE_COLORS,YEAR_END} from '../phenology/phenologyEngine.mjs';
 
 /** Seven environmental observation tabs. Crop-dependent indicators live below the chart. */
 const OPTIONS=[
- {id:'temperature',label:'Temperatura',Icon:ThermometerSun,color:'#cf8350',desc:'Temperatura media, mínima y máxima diaria · NASA POWER'},
- {id:'humidity',label:'Humedad atmosférica',Icon:Droplets,color:'#3e8cb8',desc:'Humedad relativa diaria · NASA POWER'},
- {id:'precipitation',label:'Precipitación',Icon:CloudRain,color:'#4e98bf',desc:'Lluvia diaria, NASA POWER o GPM IMERG'},
- {id:'radiation',label:'Radiación solar',Icon:Sun,color:'#c99c44',desc:'Radiación solar diaria · NASA POWER'},
- {id:'wind',label:'Viento',Icon:Wind,color:'#76909a',desc:'Viento medio diario a 2 m · NASA POWER'},
- {id:'pressure',label:'Presión atmosférica',Icon:Gauge,color:'#8e73ab',desc:'Presión atmosférica superficial · NASA POWER'},
- {id:'soil_moisture',label:'Humedad del suelo',Icon:Waves,color:'#8575af',desc:'Humedad superficial y zona radicular · producto regional NASA POWER HY'},
+ {id:'temperature',label:'Temperature',Icon:ThermometerSun,color:'#cf8350',desc:'Daily mean, minimum and maximum temperature · NASA POWER'},
+ {id:'humidity',label:'Air humidity',Icon:Droplets,color:'#3e8cb8',desc:'Daily relative humidity · NASA POWER'},
+ {id:'precipitation',label:'Precipitation',Icon:CloudRain,color:'#4e98bf',desc:'Daily rainfall · NASA POWER or GPM IMERG'},
+ {id:'radiation',label:'Solar radiation',Icon:Sun,color:'#c99c44',desc:'Daily solar radiation · NASA POWER'},
+ {id:'wind',label:'Wind',Icon:Wind,color:'#76909a',desc:'Daily average wind at 2 m · NASA POWER'},
+ {id:'pressure',label:'Air pressure',Icon:Gauge,color:'#8e73ab',desc:'Surface atmospheric pressure · NASA POWER'},
+ {id:'soil_moisture',label:'Soil moisture',Icon:Waves,color:'#8575af',desc:'Surface and root-zone soil moisture · NASA POWER HY regional product'},
 ];
 const isNum=v=>typeof v==='number'&&Number.isFinite(v);
-const fmt=(v,places=2)=>isNum(v)?v.toLocaleString('es-CL',{maximumFractionDigits:places}):'—';
+const fmt=(v,places=2)=>isNum(v)?v.toLocaleString('en-US',{maximumFractionDigits:places}):'—';
 function downloadDaily(dataset,region){
  if(!dataset?.daily?.length)return;
  const fields=['date','value','min_c','max_c','rootzone_moisture_m3_m3'];
@@ -41,11 +41,11 @@ function Plot({dataset,option,timeline}){
  const tooltip=({active,payload,label})=>!active||!payload?.length?null:(()=>{
    const stage=visibleStages.find(s=>label>=s.start && label<=s.end);
    return <div className="terra-daily-tooltip"><strong>{label}</strong>
-     {stage&&<div className="terra-chart-stage-tooltip"><i style={{background:STAGE_COLORS[stage.id]}}/>{stage.label} · escenario</div>}
+     {stage&&<div className="terra-chart-stage-tooltip"><i style={{background:STAGE_COLORS[stage.id]}}/>{stage.label} · scenario</div>}
      {payload.filter(p=>isNum(p.value)).map((p,i)=><div key={i}><span style={{color:p.color}}>{p.name}:</span> <b>{fmt(p.value,3)} {dataset.unit}</b></div>)}
    </div>;
  })();
- return <div className="terra-chart-surface terra-daily-chart" aria-label={`Serie diaria ${dataset.name}, año 2025, sin interpolación de días faltantes`}>
+ return <div className="terra-chart-surface terra-daily-chart" aria-label={`Daily series ${dataset.name}, 2025, with missing days left unfilled`}>
    <ResponsiveContainer width="100%" height="100%"><ComposedChart data={rows} margin={{top:20,right:28,bottom:10,left:2}}>
    <CartesianGrid vertical={false} stroke="#e5eee8" strokeDasharray="4 5"/>
    <XAxis dataKey="date" minTickGap={30} tick={{fontSize:10,fill:'#6b8174'}} tickFormatter={v=>v.slice(5)}/>
@@ -56,12 +56,12 @@ function Plot({dataset,option,timeline}){
      label={stage.covered_2025_days>=10?{value:`${i+1}. ${stage.label.split(' / ')[0]}`,position:'insideTop',fontSize:10,fill:'#39564a'}:undefined}/>)}
    {timeline?.sow_date&&<ReferenceLine x={timeline.sow_date} stroke="#29855e" strokeWidth={1.5} strokeDasharray="4 3" ifOverflow="hidden"/>}
    {temperature&&<>
-      <Line name="Mínima diaria" dataKey="min_c" type="linear" stroke="#3b83b4" dot={false} strokeWidth={1.5} connectNulls={false} isAnimationActive={false}/>
-      <Line name="Máxima diaria" dataKey="max_c" type="linear" stroke="#d39b43" dot={false} strokeWidth={1.5} connectNulls={false} isAnimationActive={false}/>
+      <Line name="Daily minimum" dataKey="min_c" type="linear" stroke="#3b83b4" dot={false} strokeWidth={1.5} connectNulls={false} isAnimationActive={false}/>
+      <Line name="Daily maximum" dataKey="max_c" type="linear" stroke="#d39b43" dot={false} strokeWidth={1.5} connectNulls={false} isAnimationActive={false}/>
    </>}
    {soil&&<Line name="Zona radicular" dataKey="rootzone_moisture_m3_m3" stroke="#a06bb9" dot={false} strokeWidth={1.6} connectNulls={false} isAnimationActive={false}/>}
    {precipitation?<Bar name={dataset.name} dataKey="value" fill={option.color} maxBarSize={6} isAnimationActive={false}/>:
-    <Line name={temperature?'Temperatura media':soil?'Humedad superficial':dataset.name} dataKey="value" type="linear" stroke={option.color} strokeWidth={2} dot={false} activeDot={{r:4}} connectNulls={false} isAnimationActive={false}/>}
+    <Line name={temperature?'Mean temperature':soil?'Surface moisture':dataset.name} dataKey="value" type="linear" stroke={option.color} strokeWidth={2} dot={false} activeDot={{r:4}} connectNulls={false} isAnimationActive={false}/>}
    </ComposedChart></ResponsiveContainer>
  </div>;
 }
@@ -72,21 +72,21 @@ export function Daily2025Explorer({region,analysis,loading,onRetry,timeline}){
  const dataset=activeId==='precipitation'?(rainSource==='gpm'?analysis?.datasets?.precipitation:analysis?.datasets?.precipitation_power):analysis?.datasets?.[activeId];
  const count=dataset?.coverage?.valid_days??0;
  return <>
- <nav className="terra-parameter-tabs" aria-label="Variables ambientales diarias" role="tablist">
+ <nav className="terra-parameter-tabs" aria-label="Daily environmental variables" role="tablist">
   {OPTIONS.map(o=><button key={o.id} type="button" role="tab" aria-selected={activeId===o.id} className={activeId===o.id?'selected':''} onClick={()=>setActive(o.id)}><o.Icon size={17}/><span>{o.label}</span></button>)}
  </nav>
- {!region&&<div className="terra-empty-analysis"><AlertCircle size={23}/><strong>Selecciona una región en el mapa</strong><span>Verás sus variables ambientales diarias de 2025, sin inventar datos faltantes.</span></div>}
- {region&&loading&&<div className="terra-empty-analysis" role="status"><span className="terra-loader"/><strong>Consultando 2025</strong><span>Las fuentes ambientales se recuperan una vez por región. Mover la siembra no genera consultas nuevas.</span></div>}
- {region&&!loading&&!analysis&&<div className="terra-empty-analysis"><AlertCircle size={22}/><strong>No se pudo recuperar el análisis</strong><button onClick={onRetry} type="button"><RefreshCcw size={14}/> Reintentar</button></div>}
+ {!region&&<div className="terra-empty-analysis"><AlertCircle size={23}/><strong>Select a field on the map</strong><span>Explore 2025 daily environmental observations without filling missing data.</span></div>}
+ {region&&loading&&<div className="terra-empty-analysis" role="status"><span className="terra-loader"/><strong>Retrieving 2025 data</strong><span>Environmental data is retrieved once per field. Changing the planting date does not trigger new requests.</span></div>}
+ {region&&!loading&&!analysis&&<div className="terra-empty-analysis"><AlertCircle size={22}/><strong>Unable to load the analysis</strong><button onClick={onRetry} type="button"><RefreshCcw size={14}/> Retry</button></div>}
  {analysis&&<section className="terra-variable-panel">
-  <header className="terra-variable-heading"><div><span className="overline">ANÁLISIS AMBIENTAL / 2025</span><h3>{option.label}</h3><p>{option.desc}</p></div><span className="terra-period-tag">01 ENE — 31 DIC 2025</span></header>
-  {activeId==='precipitation'&&<div className="terra-rain-source-switch"><span>Fuente de lluvia:</span><button type="button" className={rainSource==='power'?'selected':''} onClick={()=>setRainSource('power')}>POWER · LST</button><button type="button" className={rainSource==='gpm'?'selected':''} onClick={()=>setRainSource('gpm')}>GPM · UTC</button></div>}
-  <div className="terra-source-strip"><span className={`terra-data-dot ${count?'':'missing'}`}/><b>{dataset?.source||'Fuente no disponible'}</b><span>{count}/365 días con datos · {dataset?.unit||'—'}</span></div>
-  {!dataset||!count?<div className="terra-empty-analysis"><AlertCircle size={22}/><strong>Sin observaciones disponibles para esta variable</strong><span>{dataset?.metadata?.error||'No existe una serie válida para el terreno seleccionado.'}</span></div>:<>
+  <header className="terra-variable-heading"><div><span className="overline">ENVIRONMENTAL ANALYSIS / 2025</span><h3>{option.label}</h3><p>{option.desc}</p></div><span className="terra-period-tag">01 JAN — 31 DEC 2025</span></header>
+  {activeId==='precipitation'&&<div className="terra-rain-source-switch"><span>Rainfall source:</span><button type="button" className={rainSource==='power'?'selected':''} onClick={()=>setRainSource('power')}>POWER · LST</button><button type="button" className={rainSource==='gpm'?'selected':''} onClick={()=>setRainSource('gpm')}>GPM · UTC</button></div>}
+  <div className="terra-source-strip"><span className={`terra-data-dot ${count?'':'missing'}`}/><b>{dataset?.source||'Source unavailable'}</b><span>{count}/365 days with data · {dataset?.unit||'—'}</span></div>
+  {!dataset||!count?<div className="terra-empty-analysis"><AlertCircle size={22}/><strong>No observations available for this variable</strong><span>{dataset?.metadata?.error||'No valid series is available for the selected field.'}</span></div>:<>
     <Plot dataset={dataset} option={option} timeline={timeline}/>
-    <div className="terra-chart-caption"><span>Gráfico fijo del 1 de enero al 31 de diciembre de 2025. Las franjas muestran etapas fenológicas estimadas; los días sin datos siguen vacíos. Ajusta la siembra debajo del gráfico.</span><button type="button" onClick={()=>downloadDaily(dataset,analysis.region)}><Download size={14}/> CSV diario</button></div>
+    <div className="terra-chart-caption"><span>Fixed chart from January 1 to December 31, 2025. Shaded regions show estimated crop stages; missing observations remain blank. Adjust planting below the chart.</span><button type="button" onClick={()=>downloadDaily(dataset,analysis.region)}><Download size={14}/> Daily CSV</button></div>
   </>}
-  <div className="terra-variable-notes"><p><b>Método:</b> {dataset?.method||'—'} · <b>Unidad:</b> {dataset?.unit||'—'}.</p><p><b>Limitación:</b> {dataset?.limitations||dataset?.resolution_note||'—'}</p></div>
+  <div className="terra-variable-notes"><p><b>Method:</b> {dataset?.method||'—'} · <b>Unit:</b> {dataset?.unit||'—'}.</p><p><b>Limitation:</b> {dataset?.limitations||dataset?.resolution_note||'—'}</p></div>
  </section>}
  </>;
 }
