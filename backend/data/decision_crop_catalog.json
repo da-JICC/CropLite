@@ -891,6 +891,875 @@
         "Kc por etapa y GDD por ciclo del Excel original; sin objetivo GDD validado por fase.",
         "ETc es demanda teórica; no representa agua medida en el suelo."
       ]
+    },
+    {
+      "id": "arveja-verde",
+      "name": "Arveja verde",
+      "gdd_base_c": 5.0,
+      "gdd_upper_c": 27.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 905.0,
+        "max": 1400.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 350.0,
+        "max": 500.0
+      },
+      "cycle_days": 95,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 15,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -8.0,
+            "max": -7.0
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 27.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 25,
+          "kc": 0.8,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 27.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 35,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -3.0,
+            "max": -2.0
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 27.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 20,
+          "kc": 1.05,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 27.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "tomate",
+      "name": "Tomate",
+      "gdd_base_c": 7.0,
+      "gdd_upper_c": 28.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1900.0,
+        "max": 2065.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 400.0,
+        "max": 800.0
+      },
+      "cycle_days": 158,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 24,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -1.0,
+            "max": 0.0
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 7.0,
+          "gdd_upper_c": 28.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 35,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 7.0,
+          "gdd_upper_c": 28.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 63,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -1.0,
+            "max": 0.0
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 7.0,
+          "gdd_upper_c": 28.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 36,
+          "kc": 0.8,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 7.0,
+          "gdd_upper_c": 28.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "avena",
+      "name": "Avena",
+      "gdd_base_c": 0.0,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1850.0,
+        "max": 1850.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 450.0,
+        "max": 650.0
+      },
+      "cycle_days": 135,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 17,
+          "kc": 0.35,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -9.0,
+            "max": -8.0
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 28,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 56,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -2.0,
+            "max": -1.0
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 34,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "mani",
+      "name": "Maní",
+      "gdd_base_c": 10.0,
+      "gdd_upper_c": 35.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1930.0,
+        "max": 2140.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 500.0,
+        "max": 700.0
+      },
+      "cycle_days": 135,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 22,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -1.0,
+            "max": -0.5
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 35,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 50,
+          "kc": 1.05,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 28,
+          "kc": 0.7,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "cebolla-seca",
+      "name": "Cebolla seca",
+      "gdd_base_c": 4.5,
+      "gdd_upper_c": 35.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 2290.0,
+        "max": 2290.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 350.0,
+        "max": 550.0
+      },
+      "cycle_days": 180,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 27,
+          "kc": 0.5,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 45,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 68,
+          "kc": 1.05,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 40,
+          "kc": 0.85,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "pimiento-dulce",
+      "name": "Pimiento dulce",
+      "gdd_base_c": 10.0,
+      "gdd_upper_c": 35.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 2415.0,
+        "max": 2415.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 600.0,
+        "max": 900.0
+      },
+      "cycle_days": 165,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 25,
+          "kc": 0.35,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 36,
+          "kc": 0.7,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 66,
+          "kc": 1.05,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 38,
+          "kc": 0.9,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "remolacha-azucarera",
+      "name": "Remolacha azucarera",
+      "gdd_base_c": 5.0,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1900.0,
+        "max": 3070.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 550.0,
+        "max": 750.0
+      },
+      "cycle_days": 195,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 29,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -7.0,
+            "max": -6.0
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 49,
+          "kc": 0.8,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 74,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -3.0,
+            "max": -2.0
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 43,
+          "kc": 0.8,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 5.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "algodon",
+      "name": "Algodón",
+      "gdd_base_c": 12.5,
+      "gdd_upper_c": 35.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1950.0,
+        "max": 2150.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 700.0,
+        "max": 1300.0
+      },
+      "cycle_days": 188,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 32,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -2.0,
+            "max": -1.0
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 12.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 43,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 12.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 72,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -2.0,
+            "max": -1.0
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 12.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 41,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 12.5,
+          "gdd_upper_c": 35.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "alfalfa-heno",
+      "name": "Alfalfa (heno)",
+      "gdd_base_c": 0.0,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": null,
+        "max": null
+      },
+      "etc_cycle_reference_mm": {
+        "min": 800.0,
+        "max": 1600.0
+      },
+      "cycle_days": 180,
+      "stage_duration_basis": "Año de referencia provisional: alfalfa es perenne; períodos de corte y establecimiento varían con el manejo.",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 29,
+          "kc": null,
+          "kc_note": "La matriz fuente no proporciona Kc por fase para alfalfa; no se imputan valores.",
+          "kc_source": "Sin Kc específico verificado en la matriz TerraAI.",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 47,
+          "kc": null,
+          "kc_note": "La matriz fuente no proporciona Kc por fase para alfalfa; no se imputan valores.",
+          "kc_source": "Sin Kc específico verificado en la matriz TerraAI.",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 66,
+          "kc": null,
+          "kc_note": "La matriz fuente no proporciona Kc por fase para alfalfa; no se imputan valores.",
+          "kc_source": "Sin Kc específico verificado en la matriz TerraAI.",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 38,
+          "kc": null,
+          "kc_note": "La matriz fuente no proporciona Kc por fase para alfalfa; no se imputan valores.",
+          "kc_source": "Sin Kc específico verificado en la matriz TerraAI.",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 0.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
+    },
+    {
+      "id": "melon",
+      "name": "Melón",
+      "gdd_base_c": 10.0,
+      "gdd_upper_c": 38.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1175.0,
+        "max": 1600.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 400.0,
+        "max": 600.0
+      },
+      "cycle_days": 140,
+      "stage_duration_basis": "Distribución proporcional derivada del ciclo total y las cuatro fases FAO del catálogo CropLite",
+      "stage_duration_source": "https://www.fao.org/4/s2022e/s2022e07.htm",
+      "cold_reference_source": "CSV original; fecha fenológica y duración de frío no verificadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 21,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -1.0,
+            "max": -0.5
+          },
+          "cold_basis": "Referencial en inicio; exposición no equivale a daño.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 38.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 32,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 38.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 55,
+          "kc": 1.0,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min": -1.0,
+            "max": -0.5
+          },
+          "cold_basis": "Solo si coincide efectivamente con floración; la fase FAO mid NO es sinónimo exacto de floración.",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 38.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 32,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 38.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Cuatro fases FAO para modelación hídrica, no identifica día exacto de germinación ni floración.",
+        "No se interpolan fechas fenológicas usando fracciones GDD inventadas.",
+        "Kc aproximado por fase y valores del CSV; depende del manejo, variedad, clima y humedad de suelo.",
+        "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
+        "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
+      ]
     }
   ]
 }

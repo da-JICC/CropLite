@@ -28,9 +28,9 @@ test('historical NDVI is identified as independent retrospective context',()=>{
  assert.match(component,/Evaluación basada en reglas/);
  assert.match(component,/No predice el rendimiento/i);
 });
-test('ten crop catalog and 4 phases with no invented stage-level GDD',()=>{
+test('twenty crop catalog and 4 phases with no invented stage-level GDD',()=>{
  const crop=JSON.parse(read('data/cropPhenologyCatalog.json'));
- assert.equal(crop.crops.length,10);
+ assert.equal(crop.crops.length,20);
  assert.ok(crop.crops.every(c=>c.stages.length===4 && c.stages.every(stage=>stage.gdd_stage_target_degree_days === null)));
  assert.ok(crop.crops.some(c=>c.id==='papa')); 
 });

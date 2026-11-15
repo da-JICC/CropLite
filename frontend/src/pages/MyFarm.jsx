@@ -41,7 +41,7 @@ export function MyFarm({region,onRegionChange,start,end,interval,selectedCrop,on
         {rangeError&&<p className="field-input-error"><CircleAlert size={15}/>{rangeError}</p>}
         <button className="field-analyze-button" onClick={onAnalyze} disabled={!canAnalyze}>{loading?<LoaderCircle size={18} className="ndvi-spin"/>:<Satellite size={18}/>} {loading?'Consultando fuentes satelitales…':'Analizar región'} <ArrowRight size={18}/></button>
         {!region&&<p className="field-input-hint">Primero dibuja o delimita una región de cultivo en el mapa.</p>}
-        {!selectedCrop&&<p className="field-input-hint">Selecciona uno de los diez cultivos para continuar.</p>}
+        {!selectedCrop&&<p className="field-input-hint">Selecciona uno de los veinte cultivos para continuar.</p>}
         {error&&<div role="alert" className="field-alert error"><CircleAlert size={18}/>{error}</div>}
         <p className="field-small-note">Los parámetros térmicos del cultivo son referencias orientativas, no diagnósticos automáticos de daños. NDVI: estadística de todo el polígono. NASA POWER: estimación meteorológica regional en el punto representativo del campo; no es una medición in situ.</p>
       </section>

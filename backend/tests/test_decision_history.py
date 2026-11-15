@@ -37,7 +37,7 @@ def test_history_uses_all_eligible_years_not_six():
     assert report['analogues']['warm']['year']==2024
     assert report['recent_comparison']['available']
     assert len(report['seasonal_profile'])==12
-    assert len(report['ranked'])==10
+    assert len(report['ranked'])==20
     assert all(0 <= item['score'] <= 100 for item in report['ranked'])
     assert all(item['sow_date'].startswith('2027') for item in report['ranked'])
     assert report['planning_years']==[2027]
@@ -171,8 +171,8 @@ def test_ndvi_no_credentials_does_not_call_remote():
 
 def test_four_new_crops_use_distinct_original_excel_families():
     ids={c['id'] for c in CATALOG['crops']}
-    assert len(ids)==10
-    assert {'papa','girasol','poroto-seco','repollo'} <= ids
+    assert len(ids)==20
+    assert {'papa','girasol','poroto-seco','repollo','arveja-verde','tomate','avena','mani','cebolla-seca','pimiento-dulce','remolacha-azucarera','algodon','alfalfa-heno','melon'} <= ids
     from decision_engine import FAMILIES, AGRONOMY
     assert FAMILIES['papa']=='Solanaceae'
     assert FAMILIES['girasol']=='Asteraceae'
@@ -313,4 +313,21 @@ def test_full_historical_api_with_mocked_power_returns_200(monkeypatch):
     payload=response.json()
     assert payload['status']=='evaluated'
     assert len(payload['coverage']['sampled_years'])==12
-    assert len(payload['ranked'])==10
+    assert len(payload['ranked'])==20
+
+
+def test_all_twenty_crops_have_thermal_screening_references():
+    from decision_engine import CATALOG
+    catalog_ids={crop['id'] for crop in CATALOG['crops']}
+    thermal_ids={crop['id'] for crop in THERMAL}
+    assert len(catalog_ids)==20
+    assert thermal_ids==catalog_ids
+    for crop in THERMAL:
+        band=crop['thermal']['optimumClimateC']
+        assert band['min']<band['max']
+
+def test_alfalfa_does_not_invent_gdd_or_kc_values():
+    from decision_engine import CATALOG
+    alfalfa=next(c for c in CATALOG['crops'] if c['id']=='alfalfa-heno')
+    assert alfalfa['gdd_cycle_target_degree_days']['min'] is None
+    assert all(stage['kc'] is None for stage in alfalfa['stages'])

@@ -5,8 +5,8 @@ import {timelineFor,cropIndicators,dayIndex} from '../src/components/phenology/p
 const catalog=JSON.parse(readFileSync(new URL('../src/data/cropPhenologyCatalog.json',import.meta.url),'utf8'));
 const crop=id=>catalog.crops.find(c=>c.id===id);
 const fake=()=>({datasets:{temperature:{daily:[{date:'2025-01-01',value:20,min_c:-12,max_c:30},{date:'2025-01-02',value:22,min_c:10,max_c:31}]},eto:{daily:[{date:'2025-01-01',value:4},{date:'2025-01-02',value:5}]},precipitation_power:{daily:[{date:'2025-01-01',value:2},{date:'2025-01-02',value:8}]},soil_moisture:{daily:[{date:'2025-01-01',value:0.28,rootzone_moisture_m3_m3:0.3}]}}});
-test('all ten crops four stages and documented durations',()=>{
- assert.equal(catalog.crops.length,10);
+test('all twenty crops four stages and documented durations',()=>{
+ assert.equal(catalog.crops.length,20);
  for(const c of catalog.crops){
   assert.deepEqual(c.stages.map(x=>x.id),['initial','development','mid','late']);
   assert.equal(c.stages.reduce((n,x)=>n+x.duration_days,0),c.cycle_days);

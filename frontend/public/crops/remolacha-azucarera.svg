@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 136" role="img">
+<defs>
+ <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f6f7ed"/><stop offset="1" stop-color="#e1ebd4"/></linearGradient>
+ <linearGradient id="green" x1="0" x2="1"><stop stop-color="#316a34"/><stop offset=".55" stop-color="#79b249"/><stop offset="1" stop-color="#b6d66e"/></linearGradient>
+ <linearGradient id="gold" x1="0" x2="1"><stop stop-color="#b67b21"/><stop offset=".5" stop-color="#f7d25c"/><stop offset="1" stop-color="#f5e39a"/></linearGradient>
+ <radialGradient id="red"><stop stop-color="#fa7066"/><stop offset=".8" stop-color="#c8291d"/><stop offset="1" stop-color="#9a211b"/></radialGradient>
+ <radialGradient id="purple"><stop stop-color="#b85c7e"/><stop offset=".85" stop-color="#7b2751"/><stop offset="1" stop-color="#5e1d42"/></radialGradient>
+ </defs>
+ <rect x="1" y="1" width="142" height="134" rx="28" fill="url(#bg)"/>
+ <ellipse cx="71" cy="118" rx="45" ry="7" fill="#274c30" opacity=".12"/>
+ <path d="M74 70Q54 48 50 25Q75 24 77 66Q86 44 113 35Q109 65 80 79Q65 46 28 48Q40 74 70 79Z" fill="url(#green)" stroke="#4f8e42" stroke-width="2"/><path d="M76 72Q42 66 40 94Q41 115 72 127Q111 118 113 91Q112 64 76 72Z" fill="url(#purple)" stroke="#6c3154" stroke-width="2"/><path d="M70 119L74 132M81 118L85 131" stroke="#956b4e" stroke-width="2"/><path d="M69 81Q55 91 61 105" stroke="#e79bb4" stroke-width="5" opacity=".4" fill="none"/>
+</svg>

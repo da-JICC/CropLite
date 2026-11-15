@@ -19,7 +19,7 @@
       "max": 1.5
     },
     "allowable_depletion_p": 0.55,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "maize": {
     "name": "Maíz grano",
@@ -41,7 +41,7 @@
       "max": 1.7
     },
     "allowable_depletion_p": 0.55,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "rice": {
     "name": "Arroz (inundado)",
@@ -63,7 +63,7 @@
       "max": 1
     },
     "allowable_depletion_p": 0.2,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "soybean": {
     "name": "Soja",
@@ -85,7 +85,7 @@
       "max": 1.3
     },
     "allowable_depletion_p": 0.5,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "sorghum": {
     "name": "Sorgo grano",
@@ -107,7 +107,7 @@
       "max": 2
     },
     "allowable_depletion_p": 0.55,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "barley": {
     "name": "Cebada",
@@ -129,7 +129,7 @@
       "max": 1.5
     },
     "allowable_depletion_p": 0.55,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "papa": {
     "name": "Papa",
@@ -151,7 +151,7 @@
       "max": 0.6
     },
     "allowable_depletion_p": 0.35,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "girasol": {
     "name": "Girasol",
@@ -173,7 +173,7 @@
       "max": 1.5
     },
     "allowable_depletion_p": 0.45,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "poroto-seco": {
     "name": "Poroto seco",
@@ -195,7 +195,7 @@
       "max": 0.9
     },
     "allowable_depletion_p": 0.45,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   },
   "repollo": {
     "name": "Repollo",
@@ -217,6 +217,226 @@
       "max": 0.8
     },
     "allowable_depletion_p": 0.45,
-    "source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx · Matriz 20 cultivos"
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "arveja-verde": {
+    "name": "Arveja verde",
+    "family": "Fabaceae",
+    "ph": {
+      "tolerated_min": 4.5,
+      "preferred_min": 5.5,
+      "preferred_max": 7,
+      "tolerated_max": 8.3
+    },
+    "annual_rain_mm": {
+      "min": 350,
+      "preferred_min": 800,
+      "preferred_max": 1200,
+      "max": 2500
+    },
+    "root_depth_m": {
+      "min": 0.6,
+      "max": 1
+    },
+    "allowable_depletion_p": 0.35,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "tomate": {
+    "name": "Tomate",
+    "family": "Solanaceae",
+    "ph": {
+      "tolerated_min": 5,
+      "preferred_min": 5.5,
+      "preferred_max": 6.8,
+      "tolerated_max": 7.5
+    },
+    "annual_rain_mm": {
+      "min": 400,
+      "preferred_min": 600,
+      "preferred_max": 1300,
+      "max": 1800
+    },
+    "root_depth_m": {
+      "min": 0.7,
+      "max": 1.5
+    },
+    "allowable_depletion_p": 0.4,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "avena": {
+    "name": "Avena",
+    "family": "Poaceae",
+    "ph": {
+      "tolerated_min": 4.5,
+      "preferred_min": 5,
+      "preferred_max": 6,
+      "tolerated_max": 7.5
+    },
+    "annual_rain_mm": {
+      "min": 250,
+      "preferred_min": 600,
+      "preferred_max": 1000,
+      "max": 1500
+    },
+    "root_depth_m": {
+      "min": 1,
+      "max": 1.5
+    },
+    "allowable_depletion_p": 0.55,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "mani": {
+    "name": "Maní",
+    "family": "Fabaceae",
+    "ph": {
+      "tolerated_min": 4.5,
+      "preferred_min": 5.5,
+      "preferred_max": 6.5,
+      "tolerated_max": 8.5
+    },
+    "annual_rain_mm": {
+      "min": 400,
+      "preferred_min": 600,
+      "preferred_max": 1500,
+      "max": 4000
+    },
+    "root_depth_m": {
+      "min": 0.5,
+      "max": 1
+    },
+    "allowable_depletion_p": 0.5,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "cebolla-seca": {
+    "name": "Cebolla seca",
+    "family": "Amaryllidaceae",
+    "ph": {
+      "tolerated_min": 4.3,
+      "preferred_min": 6,
+      "preferred_max": 7,
+      "tolerated_max": 8.3
+    },
+    "annual_rain_mm": {
+      "min": 300,
+      "preferred_min": 350,
+      "preferred_max": 600,
+      "max": 2800
+    },
+    "root_depth_m": {
+      "min": 0.3,
+      "max": 0.6
+    },
+    "allowable_depletion_p": 0.3,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "pimiento-dulce": {
+    "name": "Pimiento dulce",
+    "family": "Solanaceae",
+    "ph": {
+      "tolerated_min": 4.5,
+      "preferred_min": 5.5,
+      "preferred_max": 6.8,
+      "tolerated_max": 7
+    },
+    "annual_rain_mm": {
+      "min": 500,
+      "preferred_min": 600,
+      "preferred_max": 1250,
+      "max": 1700
+    },
+    "root_depth_m": {
+      "min": 0.5,
+      "max": 1
+    },
+    "allowable_depletion_p": 0.3,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "remolacha-azucarera": {
+    "name": "Remolacha azucarera",
+    "family": "Amaranthaceae",
+    "ph": {
+      "tolerated_min": 5.5,
+      "preferred_min": 6,
+      "preferred_max": 7,
+      "tolerated_max": 7.5
+    },
+    "annual_rain_mm": {
+      "min": 500,
+      "preferred_min": 600,
+      "preferred_max": 800,
+      "max": 1000
+    },
+    "root_depth_m": {
+      "min": 0.7,
+      "max": 1.2
+    },
+    "allowable_depletion_p": 0.55,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "algodon": {
+    "name": "Algodón",
+    "family": "Malvaceae",
+    "ph": {
+      "tolerated_min": 5,
+      "preferred_min": 6,
+      "preferred_max": 7.5,
+      "tolerated_max": 9.5
+    },
+    "annual_rain_mm": {
+      "min": 450,
+      "preferred_min": 750,
+      "preferred_max": 1200,
+      "max": 1500
+    },
+    "root_depth_m": {
+      "min": 1,
+      "max": 1.7
+    },
+    "allowable_depletion_p": 0.65,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "alfalfa-heno": {
+    "name": "Alfalfa (heno)",
+    "family": "Fabaceae",
+    "ph": {
+      "tolerated_min": 4.3,
+      "preferred_min": 6.5,
+      "preferred_max": 7.5,
+      "tolerated_max": 8.7
+    },
+    "annual_rain_mm": {
+      "min": 350,
+      "preferred_min": 600,
+      "preferred_max": 1200,
+      "max": 2700
+    },
+    "root_depth_m": {
+      "min": 1,
+      "max": 2
+    },
+    "allowable_depletion_p": 0.55,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
+  },
+  "melon": {
+    "name": "Melón",
+    "family": "Cucurbitaceae",
+    "ph": {
+      "tolerated_min": 5,
+      "preferred_min": 6,
+      "preferred_max": 7.5,
+      "tolerated_max": 8.7
+    },
+    "annual_rain_mm": {
+      "min": 900,
+      "preferred_min": 1000,
+      "preferred_max": 1300,
+      "max": 2500
+    },
+    "root_depth_m": {
+      "min": 0.8,
+      "max": 1.5
+    },
+    "allowable_depletion_p": 0.4,
+    "source": "TerraAI_20_cultivos_con_temperaturas.xlsx · Matriz 20 cultivos"
   }
 }

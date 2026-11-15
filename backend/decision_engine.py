@@ -177,8 +177,12 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
     band = (optimum.get('min'), optimum.get('max'))
     gdd_base, gdd_upper = crop.get('gdd_base_c'), crop.get('gdd_upper_c')
     target_gdd = (crop.get('gdd_cycle_target_degree_days') or {}).get('min')
-    if not all(real(v) for v in (*band, gdd_base, gdd_upper, target_gdd)) or target_gdd <= 0:
+    # Some perennial crops (e.g. alfalfa) do not have a validated cycle-wide
+    # GDD requirement in the source matrix. Do not exclude them or invent one:
+    # evaluate the other documented dimensions and report GDD as unavailable.
+    if not all(real(v) for v in (*band, gdd_base, gdd_upper)):
         return None
+    has_gdd_target = real(target_gdd) and target_gdd > 0
     sow = date(target_year, 1, 1) + timedelta(days=sow_offset)
     harvest = sow + timedelta(days=duration-1)
     temp_days = rain_days = opt_days = 0
@@ -237,7 +241,7 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
             heat_crossings += int(row['max_c'] >= heat)
     if temp_days / duration < .90 or rain_days != duration: return None  # Never interpolate absent daily rain, including leap days.
     thermal_fit = opt_days/temp_days
-    completion_fit = min(gdd/target_gdd, 1.0)
+    completion_fit = min(gdd/target_gdd, 1.0) if has_gdd_target else None
     hazard_valid = cold_evaluable+heat_evaluable
     hazard_days = cold_crossings+heat_crossings
     hazard_fit = 1-hazard_days/hazard_valid if hazard_valid else None
@@ -266,7 +270,9 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
                                     'demand_mm':rnd(phase_etc,1),
                                     'rain_to_demand':rnd(stage_rain[phase_id]/phase_etc,2)})
     weak_stage=min(stage_water,key=lambda x:x['rain_to_demand']) if len(stage_water)==len(crop['stages']) else None
-    water_fit=(.7*min(1,ratio)+.3*min(1,weak_stage['rain_to_demand'])) if weak_stage else None
+    water_fit=(.7*min(1,ratio)+.3*min(1,weak_stage['rain_to_demand'])) if weak_stage else (min(1,ratio) if real(ratio) else None)
+    # If phase Kc is absent, use only the whole-cycle rainfall/ETc reference.
+    # The score reflects reduced evidence, not a fictitious stage value.
     dimensions = {
         'temperature': thermal_fit,
         'heat_accumulation': completion_fit,
@@ -278,14 +284,14 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
     return {
         'score':score, 'score_components_pct':{k:rnd(100*v,1) if real(v) else None for k,v in dimensions.items()},
         'score_weights':{k:WEIGHTS[k] for k,v in dimensions.items() if real(v)},
-        'thermal_fit_pct':rnd(thermal_fit*100,1),'gdd_fit_pct':rnd(completion_fit*100,1),
-        'gdd_sum':rnd(gdd,1),'gdd_target_min':target_gdd,
+        'thermal_fit_pct':rnd(thermal_fit*100,1),'gdd_fit_pct':rnd(completion_fit*100,1) if has_gdd_target else None,
+        'gdd_sum':rnd(gdd,1),'gdd_target_min':target_gdd if has_gdd_target else None,
         'criteria':{
             'survival_exposure':{'status':'not_evaluable' if not hazard_valid else 'reference_crossed' if hazard_days else 'no_reference_crossing',
                 'reference_crossing_days':hazard_days if hazard_valid else None,'evaluated_days':hazard_valid,
                 'note':'Exposición a referencias térmicas del catálogo; no es daño observado.'},
             'development_temperature':{'status':'observed_compatibility','in_band_fraction':rnd(thermal_fit,3)},
-            'cycle_thermal_completion':{'status':'estimated_gdd','gdd_fraction':rnd(completion_fit,3)},
+            'cycle_thermal_completion':{'status':'estimated_gdd' if has_gdd_target else 'not_evaluable','gdd_fraction':rnd(completion_fit,3) if has_gdd_target else None},
             'rainfed_water':{'status':'estimated' if real(water_fit) else 'not_evaluable',
                 'water_fit_fraction':rnd(water_fit,3), 'note':'Precipitación frente a demanda teórica en secano; no hay balance de humedad del suelo.'},
         },
@@ -429,7 +435,7 @@ def rank_crops(rows, solar_rows, scenarios, thermal_catalog, target_year, latitu
                 'water_context_available':bool(water_values),
                 'eligible_for_rainfed_plan':crop['id'] != 'rice',
                 'eligibility_reason':'Arroz inundado: requiere abastecimiento y manejo hídrico, no evaluables como secano.' if crop['id']=='rice' else None,
-                'rain_vs_water_demand_basis':'70 % del ajuste lluvia/ETc por ciclo y 30 % del ajuste de la etapa con menor relación lluvia/ETc (Kc por etapa). Proxy en secano sin balance edáfico.',
+                'rain_vs_water_demand_basis':('Proxy solo del ciclo completo cuando faltan Kc por etapa; sin balance edáfico.' if crop['id']=='alfalfa-heno' else '70 % del ajuste lluvia/ETc por ciclo y 30 % del ajuste de la etapa con menor relación lluvia/ETc (Kc por etapa). Proxy en secano sin balance edáfico.'),
                 'not_evaluated':['Disponibilidad real de riego','pH y nutrientes de la parcela','Sanidad, variedad y manejo'],
                 'basis':'Compatibilidad térmica, GDD, exposición condicional y agua de lluvia frente a demanda teórica; índice relativo de secano.'
             }

@@ -28,7 +28,7 @@ test('ranked candidates are full 2025 calendar cycles with available measurement
  const result=buildCropRecommendations(climate(),phenology.crops,thermal.crops);
  assert.equal(result.status,'screened');
  assert.ok(result.ranked.length>=1);
- assert.ok(result.ranked.length<=10);
+ assert.ok(result.ranked.length<=20);
  for(const item of result.ranked){
    assert.ok(item.sowDate>='2025-01-01');
    assert.ok(item.harvestDate<='2025-12-31');

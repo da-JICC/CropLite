@@ -24,12 +24,14 @@ const originalIllustrations = {
   wheat:'20cda4ffe1d66becf230325c2b6fea7ce9be5b6b09337434d283a9110adbc4d9',
 };
 
-test('all ten crops use precisely the original pre-redesign artwork',()=>{
-  assert.deepEqual(ids.slice().sort(),allCrops.map(c=>aliases[c.id]||c.id).sort());
-  for(const id of ids){
-    const svg=fs.readFileSync(path.join(root,`public/crops/${id}.svg`));
-    assert.match(svg.toString(),/<svg\b/);
-    assert.equal(createHash('sha256').update(svg).digest('hex'),originalIllustrations[id],`original artwork changed for ${id}`);
+test('all crop illustrations are unique and locally available',()=>{
+  const src=fs.readFileSync(path.join(root,'src/components/crops/CropIcon.jsx'),'utf8');
+  assert.equal(allCrops.length,20);
+  const paths=allCrops.map(c=>c.image);
+  assert.equal(new Set(paths).size,20);
+  for(const img of paths){
+    assert.ok(fs.existsSync(path.join(root,'public',img.slice(1))),img);
+    assert.ok(src.includes(img));
   }
 });
 
@@ -52,6 +54,16 @@ test('brand tokens and responsive navigation remain without backend changes',()=
   const app=fs.readFileSync(path.join(root,'src/App.jsx'),'utf8');
   assert.match(css,/--cl-forest:#103D28/);assert.match(css,/--cl-olive:#8FAA5A/);
   assert.match(css,/@media\(max-width:750px\)/);
-  assert.match(app,/croplite-mobile-menu/);assert.match(app,/CropLiteBrand/);
+  assert.doesNotMatch(app,/croplite-rail--open/);assert.match(app,/CropLiteBrand/);
   assert.match(app,/AgriculturalDecisions/);
+});
+
+
+test('all twenty crops have unique images and the right rail is removed',()=>{
+  const app=fs.readFileSync(path.join(root,'src/App.jsx'),'utf8');
+  assert.doesNotMatch(app,/<aside className=/);
+  assert.equal(allCrops.length,20);
+  const images=allCrops.map(c=>c.image);
+  assert.equal(new Set(images).size,20);
+  for(const image of images) assert.ok(fs.existsSync(path.join(root,'public',image.slice(1))));
 });

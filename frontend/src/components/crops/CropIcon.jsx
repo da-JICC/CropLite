@@ -1,13 +1,34 @@
 import React from 'react';
 
-/** Original crop illustrations, preserved from the pre-brand-redesign CropLite version. */
-const IDS = new Set(['wheat','maize','rice','soybean','sorghum','barley','potato','sunflower','bean','cabbage']);
-const ALIASES = {papa:'potato',girasol:'sunflower','poroto-seco':'bean',repollo:'cabbage'};
-export function CropIcon({cropId, name, size=48, className='', decorative=false}) {
-  const normalized = ALIASES[cropId] || cropId;
-  const id = IDS.has(normalized) ? normalized : 'wheat';
-  return <img className={`crop-illustration ${className}`.trim()} src={`/crops/${id}.svg`}
-    width={size} height={size} alt={decorative ? '' : (name || id)}
-    aria-hidden={decorative ? 'true' : undefined} loading="lazy" />;
+// The catalogue IDs map one-to-one to their own illustrations.
+// For species present in the supplied reference use the supplied artwork;
+// for the remaining eight the illustrations are species-specific SVGs.
+const ILLUSTRATIONS = {
+  'wheat': '/crops/wheat.png',
+  'maize': '/crops/maize.png',
+  'rice': '/crops/rice.png',
+  'soybean': '/crops/soybean.png',
+  'sorghum': '/crops/sorghum.png',
+  'barley': '/crops/barley.svg',
+  'papa': '/crops/papa.png',
+  'girasol': '/crops/girasol.png',
+  'poroto-seco': '/crops/poroto-seco.png',
+  'repollo': '/crops/repollo.svg',
+  'arveja-verde': '/crops/arveja-verde.png',
+  'tomate': '/crops/tomate.png',
+  'avena': '/crops/avena.svg',
+  'mani': '/crops/mani.svg',
+  'cebolla-seca': '/crops/cebolla-seca.svg',
+  'pimiento-dulce': '/crops/pimiento-dulce.svg',
+  'remolacha-azucarera': '/crops/remolacha-azucarera.svg',
+  'algodon': '/crops/algodon.png',
+  'alfalfa-heno': '/crops/alfalfa-heno.svg',
+  'melon': '/crops/melon.png',
+};
+
+export default function CropIcon({cropId, name, className='', decorative=false}) {
+  const src=ILLUSTRATIONS[cropId];
+  return <img className={`terra-crop-icon ${className}`.trim()}
+    src={src || '/crops/wheat.png'} alt={decorative ? '' : (name || cropId || 'Cultivo')}
+    aria-hidden={decorative ? true : undefined}/>;
 }
-export default CropIcon;

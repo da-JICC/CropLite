@@ -8,7 +8,7 @@ import {cropInsights,rotationInsights,numeric} from './decisionInsights.mjs';
 
 const stagesByCrop=Object.fromEntries(phenologyCatalog.crops.map(c=>[c.id,c.stages]));
 const months=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const prettyDate=iso=>iso?new Date(iso+'T12:00:00Z').toLocaleDateString('es-CL',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'—';
+const prettyDate=iso=>iso?new Date(`${iso}T12:00:00Z`).toLocaleDateString('es-CL',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'—';
 const display=(value,digits=1)=>numeric(value)?value.toLocaleString('es-CL',{maximumFractionDigits:digits}):'Sin datos';
 const clamp=value=>Math.max(0,Math.min(100,value));
 
@@ -28,7 +28,6 @@ function CropDecisionCard({crop,position,selected,onSelect}) {
   </button>;
 }
 
-/** A calendar for one planning year; no stage may be drawn beyond Dec 31. */
 function DecisionCalendar({plan,year}) {
   if(!plan?.crops?.length)return null;
   const begin=Date.UTC(year,0,1);
@@ -44,7 +43,8 @@ function DecisionCalendar({plan,year}) {
           const left=Math.max(0,100*(start-begin)/total);
           const right=Math.min(100,100*(start+stage.duration_days*86400000-begin)/total);
           if(right>left)acc.parts.push(<span key={stage.id} className="terra-decision-calstage" title={`${stage.label} · ${stage.duration_days} días`} style={{left:`${left}%`,width:`${right-left}%`,background:STAGE_COLORS[stage.id]}}/>);
-          acc.offset+=stage.duration_days;return acc;
+          acc.offset+=stage.duration_days;
+          return acc;
         },{parts:[],offset:0}).parts}
       </div>
       <small>{prettyDate(crop.sow_date)} – {prettyDate(crop.harvest_date)}</small>
@@ -66,6 +66,7 @@ export function AgriculturalDecisions({region,cropId,onCropSelect}) {
   const cache=useRef(new Map());
   const ndviCache=useRef(new Map());
   const key=region?.geometry?JSON.stringify(region.geometry):null;
+
   useEffect(()=>{
     const controller=new AbortController();
     let mounted=true;
@@ -83,39 +84,73 @@ export function AgriculturalDecisions({region,cropId,onCropSelect}) {
     },800);
     return ()=>{mounted=false;clearTimeout(timeout);controller.abort();};
   },[key,attempt]);
+
   const rotations=report?.rotations||[];
   const rotation=rotations[Math.min(activeRotation,rotations.length-1)]||null;
   const chosen=report?.ranked?.find(c=>c.crop_id===cropId)||report?.ranked?.[0];
   const chosenInsights=useMemo(()=>cropInsights(chosen),[chosen]);
   const rotationExplanation=useMemo(()=>rotationInsights(rotation,report?.ranked||[]),[rotation,report]);
+
   return <section className="terra-decision-section terra-ux-decisions" aria-label="Decisiones agrícolas"><span id="rotaciones" className="croplite-anchor"/>
-    <div className="terra-decision-header"><div><span className="overline">02 / DECISIONES AGRÍCOLAS</span><h2>Planifica tu próxima temporada</h2><p>Recomendaciones y rotaciones anuales, explicadas con datos de temporadas reales.</p></div><span className="terra-decision-header-pill"><ShieldCheck size={15}/> Evaluación basada en reglas</span></div>
-    {!region?<div className="terra-decision-empty"><Leaf size={28}/><strong>Selecciona un terreno para empezar</strong><p>CropLite comparará las condiciones del lugar con las necesidades de los diez cultivos.</p></div>
+    <div className="terra-decision-header">
+      <div>
+        <span className="overline">02 · RECOMENDACIÓN DE CULTIVOS</span>
+        <h2>Decisiones para la próxima temporada</h2>
+        <p>Ranking de cultivos y secuencias anuales explicadas con temporadas observadas, sin tratarlo como un pronóstico.</p>
+      </div>
+      <span className="terra-decision-header-pill"><ShieldCheck size={15}/> Evaluación basada en reglas</span>
+    </div>
+
+    {!region?<div className="terra-decision-empty"><Leaf size={28}/><strong>Selecciona un terreno para empezar</strong><p>CropLite comparará las condiciones del lugar con las necesidades de los veinte cultivos del catálogo.</p></div>
     :loading?<div className="terra-decision-empty" role="status"><img className="croplite-loading-emblem" src="/brand/croplite-symbol.svg" alt=""/><div className="terra-loader"/><strong>Consultando el histórico ambiental</strong><p>Recuperando registros regionales para analizar las opciones de siembra.</p></div>
     :error?<div className="terra-decision-empty" role="alert"><AlertTriangle size={22}/><strong>No fue posible consultar los datos</strong><p>{error}</p><button onClick={()=>{cache.current.delete(key);ndviCache.current.delete(key);setAttempt(x=>x+1);}}>Reintentar</button></div>
     :report?.status!=='evaluated'?<div className="terra-decision-empty"><Info size={24}/><strong>No hay suficientes datos para comparar cultivos</strong><p>El sistema necesita al menos tres temporadas históricas completas con registros diarios suficientes.</p></div>
     :<>
-      <div className="croplite-decision-layout"><div className="croplite-crop-panel">
-      <div className="terra-decision-section-head"><div><h3>Cultivos recomendados</h3><p>Selecciona uno para ver el resumen de compatibilidad.</p></div><Hint label="compatibilidad estimada" explanation="El ranking combina temperatura, calor acumulado, exposición a referencias térmicas y lluvia frente a demanda hídrica teórica en secano. No predice el rendimiento."/></div>
-      <div className="terra-decision-grid">{(showAllCrops?report.ranked:report.ranked.slice(0,6)).map((crop,index)=><CropDecisionCard key={crop.crop_id} crop={crop} position={index+1} selected={crop.crop_id===cropId} onSelect={onCropSelect}/>)}</div>
-      {report.ranked.length>6&&<button type="button" className="croplite-all-crops" onClick={()=>setShowAllCrops(v=>!v)} aria-expanded={showAllCrops}>{showAllCrops?"Mostrar menos cultivos":`Ver los ${report.ranked.length} cultivos`}</button>}
-      {chosen&&<>
-        <div className="terra-ux-explanation" aria-live="polite">
-          <div className="terra-ux-explanation-title"><CropIcon cropId={chosen.crop_id} decorative/><div><span className="overline">TU SELECCIÓN</span><h3>¿Por qué {chosen.crop_name.toLowerCase()}?</h3><p>Siembra sugerida: {prettyDate(chosen.sow_date)} · Cosecha estimada: {prettyDate(chosen.harvest_date)}</p></div></div>
-          <p className="terra-ux-ranking-context">{report.ranked?.[0]?.crop_id===chosen.crop_id
-            ? `Es la primera alternativa del análisis. Su diferencia respecto a la siguiente opción es de ${display((chosen.score??0)-(report.ranked?.[1]?.score??chosen.score),1)} puntos de compatibilidad estimada.`
-            : `Ocupa el puesto ${report.ranked.findIndex(item=>item.crop_id===chosen.crop_id)+1}. ${report.ranked?.[0]?.crop_name} está ${display((report.ranked?.[0]?.score??0)-(chosen.score??0),1)} puntos por encima en esta evaluación.`}</p>
-          <div className="terra-ux-reasons">{chosenInsights.highlights.slice(0,3).map(reason=><div key={reason.key} className="terra-ux-reason"><span className={`terra-ux-signal ${reason.tone}`}/><div><strong>{reason.title}</strong><p>{reason.description}</p></div></div>)}</div>
-          <details className="terra-ux-explanation-method"><summary>¿Cómo se obtiene la recomendación?</summary><p>Comparamos temperatura, calor acumulado, exposición térmica y lluvia frente a demanda hídrica estimada. La evaluación hídrica supone secano y no equivale a medir el agua disponible en las raíces.</p>{numeric(chosen.historical_p10_score)&&numeric(chosen.historical_p90_score)&&<p>Variación histórica para esta ventana: {display(chosen.historical_p10_score,0)}–{display(chosen.historical_p90_score,0)} puntos (percentiles 10–90 de {chosen.history_sample_years} temporadas evaluadas). Es una banda descriptiva, no una probabilidad ni una predicción.</p>}</details>
+      <div className="croplite-decision-layout croplite-decision-layout--single">
+        <div className="croplite-crop-panel croplite-crop-panel--expanded">
+          <div className="terra-decision-section-head">
+            <div>
+              <h3>Cultivos con mejor ajuste al terreno</h3>
+              <p>Selecciona uno para ver el resumen de compatibilidad y su encaje dentro del año agrícola.</p>
+            </div>
+            <Hint label="compatibilidad estimada" explanation="El ranking combina temperatura, calor acumulado, exposición a referencias térmicas y lluvia frente a demanda hídrica teórica en secano. No predice el rendimiento."/>
+          </div>
+
+          <div className="terra-decision-grid">{(showAllCrops?report.ranked:report.ranked.slice(0,8)).map((crop,index)=><CropDecisionCard key={crop.crop_id} crop={crop} position={index+1} selected={crop.crop_id===cropId} onSelect={onCropSelect}/> )}</div>
+          {report.ranked.length>8&&<button type="button" className="croplite-all-crops" onClick={()=>setShowAllCrops(v=>!v)} aria-expanded={showAllCrops}>{showAllCrops?'Mostrar menos cultivos':`Ver los ${report.ranked.length} cultivos`}</button>}
+
+          {chosen&&<div className="terra-ux-explanation" aria-live="polite">
+            <div className="terra-ux-explanation-title">
+              <CropIcon cropId={chosen.crop_id} decorative/>
+              <div>
+                <span className="overline">CULTIVO ELEGIDO</span>
+                <h3>¿Por qué {chosen.crop_name.toLowerCase()}?</h3>
+                <p>Siembra sugerida: {prettyDate(chosen.sow_date)} · Cosecha estimada: {prettyDate(chosen.harvest_date)}</p>
+              </div>
+            </div>
+            <p className="terra-ux-ranking-context">{report.ranked?.[0]?.crop_id===chosen.crop_id
+              ? `Es la primera alternativa del análisis. Su diferencia respecto a la siguiente opción es de ${display((chosen.score??0)-(report.ranked?.[1]?.score??chosen.score),1)} puntos de compatibilidad estimada.`
+              : `Ocupa el puesto ${report.ranked.findIndex(item=>item.crop_id===chosen.crop_id)+1}. ${report.ranked?.[0]?.crop_name} está ${display((report.ranked?.[0]?.score??0)-(chosen.score??0),1)} puntos por encima en esta evaluación.`}</p>
+            <div className="terra-ux-reasons">{chosenInsights.highlights.slice(0,3).map(reason=><div key={reason.key} className="terra-ux-reason"><span className={`terra-ux-signal ${reason.tone}`}/><div><strong>{reason.title}</strong><p>{reason.description}</p></div></div>)}</div>
+            <details className="terra-ux-explanation-method"><summary>¿Cómo se obtiene la recomendación?</summary><p>Comparamos temperatura, calor acumulado, exposición térmica y lluvia frente a demanda hídrica estimada. La evaluación hídrica supone secano y no equivale a medir el agua disponible en las raíces.</p>{numeric(chosen.historical_p10_score)&&numeric(chosen.historical_p90_score)&&<p>Variación histórica para esta ventana: {display(chosen.historical_p10_score,0)}–{display(chosen.historical_p90_score,0)} puntos (percentiles 10–90 de {chosen.history_sample_years} temporadas evaluadas). Es una banda descriptiva, no una probabilidad ni una predicción.</p>}</details>
+          </div>}
+
+          <div className="terra-decision-rotation-card">
+            <div className="terra-decision-section-head">
+              <div>
+                <h3>Secuencia anual sugerida</h3>
+                <p>La rotación se mantiene, pero ahora aparece debajo del ranking para no ocupar un panel lateral.</p>
+              </div>
+            </div>
+            {rotations.length? <>
+              <div className="terra-decision-rotation-options" role="group" aria-label="Alternativas de rotación">{rotations.map((r,i)=><button key={r.id} className={i===Math.min(activeRotation,rotations.length-1)?'active':''} onClick={()=>setActiveRotation(i)} aria-pressed={i===Math.min(activeRotation,rotations.length-1)}>{i+1}. {r.crops.map(c=>c.crop_name).join(' → ')}</button>)}</div>
+              <DecisionCalendar plan={rotation} year={report.planning_year}/>
+              {rotationExplanation&&<div className="terra-ux-rotation-why"><div className="terra-ux-rotation-lead"><CheckCircle2 size={18}/><div><strong>¿Por qué este orden?</strong><p>{rotationExplanation.whyOrder}</p></div></div><div className="terra-ux-rotation-evidence">{rotationExplanation.evidence.map(row=><div key={row.key}><small>{row.label}</small><strong>{row.value}</strong></div>)}</div>{rotationExplanation.reasons?.length>0&&<ul className="terra-decision-plan-reasons">{rotationExplanation.reasons.slice(0,3).map(text=><li key={text}>{text}</li>)}</ul>}</div>}
+            </> : <div className="terra-decision-no-rotations"><Info size={17}/> No se encontraron dos ciclos completos en el mismo año con familias distintas y 14 días de transición.</div>}
+          </div>
         </div>
-      </>}
-      </div><div className="croplite-rotation-panel"><div className="terra-decision-section-head"><div><h3>Rotación anual · {report.planning_year}</h3><p>Dos cultivos sucesivos que pueden completar su ciclo dentro de un año.</p></div></div>
-      {rotations.length?<>
-        <div className="terra-decision-rotation-options" role="group" aria-label="Alternativas de rotación">{rotations.map((r,i)=><button key={r.id} className={i===Math.min(activeRotation,rotations.length-1)?'active':''} onClick={()=>setActiveRotation(i)} aria-pressed={i===Math.min(activeRotation,rotations.length-1)}>{i+1}. {r.crops.map(c=>c.crop_name).join(' → ')}</button>)}</div>
-        <DecisionCalendar plan={rotation} year={report.planning_year}/>
-        {rotationExplanation&&<div className="terra-ux-rotation-why"><div className="terra-ux-rotation-lead"><CheckCircle2 size={18}/><div><strong>¿Por qué este orden?</strong><p>{rotationExplanation.whyOrder}</p></div></div><div className="terra-ux-rotation-evidence">{rotationExplanation.evidence.map(row=><div key={row.key}><small>{row.label}</small><strong>{row.value}</strong></div>)}</div>{rotationExplanation.reasons?.length>0&&<ul className="terra-decision-plan-reasons">{rotationExplanation.reasons.slice(0,3).map(text=><li key={text}>{text}</li>)}</ul>}</div>}
-      </>:<div className="terra-decision-no-rotations"><Info size={17}/> No se encontraron dos ciclos completos en el mismo año con familias distintas y 14 días de transición.</div>}
-      </div></div>
+      </div>
+
       <button className="terra-decision-method-button" type="button" onClick={()=>setDetails(v=>!v)} aria-expanded={details}><ChevronDown size={17}/>{details?'Ocultar metodología y fuentes':'Ver metodología y fuentes'}</button>
       {details&&<div className="terra-decision-method-details"><p><strong>Procedencia:</strong> NASA POWER, registros regionales históricos de temperatura y lluvia. Copernicus NDVI describe la vegetación observada anteriormente, nunca como etiqueta del cultivo futuro.</p><p><strong>Observaciones NDVI:</strong> {ndvi?.status==='unavailable'?'no disponibles por falta de configuración':ndvi?.status==='error'?'no disponibles en esta consulta':ndvi?.annual?`${ndvi.annual.filter(y=>y.status==='observed').length} años con observaciones válidas`:'consultando…'}.</p><p><strong>Evaluación:</strong> el motor contrasta hasta doce temporadas reales, temperatura, calor acumulado, referencias térmicas y lluvia frente a demanda teórica en secano. Las rotaciones planifican dos cultivos sucesivos dentro de un mismo año, alternan familias y respetan un mínimo de 14 días de transición.</p><p><strong>Límite principal:</strong> la lluvia observada no equivale al agua almacenada en las raíces; sin datos de suelo o riego, el ranking es una evaluación orientativa para secano.</p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noopener noreferrer">NASA POWER</a> · <a href="https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Statistical.html" target="_blank" rel="noopener noreferrer">Copernicus</a></div>}
     </>}

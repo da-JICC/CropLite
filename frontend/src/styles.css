@@ -725,3 +725,173 @@ body{background:var(--cl-page);color:var(--cl-ink)}
 @media(max-width:1290px){.croplite-app{grid-template-columns:minmax(0,1fr) 185px}.croplite-content{padding:19px 18px 35px!important}.croplite-decision-layout{grid-template-columns:1fr}.croplite-decision-layout .terra-decision-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.croplite-context-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.croplite-context-strip>div:nth-child(2){border-right:0}.croplite-context-strip>div:nth-child(-n+2){border-bottom:1px solid #e7eee7}}
 @media(max-width:1000px){.croplite-app{grid-template-columns:1fr}.croplite-rail{position:sticky;order:-1;top:0;height:auto;min-height:0;display:flex;flex-direction:row;align-items:center;z-index:130;padding:4px 12px}.croplite-rail-header{padding:8px;border:0}.croplite-rail-header small{display:none}.croplite-rail-section-label,.croplite-rail-note,.croplite-rail-spacer,.croplite-rail-foot{display:none}.croplite-rail-nav{flex:1;flex-direction:row;overflow:auto;justify-content:flex-end;gap:3px;scrollbar-width:none}.croplite-rail-link{white-space:nowrap;font-size:10px;min-height:34px;padding:7px 8px}.croplite-rail-link svg{height:14px;width:14px}.croplite-topbar{top:55px}.croplite-field-map .field-main-map{height:470px!important}}
 @media(max-width:700px){.croplite-content{padding:14px 11px 28px!important}.croplite-topbar{padding:0 12px;height:56px}.croplite-topbar-center{display:none}.croplite-topbar-year{font-size:0;padding:8px}.croplite-topbar-year svg{width:17px}.croplite-topbar-right .mode-pill{font-size:8px;letter-spacing:0}.croplite-brand strong{font-size:20px}.croplite-rail-header strong{display:none}.croplite-rail-header{padding:5px}.croplite-rail-nav{justify-content:flex-start}.croplite-rail-link span{display:none}.croplite-rail-link svg{width:18px;height:18px}.croplite-section-top h1{font-size:23px}.croplite-section-top .croplite-data-pill{font-size:9px}.croplite-field-map .field-main-map{height:465px!important}.croplite-field-map .field-map-toolbar{top:10px;left:10px;right:10px;flex-direction:column;align-items:stretch}.croplite-field-map .field-location-search{max-width:none;min-width:0;width:100%}.croplite-field-map .field-map-actions{justify-content:center;align-self:flex-start}.croplite-field-map .field-map-actions button{font-size:10px;padding:8px}.croplite-map-label{left:10px;bottom:70px;max-width:calc(100% - 20px)}.croplite-map-switch{right:10px;bottom:15px}.croplite-field-map .leaflet-control-zoom{margin-bottom:115px}.croplite-map-recenter{bottom:190px;left:10px}.croplite-context-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.croplite-context-strip>div{padding:12px 10px}.croplite-context-strip strong{font-size:10px}.croplite-context-strip small{font-size:8px}.croplite-decision-wrap .terra-decision-section{padding:13px}.croplite-decision-layout .terra-decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.croplite-crop-panel,.croplite-rotation-panel{padding:11px}.croplite-calendar .terra-decision-months{font-size:7px}.croplite-environment-section{padding:14px}.croplite-environment-section .crop-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.croplite-footer{padding:15px 12px}}
+
+/* --- CropLite refresh: 20 crops, no lateral panel, compact indicators --- */
+.overline{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  padding:.28rem .7rem;
+  border-radius:999px;
+  background:rgba(116,133,88,.14);
+  color:#54653f;
+  font-size:.74rem;
+  font-weight:700;
+  letter-spacing:.12em;
+}
+
+.croplite-section-top,
+.terra-history-heading,
+.terra-decision-header,
+.terra-indicators-header,
+.terra-timeline-head{
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+.croplite-decision-layout--single{
+  display:block;
+}
+
+.croplite-crop-panel--expanded,
+.terra-decision-rotation-card{
+  width:100%;
+  max-width:none;
+}
+
+.terra-decision-rotation-card{
+  margin-top:1.35rem;
+  padding:1.1rem 1.1rem 1.2rem;
+  border:1px solid rgba(90,109,67,.12);
+  border-radius:24px;
+  background:#fbfcf9;
+}
+
+.terra-decision-rotation-card .terra-decision-section-head{
+  margin-bottom:.9rem;
+}
+
+.terra-indicators-header--compact{
+  align-items:flex-start;
+  gap:1rem;
+}
+
+.terra-indicators-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:.75rem;
+  margin:.9rem 0 1rem;
+}
+
+.terra-indicators-summary-card{
+  padding:.8rem .95rem;
+  border:1px solid rgba(90,109,67,.12);
+  border-radius:18px;
+  background:#f8faf5;
+}
+
+.terra-indicators-summary-card small{
+  display:block;
+  color:#7c8574;
+  margin-bottom:.25rem;
+}
+
+.terra-indicators-summary-card strong{
+  color:#26321f;
+  font-size:.98rem;
+}
+
+.terra-indicators-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  padding:.75rem 1rem;
+  border:1px solid rgba(90,109,67,.2);
+  border-radius:999px;
+  background:#fff;
+  color:#2e3d23;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.terra-indicators-toggle:hover{
+  background:#f5f8ef;
+}
+
+.terra-indicators-drawer{
+  margin-top:1rem;
+  padding:1rem;
+  border:1px solid rgba(90,109,67,.12);
+  border-radius:22px;
+  background:#fbfcf8;
+}
+
+.terra-phenology-table-scroll--compact{
+  max-height:420px;
+}
+
+.terra-indicators-compact .terra-indicator-disclaimers{
+  margin-top:1rem;
+  font-size:.92rem;
+}
+
+@media (max-width: 900px){
+  .terra-decision-rotation-card{
+    padding:1rem;
+  }
+}
+
+/* Requested cleanup: no divider line above titles, all 20 icons unique */
+.croplite-decision-wrap .terra-decision-header,
+.croplite-history-shell .terra-history-heading,
+.terra-ux-explanation,
+.terra-ux-explanation-title,
+.terra-rec-header,
+.terra-indicators-header,
+.terra-timeline-head{
+  border-top:none !important;
+}
+
+.croplite-decision-wrap .terra-decision-header{
+  border-bottom:none !important;
+  padding-bottom:0 !important;
+  margin-bottom:14px !important;
+}
+
+.terra-ux-explanation{
+  background:#fbfcf9;
+  border:1px solid rgba(90,109,67,.12);
+  border-radius:22px;
+}
+
+.terra-ux-explanation .overline,
+.terra-indicators-header .overline,
+.terra-timeline-head strong{
+  letter-spacing:.08em;
+}
+
+.crop-picker-card .terra-crop-icon,
+.terra-phenology-crop .terra-crop-icon,
+.terra-decision-crop .terra-crop-icon,
+.terra-ux-explanation-title .terra-crop-icon,
+.terra-decision-calname .terra-crop-icon{
+  object-fit:contain;
+  image-rendering:auto;
+}
+
+/* CropLite v3 — remove the former right-side navigation and its reserved column. */
+.croplite-app{display:block!important;width:100%;min-width:0}
+.croplite-workspace{width:100%;max-width:none;min-width:0;margin:0}
+.croplite-rail,.croplite-mobile-scrim{display:none!important}
+.croplite-topbar{top:0!important}
+.croplite-content{width:100%;max-width:1800px;margin-left:auto!important;margin-right:auto!important}
+.croplite-decision-layout--single{display:block!important;grid-template-columns:minmax(0,1fr)!important}
+.croplite-crop-panel--expanded{width:100%!important;max-width:none!important}
+.croplite-decision-wrap .terra-decision-header{border:0!important;box-shadow:none!important;padding:0 0 12px!important}
+.terra-ux-explanation-title .overline::before,
+.terra-decision-header .overline::before,
+.terra-history-heading .overline::before,
+.croplite-section-top .overline::before{display:none!important;content:none!important}
+.croplite-section-top,.terra-history-heading,.terra-decision-header,.terra-indicators-header{border-top:0!important}
+@media(max-width:700px){.croplite-topbar{top:0!important}}

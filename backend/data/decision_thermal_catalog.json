@@ -279,6 +279,286 @@
         "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
         "minimumCriticalReferenceC": null
       }
+    },
+    {
+      "id": "arveja-verde",
+      "name": "Arveja verde",
+      "scientificName": "Pisum sativum",
+      "csvCropName": "Arveja verde",
+      "thermal": {
+        "gddBaseC": 5.0,
+        "gddUpperC": 27.0,
+        "optimumClimateC": {
+          "min": 10,
+          "max": 24,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": -2.0,
+        "coldFloweringRangeC": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": -2.0
+      }
+    },
+    {
+      "id": "tomate",
+      "name": "Tomate",
+      "scientificName": "Solanum lycopersicum",
+      "csvCropName": "Tomate",
+      "thermal": {
+        "gddBaseC": 7.0,
+        "gddUpperC": 28.0,
+        "optimumClimateC": {
+          "min": 20,
+          "max": 27,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": 0.0,
+        "coldFloweringRangeC": {
+          "min": -1.0,
+          "max": 0.0
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": 0.0
+      }
+    },
+    {
+      "id": "avena",
+      "name": "Avena",
+      "scientificName": "Avena sativa",
+      "csvCropName": "Avena",
+      "thermal": {
+        "gddBaseC": 0.0,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 16,
+          "max": 20,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": -1.0,
+        "coldFloweringRangeC": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": -1.0
+      }
+    },
+    {
+      "id": "mani",
+      "name": "Maní",
+      "scientificName": "Arachis hypogaea",
+      "csvCropName": "Maní",
+      "thermal": {
+        "gddBaseC": 10.0,
+        "gddUpperC": 35.0,
+        "optimumClimateC": {
+          "min": 22,
+          "max": 32,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": null,
+        "coldFloweringRangeC": {
+          "min": null,
+          "max": null
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "cebolla-seca",
+      "name": "Cebolla seca",
+      "scientificName": "Allium cepa",
+      "csvCropName": "Cebolla seca",
+      "thermal": {
+        "gddBaseC": 4.5,
+        "gddUpperC": 35.0,
+        "optimumClimateC": {
+          "min": 12,
+          "max": 25,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": null,
+        "coldFloweringRangeC": {
+          "min": null,
+          "max": null
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "pimiento-dulce",
+      "name": "Pimiento dulce",
+      "scientificName": "Capsicum annuum",
+      "csvCropName": "Pimiento dulce",
+      "thermal": {
+        "gddBaseC": 10.0,
+        "gddUpperC": 35.0,
+        "optimumClimateC": {
+          "min": 17,
+          "max": 30,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": null,
+        "coldFloweringRangeC": {
+          "min": null,
+          "max": null
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "remolacha-azucarera",
+      "name": "Remolacha azucarera",
+      "scientificName": "Beta vulgaris",
+      "csvCropName": "Remolacha azucarera",
+      "thermal": {
+        "gddBaseC": 5.0,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 15,
+          "max": 25,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": -2.0,
+        "coldFloweringRangeC": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": -2.0
+      }
+    },
+    {
+      "id": "algodon",
+      "name": "Algodón",
+      "scientificName": "Gossypium hirsutum",
+      "csvCropName": "Algodón",
+      "thermal": {
+        "gddBaseC": 12.5,
+        "gddUpperC": 35.0,
+        "optimumClimateC": {
+          "min": 22,
+          "max": 36,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": -1.0,
+        "coldFloweringRangeC": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": -1.0
+      }
+    },
+    {
+      "id": "alfalfa-heno",
+      "name": "Alfalfa (heno)",
+      "scientificName": "Medicago sativa",
+      "csvCropName": "Alfalfa (heno)",
+      "thermal": {
+        "gddBaseC": 0.0,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 21,
+          "max": 27,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": null,
+        "coldFloweringRangeC": {
+          "min": null,
+          "max": null
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "melon",
+      "name": "Melón",
+      "scientificName": "Cucumis melo",
+      "csvCropName": "Melón",
+      "thermal": {
+        "gddBaseC": 10.0,
+        "gddUpperC": 38.0,
+        "optimumClimateC": {
+          "min": 18,
+          "max": 30,
+          "basis": "Rango climático favorable según la matriz de referencia del proyecto; orientativo y no equivalente al óptimo de todas las etapas.",
+          "sourceUrl": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/"
+        },
+        "heatReproductiveReferenceC": null,
+        "heatReproductiveBasis": null,
+        "heatReproductiveSourceUrl": null,
+        "coldFloweringReferenceC": -0.5,
+        "coldFloweringRangeC": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "coldFloweringBasis": "Rango crítico orientativo durante floración o etapa reproductiva; depende de fenología, duración y aclimatación.",
+        "coldFloweringSource": "Matriz térmica del proyecto basada en referencias FAO/EcoCrop y revisión local.",
+        "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
+        "minimumCriticalReferenceC": -0.5
+      }
     }
   ]
 }
