@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import 'leaflet/dist/leaflet.css';
 import './styles.css';
+import './brand-system.css';
 import App from './App.jsx';
 import ErrorBoundary from './ErrorBoundary.jsx';
 

@@ -85,7 +85,7 @@ export default function FieldSelectionMap({region,onRegionChange}) {
         <MapFlyTo target={flyTarget}/>
         <MapFrame geometry={region?.geometry} allowFit={mode==='idle'}/>
         <MapClick drawing={mode==='draw'} onVertex={p=>setDraft(v=>v.length<40?[...v,p]:v)}/>
-        {mode!=='draw'&&positions.length>=3&&<Polygon positions={positions} pathOptions={{color:'#eafff1',weight:3,fillColor:'#51d384',fillOpacity:0.24}}/>}
+        {mode!=='draw'&&positions.length>=3&&<Polygon positions={positions} pathOptions={{color:'#FAF8F3',weight:3,fillColor:'#8FAA5A',fillOpacity:0.28}}/>}
         {mode==='draw'&&<><Polyline positions={positions} pathOptions={{color:'#ffe1a1',weight:3,dashArray:'8 6'}}/>{positions.map((p,i)=><CircleMarker key={i} center={p} radius={5} pathOptions={{color:'#fff',fillColor:'#e59e29',fillOpacity:1}}/>)}</>}
         {mode==='edit'&&vertices.map((p,i)=><Marker key={i} icon={vertexIcon} position={[p[1],p[0]]} draggable eventHandlers={{dragend:e=>updateVertex(i,e.target.getLatLng())}}/>)}
         <MapFocusButton region={region}/>

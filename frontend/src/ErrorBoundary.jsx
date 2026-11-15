@@ -7,12 +7,12 @@ export default class ErrorBoundary extends React.Component {
   componentDidCatch(error, info) { console.error('CropLite UI failure:', error, info); }
   render() {
     if (!this.state.failed) return this.props.children;
-    return <div style={{ minHeight:'100vh',display:'grid',placeItems:'center',padding:30,background:'#f2f8f3',fontFamily:'system-ui' }}>
-      <div style={{background:'#fff',border:'1px solid #dce9e0',padding:34,borderRadius:14,maxWidth:560}}>
-        <h1 style={{fontSize:25,color:'#1d5941'}}>CropLite could not render this screen.</h1>
-        <p style={{color:'#5b766a',lineHeight:1.6}}>Open browser Developer Tools (F12 → Console) to see the underlying error. Make sure dependencies were installed with <code>npm install</code> from the frontend folder.</p>
+    return <div style={{ minHeight:'100vh',display:'grid',placeItems:'center',padding:30,background:'#FAF8F3',fontFamily:'DM Sans,system-ui' }}>
+      <div style={{background:'#fff',border:'1px solid #E9EDE5',padding:34,borderRadius:18,maxWidth:560,boxShadow:'0 9px 28px #103D2811'}}><img src='/brand/croplite-symbol.svg' width='58' height='58' alt='' />
+        <h1 style={{fontSize:25,color:'#103D28'}}>CropLite no pudo cargar esta pantalla.</h1>
+        <p style={{color:'#25332B',lineHeight:1.6}}>Abre las herramientas de desarrollo (F12 → Consola) para ver el error. Comprueba que instalaste las dependencias con <code>npm install</code> from the frontend folder.</p>
         <pre style={{whiteSpace:'pre-wrap',fontSize:11,color:'#9b4c38',background:'#fdf4f0',padding:12,borderRadius:8}}>{this.state.message}</pre>
-        <button onClick={() => window.location.reload()} style={{background:'#2f8f61',color:'#fff',border:0,borderRadius:8,padding:'12px 16px',cursor:'pointer'}}>Reload CropLite</button>
+        <button onClick={() => window.location.reload()} style={{background:'#103D28',color:'#fff',border:0,borderRadius:8,padding:'12px 16px',cursor:'pointer'}}>Recargar CropLite</button>
       </div>
     </div>;
   }

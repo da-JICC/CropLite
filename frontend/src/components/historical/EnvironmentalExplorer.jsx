@@ -1,3 +1,4 @@
+import CropIcon from '../crops/CropIcon.jsx';
 import React, {useMemo, useState} from 'react';
 import {Area, CartesianGrid, ComposedChart, Line, ReferenceArea, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import {CloudRain, Droplets, Leaf, Sun, Wind, ThermometerSun, Waves, Download, AlertCircle, RefreshCcw, CalendarRange} from 'lucide-react';
@@ -38,7 +39,7 @@ function CompactCropSelector({cropId,onCropSelect}) {
     <div className="terra-crop-inline-heading"><div><strong>Cultivo de referencia</strong><span>Selecciona un cultivo para ver sus parámetros térmicos</span></div></div>
     <div className="terra-crop-inline-items" role="group" aria-label="Seleccionar cultivo">
       {CROPS.map(c=><button type="button" key={c.id} aria-pressed={c.id===cropId} onClick={()=>onCropSelect(c.id)} className={`terra-crop-compact${cropId===c.id?' selected':''}`}>
-        <img src={c.image} alt="" loading="lazy"/><span>{c.name}</span>
+        <CropIcon cropId={c.id} decorative/><span>{c.name}</span>
       </button>)}
     </div>
   </div>;

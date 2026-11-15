@@ -1,6 +1,7 @@
 import React,{useMemo} from 'react';
 import {CalendarDays,Info,Leaf,TriangleAlert} from 'lucide-react';
 import {CROPS} from '../crops/CropSelector.jsx';
+import CropIcon from '../crops/CropIcon.jsx';
 import phenologyCatalog from '../../data/cropPhenologyCatalog.json';
 import {cropIndicators,dayIndex,shiftDay,STAGE_COLORS,timelineFor} from './phenologyEngine.mjs';
 import {buildIndicatorComparisonGroups} from './indicatorComparisons.mjs';
@@ -16,7 +17,7 @@ export function CropSelectorBar({cropId,onCropSelect}) {
     <div className="terra-phenology-crops" role="group" aria-label="Cultivo de referencia">
       {CROPS.map(item=><button type="button" key={item.id} aria-pressed={item.id===cropId}
         className={`terra-phenology-crop${item.id===cropId?' active':''}`} onClick={()=>onCropSelect(item.id)}>
-        <img src={item.image} alt="" loading="lazy"/><span>{item.name}</span>
+        <CropIcon cropId={item.id} decorative/><span>{item.name}</span>
       </button>)}
     </div>
   </div>;

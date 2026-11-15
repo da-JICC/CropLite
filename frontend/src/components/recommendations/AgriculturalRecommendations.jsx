@@ -1,3 +1,4 @@
+import CropIcon from '../crops/CropIcon.jsx';
 import React,{useMemo,useState} from 'react';
 import {ArrowRight,CheckCircle2,CalendarDays,Info,Leaf,AlertTriangle,RefreshCcw,ShieldAlert,Sun} from 'lucide-react';
 import phenologyCatalog from '../../data/cropPhenologyCatalog.json';
@@ -20,7 +21,7 @@ function ScenarioBar({scenario}){
 function RankingCard({scenario,ordinal,selected,onPick}){
   return <button className={`terra-rec-card${selected?' active':''}`} type="button" onClick={()=>onPick(scenario.cropId)}
     aria-pressed={selected} aria-label={`Explorar ${scenario.cropName} en el análisis ambiental`}>
-    <div className="terra-rec-card-head"><img src={pictures[scenario.cropId]} alt=""/>
+    <div className="terra-rec-card-head"><CropIcon cropId={scenario.cropId} decorative/>
       <span className="terra-rec-rank">{ordinal}º</span><div><strong>{scenario.cropName}</strong><small>{scenario.family} · Escenario 2025</small></div></div>
     <div className="terra-rec-card-dates"><CalendarDays size={13}/>{formatDate(scenario.sowDate)} – {formatDate(scenario.harvestDate)}<span>{scenario.cycleDays} días</span></div>
     <ScenarioBar scenario={scenario}/>
@@ -40,7 +41,7 @@ function RotationDisplay({plan}){
   return <div className="terra-rec-rotation-display">
     <div className="terra-rec-year-axis"><span>ENE</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span><span>DIC</span></div>
     {plan.crops.map(crop=><div className="terra-rec-year-row" key={crop.cropId}>
-      <div className="terra-rec-year-name"><img alt="" src={pictures[crop.cropId]}/><span>{crop.cropName}</span></div>
+      <div className="terra-rec-year-name"><CropIcon cropId={crop.cropId} decorative/><span>{crop.cropName}</span></div>
       <div className="terra-rec-year-body"><ScenarioBar scenario={crop}/></div>
       <span className="terra-rec-year-dates">{formatDate(crop.sowDate)} – {formatDate(crop.harvestDate)}</span>
     </div>)}

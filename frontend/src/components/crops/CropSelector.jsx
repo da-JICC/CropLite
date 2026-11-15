@@ -1,5 +1,6 @@
 import React from 'react';
 import cropCatalog from '../../data/cropTemperatureCatalog.json';
+import CropIcon from './CropIcon.jsx';
 
 export const CROPS = cropCatalog.crops;
 export function getCropById(id) {return CROPS.find(crop => crop.id === id) ?? null;}
@@ -19,7 +20,7 @@ export function CropSelector({selectedId, onSelect}) {
         aria-pressed={item.id === selectedId}
         className={`crop-picker-card${item.id === selectedId ? ' selected' : ''}`}
         onClick={() => onSelect(item.id)}>
-        <img src={item.image} alt={`Ilustración de ${item.name}`} loading="lazy"/>
+        <CropIcon cropId={item.id} name={item.name}/>
         <span className="crop-picker-label">{item.name}</span>
         {item.id === selectedId && <span className="crop-picker-check" aria-hidden="true">✓</span>}
       </button>)}

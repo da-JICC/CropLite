@@ -1,12 +1,11 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {Leaf,Info,AlertTriangle,ChevronDown,ShieldCheck,CheckCircle2} from 'lucide-react';
-import thermalCatalog from '../../data/cropTemperatureCatalog.json';
+import CropIcon from '../crops/CropIcon.jsx';
 import phenologyCatalog from '../../data/cropPhenologyCatalog.json';
 import {STAGE_COLORS} from '../phenology/phenologyEngine.mjs';
 import {loadDecisionHistory,loadDecisionNDVI} from '../../services/decisionsService.js';
 import {cropInsights,rotationInsights,numeric} from './decisionInsights.mjs';
 
-const cropImages=Object.fromEntries(thermalCatalog.crops.map(c=>[c.id,c.image]));
 const stagesByCrop=Object.fromEntries(phenologyCatalog.crops.map(c=>[c.id,c.stages]));
 const months=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const prettyDate=iso=>iso?new Date(iso+'T12:00:00Z').toLocaleDateString('es-CL',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'—';
@@ -21,7 +20,7 @@ function CropDecisionCard({crop,position,selected,onSelect}) {
   const insight=cropInsights(crop);
   const headline=insight.highlights.find(item=>item.key==='irrigation') || insight.highlights.find(item=>item.key==='water' && item.tone==='caution') || insight.highlights.find(item=>item.key==='temperature') || insight.highlights[0];
   return <button className={`terra-decision-crop terra-ux-crop-card${selected?' selected':''}`} type="button" aria-pressed={selected} onClick={()=>onSelect(crop.crop_id)}>
-    <div className="terra-decision-crop-top"><span className="terra-decision-index">{String(position).padStart(2,'0')}</span><img src={cropImages[crop.crop_id]} alt=""/><div><strong>{crop.crop_name}</strong><small>{crop.cycle_days} días aproximados</small></div></div>
+    <div className="terra-decision-crop-top"><span className="terra-decision-index">{String(position).padStart(2,'0')}</span><CropIcon cropId={crop.crop_id} decorative/><div><strong>{crop.crop_name}</strong><small>{crop.cycle_days} días aproximados</small></div></div>
     <div className="terra-ux-card-conclusion"><span className={`terra-ux-signal ${headline?.tone||'neutral'}`}/><span>{headline?.title || 'Evaluación disponible'}</span></div>
     <div className="terra-ux-card-meta"><span>Compatibilidad estimada</span><b>{display(crop.score,0)} <small>/100</small></b></div>
     <div className="terra-decision-progress" aria-hidden="true"><span style={{width:`${clamp(crop.score??0)}%`}}/></div>
@@ -38,7 +37,7 @@ function DecisionCalendar({plan,year}) {
     <div className="croplite-calendar-year">Año agrícola {year} <span>Siembra → cosecha</span></div>
     <div className="terra-decision-months">{months.map(m=><span key={m}>{m}</span>)}</div>
     {plan.crops.map((crop,i)=><div className="terra-decision-calrow" key={`${crop.crop_id}-${i}`}>
-      <div className="terra-decision-calname"><img src={cropImages[crop.crop_id]} alt=""/><strong>{crop.crop_name}</strong></div>
+      <div className="terra-decision-calname"><CropIcon cropId={crop.crop_id} decorative/><strong>{crop.crop_name}</strong></div>
       <div className="terra-decision-calbody" aria-label={`${crop.crop_name}: ${prettyDate(crop.sow_date)} a ${prettyDate(crop.harvest_date)}`}>
         {(stagesByCrop[crop.crop_id]||[]).reduce((acc,stage)=>{
           const start=Date.parse(`${crop.sow_date}T00:00:00Z`)+acc.offset*86400000;
@@ -92,7 +91,7 @@ export function AgriculturalDecisions({region,cropId,onCropSelect}) {
   return <section className="terra-decision-section terra-ux-decisions" aria-label="Decisiones agrícolas"><span id="rotaciones" className="croplite-anchor"/>
     <div className="terra-decision-header"><div><span className="overline">02 / DECISIONES AGRÍCOLAS</span><h2>Planifica tu próxima temporada</h2><p>Recomendaciones y rotaciones anuales, explicadas con datos de temporadas reales.</p></div><span className="terra-decision-header-pill"><ShieldCheck size={15}/> Evaluación basada en reglas</span></div>
     {!region?<div className="terra-decision-empty"><Leaf size={28}/><strong>Selecciona un terreno para empezar</strong><p>CropLite comparará las condiciones del lugar con las necesidades de los diez cultivos.</p></div>
-    :loading?<div className="terra-decision-empty" role="status"><div className="terra-loader"/><strong>Consultando el histórico ambiental</strong><p>Recuperando registros regionales para analizar las opciones de siembra.</p></div>
+    :loading?<div className="terra-decision-empty" role="status"><img className="croplite-loading-emblem" src="/brand/croplite-symbol.svg" alt=""/><div className="terra-loader"/><strong>Consultando el histórico ambiental</strong><p>Recuperando registros regionales para analizar las opciones de siembra.</p></div>
     :error?<div className="terra-decision-empty" role="alert"><AlertTriangle size={22}/><strong>No fue posible consultar los datos</strong><p>{error}</p><button onClick={()=>{cache.current.delete(key);ndviCache.current.delete(key);setAttempt(x=>x+1);}}>Reintentar</button></div>
     :report?.status!=='evaluated'?<div className="terra-decision-empty"><Info size={24}/><strong>No hay suficientes datos para comparar cultivos</strong><p>El sistema necesita al menos tres temporadas históricas completas con registros diarios suficientes.</p></div>
     :<>
@@ -102,7 +101,7 @@ export function AgriculturalDecisions({region,cropId,onCropSelect}) {
       {report.ranked.length>6&&<button type="button" className="croplite-all-crops" onClick={()=>setShowAllCrops(v=>!v)} aria-expanded={showAllCrops}>{showAllCrops?"Mostrar menos cultivos":`Ver los ${report.ranked.length} cultivos`}</button>}
       {chosen&&<>
         <div className="terra-ux-explanation" aria-live="polite">
-          <div className="terra-ux-explanation-title"><img src={cropImages[chosen.crop_id]} alt=""/><div><span className="overline">TU SELECCIÓN</span><h3>¿Por qué {chosen.crop_name.toLowerCase()}?</h3><p>Siembra sugerida: {prettyDate(chosen.sow_date)} · Cosecha estimada: {prettyDate(chosen.harvest_date)}</p></div></div>
+          <div className="terra-ux-explanation-title"><CropIcon cropId={chosen.crop_id} decorative/><div><span className="overline">TU SELECCIÓN</span><h3>¿Por qué {chosen.crop_name.toLowerCase()}?</h3><p>Siembra sugerida: {prettyDate(chosen.sow_date)} · Cosecha estimada: {prettyDate(chosen.harvest_date)}</p></div></div>
           <p className="terra-ux-ranking-context">{report.ranked?.[0]?.crop_id===chosen.crop_id
             ? `Es la primera alternativa del análisis. Su diferencia respecto a la siguiente opción es de ${display((chosen.score??0)-(report.ranked?.[1]?.score??chosen.score),1)} puntos de compatibilidad estimada.`
             : `Ocupa el puesto ${report.ranked.findIndex(item=>item.crop_id===chosen.crop_id)+1}. ${report.ranked?.[0]?.crop_name} está ${display((report.ranked?.[0]?.score??0)-(chosen.score??0),1)} puntos por encima en esta evaluación.`}</p>

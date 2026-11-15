@@ -7,7 +7,18 @@ CropLite permite delimitar un campo sobre un mapa con **imágenes satelitales re
 
 > **Prototipo orientativo:** no es un modelo de IA entrenado ni pronostica rendimientos, daños o resultados futuros. Las fechas agrícolas usan escenarios de planificación contrastados con climas históricos; no se simula el tiempo del año futuro.
 
-## Qué cambió en esta versión
+## Identidad visual y rediseño integral (noviembre de 2026)
+
+La identidad aprobada es **CropLite**: emblema circular con surcos, arco orbital y señal de satélite. El símbolo y el wordmark proceden de **la imagen del logo aprobada por el equipo**, convertida a rutas SVG con sus formas originales y limitada a las dos tintas de marca. No se ha sustituido el emblema ni se ha recompuesto el nombre con una tipografía aproximada.
+
+- **Solo dos tintas en la iconografía de marca:** verde bosque `#103D28` y verde oliva `#8FAA5A`. Los neutros `#FAF8F3`, `#FFFFFF`, `#E9EDE5` y `#25332B` se usan únicamente como superficie, separación y texto. Los gráficos pueden mantener tonos adicionales si representan variables diferentes o avisos científicos.
+- **Archivos de marca:** `frontend/public/brand/croplite-symbol.svg`, `croplite-horizontal.svg`, `croplite-badge.svg` (variante sobre fondo oscuro) y `croplite-app.svg` (favicon); componente reutilizable `src/components/ui/CropLiteBrand.jsx`.
+- **Diez ilustraciones de cultivos originales restauradas:** `frontend/public/crops/*.svg` coincide con la versión previa al rediseño de marca; se conserva el componente `src/components/crops/CropIcon.jsx` para recomendaciones, selectores y calendarios.
+- **Sistema de diseño compartido:** `frontend/src/brand-system.css` agrupa tokens, tipografía, espaciados, estados interactivos, tablas, paneles y puntos de quiebre; se carga después de la hoja de compatibilidad `styles.css` para preservar la funcionalidad existente.
+- **Diseño adaptable:** mapa y tarjetas refinados, navegación lateral con menú táctil en pantallas pequeñas, foco visible, tamaño de controles apropiado, desplazamiento de tablas y opciones para movimiento reducido.
+- **Inteligencia agrícola sin cambios:** no se tocaron el backend, las fuentes NASA/Copernicus, la puntuación agronómica, la línea temporal fenológica ni el cálculo de rotaciones. La versión vigente **planifica rotaciones anuales de dos cultivos**, tal como se había definido anteriormente, y no vuelve a introducir planes de tres años.
+
+## Qué cambió en la versión satelital (base)
 
 1. **Nuevo nombre: CropLite.** Título, identidad principal, API y nombre del paquete frontend.
 2. **Layout inspirado en una plataforma de monitoreo agrícola:** barra superior compacta, mapa protagonista, buscador y edición de parcelas sobre la imagen, fichas de estado bajo el mapa y navegación derecha hacia secciones realmente existentes. Conserva la paleta verde, los fondos claros y las tarjetas limpias de la versión anterior. Responsive en móvil.
@@ -55,7 +66,8 @@ Abre `http://localhost:5173/`. El proxy de Vite dirige `/api` a `http://127.0.0.
 ### Pruebas automatizadas
 
 ```powershell
-# Desde backend, con entorno Python activado e instaladas las dependencias
+# Desde backend: primero instala las dependencias de desarrollo
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
 
 # Desde frontend
@@ -63,7 +75,7 @@ node --test tests/*.mjs
 npm run build
 ```
 
-**Estado al entregar:** 57 pruebas del backend y 48 del frontend exitosas en este entorno; se verificó sintaxis JSX de los componentes modificados. La compilación completa de Vite **no pudo ejecutarse aquí** porque el registro de paquetes npm no era accesible (`EAI_AGAIN`); debe validarse localmente con `npm install && npm run build`.
+**Verificación del rediseño:** las 57 pruebas de FastAPI y las pruebas Node del frontend fueron ejecutadas correctamente. Los SVG fueron validados como XML y el código JS/JSX se analizó con el parser de TypeScript. La compilación Vite no pudo ejecutarse aquí porque npm no completó la instalación de dependencias de red en el plazo de prueba; ejecútala localmente con `npm install && npm run build`. No sustituye la prueba de navegador real.
 
 ## Motor de recomendaciones
 
@@ -108,9 +120,14 @@ croplite/
 │   └── tests/
 ├── frontend/
 │   ├── index.html
+│   ├── public/brand/                    # Logo, emblema y favicon SVG
+│   ├── public/crops/                    # 10 ilustraciones originales restauradas
 │   ├── src/
 │   │   ├── App.jsx                     # Shell CropLite + navegación derecha
-│   │   ├── styles.css                  # Paleta verde y layout responsive
+│   │   ├── styles.css                  # Estilos existentes para compatibilidad
+│   │   ├── brand-system.css            # Tokens y componentes del nuevo diseño
+│   │   ├── components/ui/CropLiteBrand.jsx
+│   │   ├── components/crops/CropIcon.jsx
 │   │   ├── components/maps/FieldSelectionMap.jsx
 │   │   ├── components/recommendations/AgriculturalDecisions.jsx
 │   │   ├── components/recommendations/decisionInsights.mjs

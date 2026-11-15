@@ -1,3 +1,4 @@
+import CropIcon from '../components/crops/CropIcon.jsx';
 import React from 'react';
 import {ArrowLeft, CheckCircle2, CircleAlert, Download, Leaf, MapPin, Satellite, ThermometerSun} from 'lucide-react';
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
@@ -36,7 +37,7 @@ export function Environment({region,start,end,analysis,loading,navigate,selected
         <div className="field-dataset-heading"><div><span className="overline">02 / TEMPERATURE INTELLIGENCE</span><h2><ThermometerSun size={23}/> Temperatura · NASA POWER</h2><p>Estimaciones diarias de temperatura del aire a 2 metros para un punto representativo del terreno, no una media espacial del polígono.</p></div><button type="button" disabled={temperature?.status!=='success'||!tempRows.length} onClick={()=>saveDatasetCsv({dataset:temperature,analysis,type:'temperature'})}><Download size={16}/> Exportar CSV</button></div>
         <DataStatus dataset={temperature} source="NASA POWER"/>
         {selectedCrop && <div className="crop-environment-context">
-          <img src={selectedCrop.image} alt={`Ilustración de ${selectedCrop.name}`}/>
+          <CropIcon cropId={selectedCrop.id} name={selectedCrop.name}/>
           <div><span className="crop-picker-eyebrow">REFERENCIAS TÉRMICAS · CULTIVO SELECCIONADO</span><h3>{selectedCrop.name} <small>{selectedCrop.scientificName}</small></h3>
             <p>Óptimo climático {selectedCrop.thermal.optimumClimateC.min}–{selectedCrop.thermal.optimumClimateC.max} °C · Base GDD {selectedCrop.thermal.gddBaseC} °C · Tope GDD {selectedCrop.thermal.gddUpperC} °C.</p>
             <p className="crop-source-links">Fuentes: <a href={selectedCrop.thermal.optimumClimateC.sourceUrl} target="_blank" rel="noreferrer">Óptimo climático</a> · <a href={selectedCrop.thermal.heatReproductiveSourceUrl} target="_blank" rel="noreferrer">Calor reproductivo</a> · <a href={selectedCrop.thermal.coldFloweringSourceUrl} target="_blank" rel="noreferrer">Frío en floración (FAO)</a>, coincidente con el CSV del proyecto.</p>
