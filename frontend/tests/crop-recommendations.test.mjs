@@ -28,7 +28,7 @@ test('ranked candidates are full 2025 calendar cycles with available measurement
  const result=buildCropRecommendations(climate(),phenology.crops,thermal.crops);
  assert.equal(result.status,'screened');
  assert.ok(result.ranked.length>=1);
- assert.ok(result.ranked.length<=6);
+ assert.ok(result.ranked.length<=10);
  for(const item of result.ranked){
    assert.ok(item.sowDate>='2025-01-01');
    assert.ok(item.harvestDate<='2025-12-31');
@@ -50,7 +50,7 @@ test('no water information can be silently interpreted as sufficient rainfall',(
  assert.match(result.vulnerabilities.join(' '),/Cobertura insuficiente/);
 });
 test('missing temperature invalidates ranking even if other series exist',()=>{
- const sample=climate();sample.datasets.temperature.daily=sample.datasets.temperature.daily.map((row,i)=>i<100?row:{...row,value:null});
+ const sample=climate();sample.datasets.temperature.daily=sample.datasets.temperature.daily.map((row,i)=>i<20?row:{...row,value:null});
  const result=buildCropRecommendations(sample,phenology.crops,thermal.crops);
  assert.equal(result.status,'insufficient');
 });

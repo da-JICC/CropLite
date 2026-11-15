@@ -37,9 +37,11 @@ def test_history_uses_all_eligible_years_not_six():
     assert report['analogues']['warm']['year']==2024
     assert report['recent_comparison']['available']
     assert len(report['seasonal_profile'])==12
-    assert len(report['ranked'])==6
+    assert len(report['ranked'])==10
     assert all(0 <= item['score'] <= 100 for item in report['ranked'])
-    assert all(item['sow_date'].startswith('2027') and item['harvest_date'].startswith('2027') for item in report['ranked'])
+    assert all(item['sow_date'].startswith('2027') for item in report['ranked'])
+    assert report['planning_years']==[2027,2028,2029]
+    assert all(item['history_sample_years']>=3 for item in report['ranked'])
 
 
 def test_2025_is_held_out_for_historical_scenario_selection():
@@ -85,18 +87,28 @@ def test_only_real_comparable_crop_parameters_are_used():
 def test_rotations_do_not_overlap_or_repeat_families():
     weather,solar=synthetic()
     result=build_decision_report(weather,solar,THERMAL)
+    assert result['rotations']
     for rotation in result['rotations']:
-        a,b=rotation['crops']
-        assert a['family']!=b['family']
-        assert date.fromisoformat(a['harvest_date'])+timedelta(days=15)<=date.fromisoformat(b['sow_date'])
-        assert b['harvest_date'].startswith(str(result['planning_year']))
+        assert len(rotation['crops'])==3
+        a,b,c=rotation['crops']
+        assert a['family']!=b['family']!=c['family']
+        assert len({a['crop_id'],b['crop_id'],c['crop_id']})==3
+        assert rotation['species_count']==3
+        assert rotation['legume_present']==any(item['family']=='Fabaceae' for item in rotation['crops'])
+        assert [x['planning_year'] for x in (a,b,c)]==result['planning_years']
+        for previous,next_crop in zip(rotation['crops'],rotation['crops'][1:]):
+            assert date.fromisoformat(previous['harvest_date'])+timedelta(days=15)<=date.fromisoformat(next_crop['sow_date'])
 
 
 def test_eto_is_missing_not_invented_without_radiation():
     weather,solar=synthetic()
     result=build_decision_report(weather,[],THERMAL)
     assert result['status']=='evaluated'
-    assert all(s['etc_mm'] is None and s['rain_etc_ratio'] is None for c in result['ranked'] for s in c['scenario_results'].values())
+    assert all(s['etc_mm'] is None and s['etc_source']=='Rango de ETc por ciclo (Excel)'
+               for c in result['ranked'] for s in c['scenario_results'].values())
+    # A documented reference ETc is usable as a screening benchmark; it is NOT
+    # silently reported as a weather-derived evapotranspiration measurement.
+    assert any(s['rain_etc_ratio'] is not None for c in result['ranked'] for s in c['scenario_results'].values())
 
 
 def test_independent_products_do_not_block_ranking():
@@ -134,3 +146,150 @@ def test_ndvi_no_credentials_does_not_call_remote():
         async def statistics(self,*args,**kwargs):raise AssertionError('should not fetch')
     result=asyncio.run(historical_ndvi_context(POLYGON,Cop()))
     assert result['status']=='unavailable'
+
+
+def test_four_new_crops_use_distinct_original_excel_families():
+    ids={c['id'] for c in CATALOG['crops']}
+    assert len(ids)==10
+    assert {'papa','girasol','poroto-seco','repollo'} <= ids
+    from decision_engine import FAMILIES, AGRONOMY
+    assert FAMILIES['papa']=='Solanaceae'
+    assert FAMILIES['girasol']=='Asteraceae'
+    assert FAMILIES['poroto-seco']=='Fabaceae'
+    assert FAMILIES['repollo']=='Brassicaceae'
+    assert AGRONOMY['papa']['ph']['preferred_min']==5
+
+
+def test_rainfall_contributes_to_score_under_rainfed_assumption():
+    weather,solar=synthetic()
+    from decision_engine import _scenario_cycle
+    crop=next(c for c in CATALOG['crops'] if c['id']=='wheat')
+    ref=next(c for c in THERMAL if c['id']=='wheat')
+    year={r['date']:r for r in weather if r['date'].startswith('2020')}
+    wet=_scenario_cycle(crop,ref,year,2020,1,2027,-33)
+    dry={key:{**row,'precipitation_mm':0} for key,row in year.items()}
+    drier=_scenario_cycle(crop,ref,dry,2020,1,2027,-33)
+    assert wet['score']>drier['score']
+    assert wet['score_components_pct']['rainfed_water']>drier['score_components_pct']['rainfed_water']
+    assert drier['score_components_pct']['rainfed_water']==0
+
+
+def test_cross_year_sowing_uses_only_observed_adjacent_dates():
+    weather,solar=synthetic()
+    from decision_engine import _scenario_cycle
+    crop=next(c for c in CATALOG['crops'] if c['id']=='wheat')
+    ref=next(c for c in THERMAL if c['id']=='wheat')
+    by_date={r['date']:r for r in weather if r['date'].startswith(('2018','2019'))}
+    evaluated=_scenario_cycle(crop,ref,by_date,2018,275,2027,-33)
+    assert evaluated is not None
+    assert evaluated['harvest_date'].startswith('2028')
+    assert evaluated['rain_coverage']==1
+    assert evaluated['temperature_coverage']==1
+    # Missing the following observed year must NOT be filled synthetically.
+    missing={key:row for key,row in by_date.items() if key.startswith('2018')}
+    assert _scenario_cycle(crop,ref,missing,2018,275,2027,-33) is None
+
+
+def test_soil_is_not_invented_or_added_to_score():
+    weather,solar=synthetic()
+    report=build_decision_report(weather,solar,THERMAL)
+    assert report['planning_assumptions']['soil_measured'] is False
+    assert 'pH' not in report['decision_dimensions']
+    assert 'rainfed_water' in next(iter(report['ranked'][0]['scenario_results'].values()))['score_components_pct']
+
+
+def test_flooded_rice_is_not_proposed_for_rainfed_rotations():
+    weather,solar=synthetic()
+    report=build_decision_report(weather,solar,THERMAL)
+    rice=next(c for c in report['ranked'] if c['crop_id']=='rice')
+    assert rice['eligible_for_rainfed_plan'] is False
+    assert 'inundado' in rice['eligibility_reason'].lower()
+    assert all(c['crop_id']!='rice' for r in report['rotations'] for c in r['crops'])
+
+
+def test_missing_february_29_never_filled_from_neighboring_day():
+    weather,solar=synthetic()
+    crop=next(c for c in CATALOG['crops'] if c['id']=='wheat')
+    ref=next(c for c in THERMAL if c['id']=='wheat')
+    rows={r['date']:r for r in weather if r['date'].startswith(('2018','2019'))}
+    # Planning in 2028 includes Feb 29, but 2019 was not a leap year.
+    assert _scenario_cycle(crop,ref,rows,2018,310,2027,-33) is None
+
+
+def test_same_total_rain_different_stage_distribution_affects_water_screening():
+    weather,solar=synthetic()
+    crop=next(c for c in CATALOG['crops'] if c['id']=='wheat')
+    ref=next(c for c in THERMAL if c['id']=='wheat')
+    normal={r['date']:r for r in weather if r['date'].startswith('2020')}
+    # 120 days × 3 mm: the same rain distributed through the crop cycle.
+    steady=_scenario_cycle(crop,ref,normal,2020,0,2027,-33)
+    concentrated={day:{**r,'precipitation_mm':12 if i<30 else 0}
+                  for i,(day,r) in enumerate(normal.items())}
+    uneven=_scenario_cycle(crop,ref,concentrated,2020,0,2027,-33)
+    assert steady['rain_mm']==uneven['rain_mm']==360
+    assert uneven['score_components_pct']['rainfed_water'] < steady['score_components_pct']['rainfed_water']
+    assert uneven['water_weak_stage'] is not None
+
+
+def test_historical_band_is_supported_by_actual_sample_count():
+    weather, solar = synthetic()
+    report = build_decision_report(weather, solar, THERMAL)
+    for crop in report['ranked']:
+        assert crop['history_sample_years'] >= 3
+        assert crop['min_scenario_score'] <= crop['historical_p10_score']
+        assert crop['historical_p10_score'] <= crop['historical_p90_score']
+        assert crop['historical_p90_score'] <= 100
+
+
+
+def test_long_climate_history_selection_does_not_throw_index_error():
+    """Regression: 44 complete years used to trigger an IndexError / HTTP 500."""
+    from decision_engine import selected_history_years, select_analogue_years, HISTORY_SAMPLE_MAX
+    summaries = [
+        {'year':year, 'eligible':True,
+         'mean_temperature_c': 11 + (year-1981) * .15 + (year % 7)*.07,
+         'rainfall_mm': 450 + (year % 11) * 21 + (year-1981)*3}
+        for year in range(1981,2026)
+    ]
+    analogues = select_analogue_years(summaries,2025)
+    selected = selected_history_years(summaries,2025,analogues)
+    assert len(selected)==HISTORY_SAMPLE_MAX
+    assert len(selected)==len(set(selected))
+    assert selected==sorted(selected)
+    assert all(year<2025 for year in selected)
+    assert {a['year'] for a in analogues.values()}<=set(selected)
+    assert {1981,2024}<=set(selected)
+
+
+def test_full_historical_api_with_mocked_power_returns_200(monkeypatch):
+    """End-to-end API test with many years and no actual NASA HTTP calls."""
+    from fastapi.testclient import TestClient
+    from app import app, earth_client
+    from earth_observation_service import DAILY_WEATHER_PARAMETERS
+
+    async def fake_daily(latitude, longitude, start, end, params, community, standard):
+        if community=='HY':
+            return []
+        base=date(start.year,1,1)
+        results=[]
+        while base<=end:
+            temperature=18+(base.year-1981)*.03
+            row={'date':str(base)}
+            if params==DAILY_WEATHER_PARAMETERS:
+                row.update({'mean_c':temperature,'min_c':temperature-6,'max_c':temperature+9,
+                            'precipitation_mm':2+(base.year % 7)*.2,
+                            'wind_speed_ms':2.1,'dewpoint_c':11,'relative_humidity_pct':60,
+                            'surface_pressure_kpa':101})
+            else:
+                row['solar_radiation_mj_m2_day']=17
+            results.append(row)
+            base+=timedelta(days=1)
+        return results
+
+    monkeypatch.setattr(earth_client,'daily',fake_daily)
+    response=TestClient(app).post('/api/regions/decisions/history', json={'polygon':POLYGON})
+    assert response.status_code==200, response.text[:1000]
+    payload=response.json()
+    assert payload['status']=='evaluated'
+    assert len(payload['coverage']['sampled_years'])==12
+    assert len(payload['ranked'])==10

@@ -13,12 +13,15 @@ export function meanField(rows, field) {
 export function cropInsights(crop) {
   if (!crop) return {temperature: null, development: null, rainRatio: null, highlights: []};
   const rows = Object.values(crop.scenario_results || {});
+  const requiresFlooding = crop.eligible_for_rainfed_plan === false;
   const temperature = meanField(rows, 'thermal_fit_pct');
   const development = meanField(rows, 'gdd_fit_pct');
   const rainRatio = meanField(rows, 'rain_etc_ratio');
+  const rainfedFit = numeric(crop.water_fit_pct) ? crop.water_fit_pct : (rainRatio !== null ? Math.min(100,rainRatio*100) : null);
   const crossingValues = rows.map(row => row?.criteria?.survival_exposure?.reference_crossing_days).filter(numeric);
   const avgCrossing = crossingValues.length ? crossingValues.reduce((a,b) => a+b, 0)/crossingValues.length : null;
   const highlights = [];
+  if (requiresFlooding) highlights.push({key:'irrigation',tone:'caution',title:'Necesita riego e inundación controlada',description:'El arroz inundado no se considera elegible para los planes de secano sin confirmar disponibilidad e infraestructura hídrica.'});
   if (temperature !== null) {
     highlights.push({
       key: 'temperature',
@@ -43,35 +46,40 @@ export function cropInsights(crop) {
       description: 'Se identificaron posibles exposiciones a referencias de frío o calor en fases sensibles. No equivalen a daño confirmado.',
     });
   }
-  if (rainRatio !== null) {
+  if (rainfedFit !== null) {
     highlights.push({
-      key: 'water', tone: rainRatio >= 1 ? 'neutral' : 'caution',
-      title: rainRatio >= 1 ? 'Lluvia comparable a la demanda estimada' : 'La lluvia podría no cubrir la demanda de agua',
-      description: rainRatio >= 1
-        ? 'La lluvia acumulada fue similar o superior a la demanda teórica de agua durante los ciclos evaluados. No se verifica cuánto quedó disponible para las raíces.'
-        : 'La lluvia acumulada fue menor que la demanda teórica de agua durante los ciclos evaluados. Se desconoce el aporte de riego y las reservas del suelo.',
+      key: 'water', tone: rainfedFit >= 90 ? 'positive' : rainfedFit < 60 ? 'caution' : 'neutral',
+      title: rainfedFit >= 90 ? 'Lluvia potencialmente suficiente en secano' : rainfedFit < 60 ? 'Lluvias insuficientes frente a la demanda del cultivo' : 'Lluvias que podrían requerir apoyo',
+      description: `El indicador hídrico estima ${Math.round(rainfedFit)} % de compatibilidad de lluvia frente a la demanda del cultivo y su etapa más exigente${crop.water_weak_stage ? ` (${crop.water_weak_stage})` : ''}. Se usa para el ranking de secano, sin afirmar agua real en las raíces ni asumir que existe riego.`,
     });
   }
-  return {temperature, development, rainRatio, avgCrossing, highlights};
+  if (numeric(crop.history_sample_years)) highlights.push({key:'history',tone:'neutral',title:'Comparación de varias temporadas',description:`Se contrastaron ${crop.history_sample_years} temporadas históricas con datos suficientes para esta ventana de siembra.`});
+  return {temperature, development, rainRatio, rainfedFit, avgCrossing, highlights};
 }
 
 export function rotationInsights(plan, ranked = []) {
   if (!plan?.crops || plan.crops.length < 2) return null;
-  const [first, second] = plan.crops;
+  const crops = plan.crops;
   const leader = ranked[0];
-  const gap = plan.gap_days;
-  const score = plan.score;
+  const first = crops[0];
+  const gaps = Array.isArray(plan.gap_days) ? plan.gap_days : [plan.gap_days];
+  const gapDescription = gaps.filter(numeric).map(n=>`${n} días`).join(' y ');
+  const plannedYears = [...new Set(crops.map(c=>c.planning_year || c.sow_date?.slice(0,4)))];
+  const isMultiYear = plannedYears.length > 1;
   const whyOrder = leader && leader.crop_id !== first.crop_id
-    ? `${leader.crop_name} lidera la evaluación individual, pero este plan comienza con ${first.crop_name}: aquí se priorizan dos ciclos que encajen en el calendario y su puntuación conjunta.`
-    : `El orden ${first.crop_name} → ${second.crop_name} responde a la compatibilidad del calendario y la evaluación conjunta de ambos cultivos.`;
+    ? `${leader.crop_name} lidera la evaluación individual, pero esta secuencia comienza con ${first.crop_name}. El planificador evalúa el conjunto de ${crops.length} campañas, evita superponer ciclos, no repite especies en tres campañas y prioriza la alternancia de familias.`
+    : `Esta secuencia prioriza ${crops.length} ciclos compatibles, alterna familias de cultivos consecutivos, evita repetir especies en tres campañas y conserva un tiempo de transición entre cada cosecha y nueva siembra.`;
   return {
-    headline: `${first.crop_name} primero, ${second.crop_name} después`,
+    headline: crops.map(c=>c.crop_name).join(' → '),
     whyOrder,
     evidence: [
-      {key:'calendar', label:'Primer cultivo', value:`${first.crop_name}: ${first.sow_date} a ${first.harvest_date}`},
-      {key:'transition', label:'Tiempo entre cultivos', value:numeric(gap) ? `${gap} días para la transición` : 'Sin dato de transición'},
-      {key:'families', label:'Familias distintas', value:`${first.family || 'No informada'} → ${second.family || 'No informada'}`},
-      {key:'score', label:'Evaluación conjunta', value:numeric(score)?`${Math.round(score)}/100 (índice relativo)`:'Sin puntuación disponible'},
+      {key:'calendar', label:'Plan de campañas', value: crops.map(c=>`${c.crop_name} (${c.sow_date?.slice(0,4)})`).join(' → ')},
+      {key:'transition', label:'Transición entre cultivos', value:gapDescription || 'Sin información de transición'},
+      {key:'families', label:'Familias que se alternan', value:crops.map(c=>c.family || 'No informada').join(' → ')},
+      {key:'score', label:'Compatibilidad conjunta', value:numeric(plan.score)?`${Math.round(plan.score)}/100 (índice relativo)`:'Sin puntuación disponible'},
     ],
+    reasons: plan.reasons || [],
+    planningYears: plannedYears,
+    isMultiYear,
   };
 }

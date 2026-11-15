@@ -39,3 +39,17 @@ test('UI keeps one map, live sources, tabs and no redundant ranking jargon',()=>
   assert.doesNotMatch(component,/terra-decision-notice/);
   assert.ok(map.length>3000);
 });
+
+
+test('multiyear rotation explanation reports the actual three-year sequence',()=>{
+  const plan={score:78.3,gap_days:[90,75],reasons:['Alterna familias reales.'],crops:[
+    {crop_id:'wheat',crop_name:'Trigo',sow_date:'2027-05-01',harvest_date:'2027-09-01',family:'Poaceae',planning_year:2027},
+    {crop_id:'papa',crop_name:'Papa',sow_date:'2028-01-01',harvest_date:'2028-04-15',family:'Solanaceae',planning_year:2028},
+    {crop_id:'girasol',crop_name:'Girasol',sow_date:'2029-01-01',harvest_date:'2029-05-01',family:'Asteraceae',planning_year:2029},
+  ]};
+  const info=rotationInsights(plan,[plan.crops[0]]);
+  assert.equal(info.planningYears.length,3);
+  assert.match(info.evidence.find(x=>x.key==='calendar').value,/2029/);
+  assert.match(info.evidence.find(x=>x.key==='transition').value,/90 días y 75 días/);
+  assert.ok(info.reasons.length);
+});

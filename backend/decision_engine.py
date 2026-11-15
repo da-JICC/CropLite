@@ -15,8 +15,8 @@ from statistics import mean, median
 from daily2025_service import daily_eto, daily_vpd
 
 CATALOG = json.loads((Path(__file__).parent / 'data' / 'decision_crop_catalog.json').read_text(encoding='utf-8'))
-FAMILIES = {'wheat': 'Poaceae', 'maize': 'Poaceae', 'rice': 'Poaceae', 'soybean': 'Fabaceae',
-            'sorghum': 'Poaceae', 'barley': 'Poaceae'}
+AGRONOMY = json.loads((Path(__file__).parent / 'data' / 'decision_agronomy_catalog.json').read_text(encoding='utf-8'))
+FAMILIES = {key: item['family'] for key, item in AGRONOMY.items()}
 VALID_THRESHOLD = .95
 SOW_INTERVAL_DAYS = 14
 TRANSITION_DAYS = 14
@@ -109,12 +109,18 @@ def month_profile(rows, years):
              } for m in range(1, 13)]
 
 
+
+# Scoring considers thermal suitability, heat accumulation, documented exposure,
+# and potential rainfall adequacy for UNIRRIGATED systems. No hidden soil values.
+WEIGHTS = {'temperature': .30, 'heat_accumulation': .25, 'exposure': .15, 'rainfed_water': .30}
+HISTORY_SAMPLE_MAX = 12
+ROTATION_YEARS = 3
+
+
 def _mapped_annual_day(year, day_index):
-    """Use month/day against actual analog year; don't invent leap-day observations."""
-    reference = date(2025, 1, 1) + timedelta(days=day_index)
-    if reference.year != 2025:
-        return None
-    return f'{year}-{reference.month:02d}-{reference.day:02d}'
+    """Legacy helper used by older clients; no future climate is generated."""
+    candidate = date(2025, 1, 1) + timedelta(days=day_index)
+    return str(date(year, candidate.month, candidate.day)) if candidate.year == 2025 else None
 
 
 def _stage_for_day(crop, position):
@@ -126,218 +132,354 @@ def _stage_for_day(crop, position):
     return crop['stages'][-1]
 
 
+def selected_history_years(summaries, reference_year, analogues=None):
+    """Deterministic diversified sample, no artificial six-year limit.
+
+    Includes climate extremes, typical year, beginning/recent years, and
+    distributional quantiles. Annual completeness is checked separately.
+    """
+    eligible = [r for r in summaries if r['year'] < reference_year and r['eligible']]
+    if len(eligible) <= HISTORY_SAMPLE_MAX:
+        return [r['year'] for r in eligible]
+    chosen = {item['year'] for item in (analogues or {}).values()}
+    chosen.update((eligible[0]['year'], eligible[-1]['year']))
+    for field in ('mean_temperature_c', 'rainfall_mm', 'year'):
+        ordered = sorted(eligible, key=lambda r: r[field])
+        for quantile in (.1, .25, .5, .75, .9):
+            chosen.add(ordered[round((len(ordered)-1)*quantile)]['year'])
+    if len(chosen) > HISTORY_SAMPLE_MAX:
+        compulsory = {item['year'] for item in (analogues or {}).values()}
+        compulsory.update((eligible[0]['year'], eligible[-1]['year']))
+        ordered_extra = sorted(chosen-compulsory)
+        # Compute indices against an immutable pool and a constant slot count.
+        # Previously len(selected) changed inside the loop, eventually producing
+        # an index outside ordered_extra and HTTP 500 on long NASA POWER series.
+        slots = HISTORY_SAMPLE_MAX-len(compulsory)
+        if slots > 0 and ordered_extra:
+            if slots == 1:
+                indices = [len(ordered_extra)//2]
+            else:
+                indices = [round(i*(len(ordered_extra)-1)/(slots-1))
+                           for i in range(min(slots,len(ordered_extra)))]
+            compulsory.update(ordered_extra[index] for index in indices)
+        return sorted(compulsory)
+    return sorted(chosen)
+
+
 def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latitude):
+    """Evaluate an actual observed seasonal window, including a following year.
+
+    The planned window is a hypothetical future calendar; the meteorology comes
+    exclusively from recorded years, with matching month/day and adjacent years.
+    """
     duration = crop['cycle_days']
-    if sow_offset + duration > 365:
-        return None
     optimum = (thermal or {}).get('thermal', {}).get('optimumClimateC') or {}
-    band = optimum.get('min'), optimum.get('max')
-    if not all(real(v) for v in band):
-        return None
+    band = (optimum.get('min'), optimum.get('max'))
     gdd_base, gdd_upper = crop.get('gdd_base_c'), crop.get('gdd_upper_c')
     target_gdd = (crop.get('gdd_cycle_target_degree_days') or {}).get('min')
-    if not all(real(v) for v in (gdd_base, gdd_upper, target_gdd)) or target_gdd <= 0:
+    if not all(real(v) for v in (*band, gdd_base, gdd_upper, target_gdd)) or target_gdd <= 0:
         return None
-    temp_days = 0
-    rain_days = 0
-    opt_days = 0
-    gdd = 0
-    precipitation = 0
-    etc_sum = 0
-    etc_days = 0
-    vpd_values = []
-    radiation_values = []
-    cold_evaluable = 0
-    cold_crossings = 0
-    heat_evaluable = 0
-    heat_crossings = 0
+    sow = date(target_year, 1, 1) + timedelta(days=sow_offset)
+    harvest = sow + timedelta(days=duration-1)
+    temp_days = rain_days = opt_days = 0
+    gdd = precipitation = etc_sum = 0.0
+    etc_days = cold_crossings = heat_crossings = 0
+    cold_evaluable = heat_evaluable = 0
+    vpd_values, radiation_values = [], []
+    max_dry_spell = dry_spell = 0
+    stage_rain=defaultdict(float)
+    stage_etc=defaultdict(float)
+    stage_etc_days=defaultdict(int)
     for i in range(duration):
-        key = _mapped_annual_day(year, sow_offset+i)
-        row = by_date.get(key) if key else None
-        if not row:
-            continue
+        planned_date = sow + timedelta(days=i)
+        historical_year = year + planned_date.year - target_year
+        try:
+            observed_date = date(historical_year, planned_date.month, planned_date.day)
+        except ValueError:
+            continue  # Feb 29 has no observed counterpart in some years.
+        row = by_date.get(str(observed_date))
+        if row is None: continue
         stage = _stage_for_day(crop, i)
         if real(row.get('mean_c')):
             temp_days += 1
             t = row['mean_c']
-            opt_days += (band[0] <= t <= band[1])
+            opt_days += int(band[0] <= t <= band[1])
             gdd += max(0, min(t, gdd_upper) - gdd_base)
         if real(row.get('precipitation_mm')):
             rain_days += 1
-            precipitation += row['precipitation_mm']
-        vpd = daily_vpd(row.get('max_c'),row.get('min_c'),row.get('dewpoint_c'))
-        if real(vpd):
-            vpd_values.append(vpd)
+            precipitation += max(0, row['precipitation_mm'])
+            stage_rain[stage['id']]+=max(0,row['precipitation_mm'])
+            dry_spell = dry_spell + 1 if row['precipitation_mm'] < 1.0 else 0
+            max_dry_spell = max(max_dry_spell, dry_spell)
+        vpd = row.get('_computed_vpd')
+        if vpd is None:
+            vpd = daily_vpd(row.get('max_c'), row.get('min_c'), row.get('dewpoint_c'))
+        if real(vpd): vpd_values.append(vpd)
         radiation = row.get('solar_radiation_mj_m2_day')
-        if real(radiation):
-            radiation_values.append(radiation)
-        date_key = date.fromisoformat(key)
-        eto = daily_eto(row.get('mean_c'), row.get('min_c'), row.get('max_c'),
-                        row.get('dewpoint_c'), row.get('wind_speed_ms'),
-                        row.get('surface_pressure_kpa'), radiation, latitude, date_key.timetuple().tm_yday)
+        if real(radiation): radiation_values.append(radiation)
+        eto = row.get('_computed_eto')
+        if eto is None and '_computed_eto' not in row:
+            eto = daily_eto(row.get('mean_c'),row.get('min_c'),row.get('max_c'),
+                            row.get('dewpoint_c'),row.get('wind_speed_ms'),
+                            row.get('surface_pressure_kpa'),radiation,latitude,observed_date.timetuple().tm_yday)
         if real(eto) and real(stage.get('kc')):
-            etc_sum += eto * stage['kc']
+            etc_sum += eto*stage['kc']
+            stage_etc[stage['id']]+=eto*stage['kc']
+            stage_etc_days[stage['id']]+=1
             etc_days += 1
         cold = stage.get('cold_reference_c')
         if cold and real(cold.get('max_c')) and real(row.get('min_c')):
             cold_evaluable += 1
-            cold_crossings += (row['min_c'] <= cold['max_c'])
+            cold_crossings += int(row['min_c'] <= cold['max_c'])
         heat = (thermal or {}).get('thermal', {}).get('heatReproductiveReferenceC')
         if stage['id'] == 'mid' and real(heat) and real(row.get('max_c')):
             heat_evaluable += 1
-            heat_crossings += (row['max_c'] >= heat)
-    cover = temp_days / duration
-    if cover < .9:
-        return None
-    # Three explicitly separate criteria. Hazard comparison applies only to
-    # documented cold stages and the broad reproductive mid-stage proxy.
-    thermal_fit = opt_days / temp_days
-    completion_fit = min(gdd / target_gdd, 1)
-    hazard_days = cold_crossings + heat_crossings
-    hazard_valid = cold_evaluable + heat_evaluable
-    hazard_fit = 1 - hazard_days / hazard_valid if hazard_valid else None
-    dimensions = [(thermal_fit, .45), (completion_fit, .4)]
-    if hazard_fit is not None:
-        dimensions.append((hazard_fit, .15))
-    score = round(100 * sum(v*w for v, w in dimensions)/sum(w for _, w in dimensions))
-    base = date(target_year, 1, 1)
-    sow = base+timedelta(days=sow_offset)
-    harvest = sow+timedelta(days=duration-1)
+            heat_crossings += int(row['max_c'] >= heat)
+    if temp_days / duration < .90 or rain_days != duration: return None  # Never interpolate absent daily rain, including leap days.
+    thermal_fit = opt_days/temp_days
+    completion_fit = min(gdd/target_gdd, 1.0)
+    hazard_valid = cold_evaluable+heat_evaluable
+    hazard_days = cold_crossings+heat_crossings
+    hazard_fit = 1-hazard_days/hazard_valid if hazard_valid else None
+    actual_etc = etc_sum if etc_days / duration >= .90 else None
+    # If radiation is unavailable, compare rain with the user's documented
+    # reference ETc range for this crop instead of inventing missing ET0.
+    etc_reference = crop.get('etc_cycle_reference_mm') or {}
+    valid_ref = [etc_reference.get('min'), etc_reference.get('max')]
+    fallback_etc = mean(valid_ref) if all(real(v) and v>0 for v in valid_ref) else None
+    water_benchmark = actual_etc if real(actual_etc) and actual_etc > 0 else fallback_etc
+    rainfall_complete = rain_days == duration
+    ratio = precipitation/water_benchmark if rainfall_complete and water_benchmark else None
+    stage_water=[]
+    if real(ratio) and crop['id'] != 'rice':
+        # Compare rainfall distribution against documented phase-specific Kc.
+        # It is an exploratory screening proxy, not a daily soil-water balance.
+        stage_total_weight=sum(st['duration_days']*st['kc'] for st in crop['stages'] if real(st.get('kc')))
+        for st in crop['stages']:
+            phase_id=st['id']
+            phase_etc=stage_etc.get(phase_id) if stage_etc_days[phase_id] >= .9*st['duration_days'] else None
+            if not real(phase_etc):
+                phase_etc=water_benchmark*st['duration_days']*st['kc']/stage_total_weight if stage_total_weight and real(st.get('kc')) else None
+            if real(phase_etc) and phase_etc>0:
+                stage_water.append({'stage':phase_id,'label':st['label'],
+                                    'rain_mm':rnd(stage_rain[phase_id],1),
+                                    'demand_mm':rnd(phase_etc,1),
+                                    'rain_to_demand':rnd(stage_rain[phase_id]/phase_etc,2)})
+    weak_stage=min(stage_water,key=lambda x:x['rain_to_demand']) if len(stage_water)==len(crop['stages']) else None
+    water_fit=(.7*min(1,ratio)+.3*min(1,weak_stage['rain_to_demand'])) if weak_stage else None
+    dimensions = {
+        'temperature': thermal_fit,
+        'heat_accumulation': completion_fit,
+        'exposure': hazard_fit,
+        'rainfed_water': water_fit,
+    }
+    available = [(v,WEIGHTS[k]) for k,v in dimensions.items() if real(v)]
+    score = round(100*sum(value*weight for value,weight in available)/sum(weight for _,weight in available),1)
     return {
-        'score': score,
+        'score':score, 'score_components_pct':{k:rnd(100*v,1) if real(v) else None for k,v in dimensions.items()},
+        'score_weights':{k:WEIGHTS[k] for k,v in dimensions.items() if real(v)},
+        'thermal_fit_pct':rnd(thermal_fit*100,1),'gdd_fit_pct':rnd(completion_fit*100,1),
+        'gdd_sum':rnd(gdd,1),'gdd_target_min':target_gdd,
         'criteria':{
-            'survival_exposure': {'status':('not_evaluable' if not hazard_valid else 'reference_crossed' if hazard_days else 'no_reference_crossing'),
-                                  'reference_crossing_days':hazard_days if hazard_valid else None,
-                                  'evaluated_days':hazard_valid,
-                                  'note':'Cruces de referencias por etapa; NO se infiere supervivencia o daño real.'},
-            'development_temperature': {'status':'observed_compatibility', 'in_band_fraction':rnd(thermal_fit,3),
-                                        'note':'Coincidencia de T media con banda climática orientativa, NO salud observada.'},
-            'cycle_thermal_completion':{'status':'estimated_gdd','gdd_fraction':rnd(completion_fit,3),
-                                        'note':'Progreso de GDD frente a requisito mínimo, no maduración observada.'},
+            'survival_exposure':{'status':'not_evaluable' if not hazard_valid else 'reference_crossed' if hazard_days else 'no_reference_crossing',
+                'reference_crossing_days':hazard_days if hazard_valid else None,'evaluated_days':hazard_valid,
+                'note':'Exposición a referencias térmicas del catálogo; no es daño observado.'},
+            'development_temperature':{'status':'observed_compatibility','in_band_fraction':rnd(thermal_fit,3)},
+            'cycle_thermal_completion':{'status':'estimated_gdd','gdd_fraction':rnd(completion_fit,3)},
+            'rainfed_water':{'status':'estimated' if real(water_fit) else 'not_evaluable',
+                'water_fit_fraction':rnd(water_fit,3), 'note':'Precipitación frente a demanda teórica en secano; no hay balance de humedad del suelo.'},
         },
-        'thermal_fit_pct': rnd(100*thermal_fit,1),
-        'gdd_fit_pct': rnd(100*completion_fit,1), 'gdd_sum': rnd(gdd,1), 'gdd_target_min': target_gdd,
-        'cold_reference_crossings': cold_crossings if cold_evaluable else None,
-        'heat_reference_crossings': heat_crossings if heat_evaluable else None,
-        'hazard_days_evaluated': hazard_valid,
-        'rain_mm': rnd(precipitation) if rain_days == duration else None,
-        'etc_mm': rnd(etc_sum) if etc_days / duration >= .9 else None,
-        'rain_etc_ratio': rnd(precipitation / etc_sum, 2) if rain_days == duration and etc_days==duration and etc_sum > 0 else None,
-        'vpd_mean_kpa': rnd(avg(vpd_values)),
-        'solar_radiation_mean_mj_m2_day': rnd(avg(radiation_values)),
-        'solar_radiation_coverage': rnd(len(radiation_values)/duration,3),
-        'etc_coverage':rnd(etc_days/duration,3),
-        'rain_coverage': rnd(rain_days / duration,3), 'temperature_coverage': rnd(cover,3),
-        'sow_date': str(sow), 'harvest_date': str(harvest), 'duration_days': duration,
-        'sow_day_offset': sow_offset,
+        'cold_reference_crossings':cold_crossings if cold_evaluable else None,
+        'heat_reference_crossings':heat_crossings if heat_evaluable else None,
+        'hazard_days_evaluated':hazard_valid,
+        'rain_mm':rnd(precipitation) if rainfall_complete else None,
+        'etc_mm':rnd(actual_etc), 'etc_source':'FAO-56 ETo×Kc' if real(actual_etc) else 'Rango de ETc por ciclo (Excel)',
+        'water_benchmark_mm':rnd(water_benchmark),'rain_etc_ratio':rnd(ratio,2),
+        'max_dry_spell_days':max_dry_spell if rainfall_complete else None,
+        'stage_water_context':stage_water,
+        'water_weak_stage':weak_stage['label'] if weak_stage else None,
+        'vpd_mean_kpa':rnd(avg(vpd_values)), 'solar_radiation_mean_mj_m2_day':rnd(avg(radiation_values)),
+        'solar_radiation_coverage':rnd(len(radiation_values)/duration,3),
+        'etc_coverage':rnd(etc_days/duration,3), 'rain_coverage':rnd(rain_days/duration,3),
+        'temperature_coverage':rnd(temp_days/duration,3),
+        'sow_date':str(sow),'harvest_date':str(harvest),'duration_days':duration,'sow_day_offset':sow_offset,
     }
 
 
-def rank_crops(rows, solar_rows, scenarios, thermal_catalog, target_year, latitude):
-    by_year = defaultdict(dict)
-    for r in rows:
-        key = r.get('date', '')
-        if len(key) == 10:
-            by_year[int(key[:4])][key] = r
-    thermal_by_id = {c['id']: c for c in thermal_catalog}
-    for row in solar_rows:
-        item = by_year.get(int(row['date'][:4]),{}).get(row['date'])
-        if item is not None and real(row.get('solar_radiation_mj_m2_day')):
-            item['solar_radiation_mj_m2_day'] = row['solar_radiation_mj_m2_day']
-    scenario_years = {key: meta['year'] for key, meta in scenarios.items()}
-    result, plan_pool = [], []
-    for crop in CATALOG['crops']:
-        best = None
-        for offset in range(0, 365 - crop['cycle_days'] + 1, SOW_INTERVAL_DAYS):
-            per_scenario = {}
-            for label, yr in scenario_years.items():
-                evaluated = _scenario_cycle(crop, thermal_by_id.get(crop['id']), by_year[yr], yr, offset, target_year, latitude)
-                if evaluated:
-                    per_scenario[label] = evaluated
-            if len(per_scenario) < len(scenarios):
-                continue  # A missing scenario is never silently counted as favorable.
-            values = [v['score'] for v in per_scenario.values()]
-            robust = rnd(.6*min(values) + .4*mean(values),1)
-            candidate = {'crop_id':crop['id'], 'crop_name':crop['name'], 'family':FAMILIES[crop['id']],
-                         'score':robust, 'scenario_results':per_scenario,
-                         'sow_date':next(iter(per_scenario.values()))['sow_date'],
-                         'harvest_date':next(iter(per_scenario.values()))['harvest_date'],
-                         'cycle_days':crop['cycle_days'], 'min_scenario_score':min(values),
-                         'mean_scenario_score':rnd(mean(values),1),
-                         'not_evaluated':['Producción/rendimiento', 'Disponibilidad real de riego',
-                                          'pH, nutrientes, textura y fertilidad de la parcela',
-                                          'Sanidad vegetal, variedad y manejo del cultivo'],
-                         'basis': 'Índice de compatibilidad térmica y GDD con referencias condicionales; no probabilidad de cosecha'}
-            plan_pool.append(candidate)
-            if best is None or candidate['score'] > best['score']:
-                best = candidate
-        if best:
-            result.append(best)
-    result.sort(key=lambda r:(-r['score'],r['crop_name']))
-    rotations=[]
-    for first in plan_pool:
-        for second in plan_pool:
-            if first['family']==second['family'] or first['crop_id']==second['crop_id']:
-                continue
-            if date.fromisoformat(second['sow_date']) <= date.fromisoformat(first['harvest_date']) + timedelta(days=TRANSITION_DAYS):
-                continue
-            mean_score = rnd(.6*min(first['score'],second['score'])+.4*mean([first['score'],second['score']]),1)
-            rotations.append({'id':f"{first['crop_id']}-{first['sow_date']}-{second['crop_id']}-{second['sow_date']}",
-                              'crops':[first,second], 'score':mean_score,
-                              'gap_days':(date.fromisoformat(second['sow_date'])-date.fromisoformat(first['harvest_date'])).days-1,
-                              'basis':'Familias distintas, calendario compatible y puntuación térmica robusta; no certifica viabilidad de rotación'})
-    rotations.sort(key=lambda row:(-row['score'],row['id']))
-    # Prefer distinct combinations; multiple dates of same two crops are not 3 independent alternatives.
-    unique=[]; seen=set()
-    for item in rotations:
-        pair=tuple(c['crop_id'] for c in item['crops'])
-        if pair in seen:continue
-        seen.add(pair);unique.append(item)
+def _rotations(candidate_by_crop, planning_year):
+    """One main growing cycle per year for three years; no calendar truncation.
+
+    This is a sequencing screen, NOT a nutrient/pest/soil improvement forecast.
+    Family and available rooting-depth contrast act as tie-breakers, not fake
+    measured soil effects. Each annual season uses the SAME observed climate
+    evidence: planning dates are hypothetical, never meteorological predictions.
+    """
+    # Up to three substantially different sowing windows per crop to avoid
+    # rejecting a valid succession merely because its best solo date is late.
+    options=[]
+    for crop,entries in candidate_by_crop.items():
+        entries.sort(key=lambda x:-x['score'])
+        picked=[]
+        for item in entries:
+            if all(abs(item['sow_day_offset']-p['sow_day_offset']) >= 49 for p in picked):
+                picked.append(item)
+            if len(picked)==3:break
+        options.extend(picked)
+    options.sort(key=lambda x:-x['score'])
+    candidates=options[:36]
+    def shifted(item,year):
+        sow=date.fromisoformat(item['sow_date'])
+        try: new_sow=date(year,sow.month,sow.day)
+        except ValueError: new_sow=date(year,sow.month,28)
+        copy={**item,'sow_date':str(new_sow),
+              'harvest_date':str(new_sow+timedelta(days=item['cycle_days']-1)),
+              'planning_year':year}
+        return copy
+    plans=[]
+    for i in candidates:
+        first=shifted(i,planning_year)
+        for j in candidates:
+            if i['family']==j['family']:continue
+            second=shifted(j,planning_year+1)
+            gap1=(date.fromisoformat(second['sow_date'])-date.fromisoformat(first['harvest_date'])).days-1
+            if gap1 < TRANSITION_DAYS:continue
+            for k in candidates:
+                if j['family']==k['family'] or i['crop_id']==k['crop_id']:continue
+                third=shifted(k,planning_year+2)
+                gap2=(date.fromisoformat(third['sow_date'])-date.fromisoformat(second['harvest_date'])).days-1
+                if gap2 < TRANSITION_DAYS:continue
+                trio=[first,second,third]
+                values=[item['score'] for item in trio]
+                families=[item['family'] for item in trio]
+                root=[(AGRONOMY.get(item['crop_id']) or {}).get('root_depth_m',{}).get('max') for item in trio]
+                root_contrast=sum(1 for a,b in zip(root,root[1:]) if real(a) and real(b) and abs(a-b)>=.4)
+                score=rnd(.5*min(values)+.5*mean(values),1)
+                plans.append({'id':'-'.join(f"{item['crop_id']}-{item['planning_year']}" for item in trio),
+                              'crops':trio,'score':score,'gap_days':[gap1,gap2],
+                              'years':[planning_year,planning_year+1,planning_year+2],
+                              'families_count':len(set(families)), 'root_contrast_count':root_contrast,
+                              'legume_present': 'Fabaceae' in families, 'species_count':len({item['crop_id'] for item in trio}),
+                              'basis':'Tres campañas anuales con especies distintas; compatibilidad de fechas, alternancia de familia y respaldo climático de cada cultivo.',
+                              'reasons':[
+                                  f"Cada cultivo dispone de una ventana de siembra y cosecha sin superponerse con la siguiente campaña.",
+                                  f"La secuencia alterna familias: {' → '.join(families)}, y no repite especies en tres campañas.",
+                                  f"Deja {gap1} y {gap2} días entre cosecha y nueva siembra.",
+                                  f"Comparación de profundidad radicular referencial en {root_contrast} transiciones (no demuestra mejoras reales del suelo)."
+                              ]})
+    # Distinct sequences first. More diverse families/rooting patterns win ties;
+    # these are secondary rules, never assumed measured soil benefits.
+    plans.sort(key=lambda p:(-p['score'],-p['families_count'],-int(p['legume_present']),-p['root_contrast_count'],p['id']))
+    unique=[];seen=set()
+    for item in plans:
+        signature=tuple(c['crop_id'] for c in item['crops'])
+        if signature in seen:continue
+        seen.add(signature);unique.append(item)
         if len(unique)==3:break
-    return result, unique
+    return unique
 
 
-def build_decision_report(weather_rows, solar_rows, thermal_catalog, *, reference_year=2025, target_year=2027, latitude=-33.05):
+def rank_crops(rows, solar_rows, scenarios, thermal_catalog, target_year, latitude, *, evaluation_years=None):
+    if not scenarios: return [],[]
+    thermal_by_id={c['id']:c for c in thermal_catalog}
+    years=list(dict.fromkeys(evaluation_years or [x['year'] for x in scenarios.values()]))
+    # Never modify the raw POWER records in place; benchmark simulations are pure.
+    observed={row['date']:dict(row) for row in rows if len(row.get('date',''))==10 and int(row['date'][:4])<=max(years)}
+    for row in solar_rows:
+        key=row.get('date')
+        if key in observed and real(row.get('solar_radiation_mj_m2_day')):
+            observed[key]['solar_radiation_mj_m2_day']=row['solar_radiation_mj_m2_day']
+    # ETo is expensive; compute once per observed day, not per crop/window.
+    for key,row in observed.items():
+        radiation=row.get('solar_radiation_mj_m2_day')
+        day=date.fromisoformat(key)
+        row['_computed_eto']=daily_eto(row.get('mean_c'),row.get('min_c'),row.get('max_c'),
+                                       row.get('dewpoint_c'),row.get('wind_speed_ms'),
+                                       row.get('surface_pressure_kpa'),radiation,latitude,day.timetuple().tm_yday) if real(radiation) else None
+        row['_computed_vpd']=daily_vpd(row.get('max_c'),row.get('min_c'),row.get('dewpoint_c'))
+    result=[];pool=defaultdict(list)
+    for crop in CATALOG['crops']:
+        best=None
+        for offset in range(0,365,SOW_INTERVAL_DAYS):
+            per_year={}
+            for year in years:
+                evaluated=_scenario_cycle(crop,thermal_by_id.get(crop['id']),observed,year,offset,target_year,latitude)
+                if evaluated:per_year[year]=evaluated
+            if len(per_year)<max(3,math.ceil(.8*len(years))):continue
+            values=[v['score'] for v in per_year.values()]
+            robust=rnd(.6*percentile(values,.25)+.4*mean(values),1)
+            scenario_results={label:per_year.get(meta['year']) for label,meta in scenarios.items()}
+            scenario_results={key:value for key,value in scenario_results.items() if value}
+            # Summaries for the user are calculated across ALL valid sample years.
+            water_values=[r['score_components_pct']['rainfed_water'] for r in per_year.values()
+                          if real(r['score_components_pct']['rainfed_water'])]
+            candidate={
+                'crop_id':crop['id'],'crop_name':crop['name'],'family':FAMILIES[crop['id']],
+                'score':robust,'scenario_results':scenario_results,
+                'sow_date':next(iter(per_year.values()))['sow_date'],
+                'harvest_date':next(iter(per_year.values()))['harvest_date'],
+                'sow_day_offset':offset,'cycle_days':crop['cycle_days'],
+                'min_scenario_score':min(values),'mean_scenario_score':rnd(mean(values),1),
+                'history_sample_years':len(per_year),'history_years_considered':len(years),
+                'historical_p25_score':rnd(percentile(values,.25),1),
+                'historical_p10_score':rnd(percentile(values,.1),1),
+                'historical_p90_score':rnd(percentile(values,.9),1),
+                'water_fit_pct':rnd(avg(water_values),1),
+                'water_weak_stage':next((v['water_weak_stage'] for v in per_year.values() if v.get('water_weak_stage')),None),
+                'water_context_available':bool(water_values),
+                'eligible_for_rainfed_plan':crop['id'] != 'rice',
+                'eligibility_reason':'Arroz inundado: requiere abastecimiento y manejo hídrico, no evaluables como secano.' if crop['id']=='rice' else None,
+                'rain_vs_water_demand_basis':'70 % del ajuste lluvia/ETc por ciclo y 30 % del ajuste de la etapa con menor relación lluvia/ETc (Kc por etapa). Proxy en secano sin balance edáfico.',
+                'not_evaluated':['Disponibilidad real de riego','pH y nutrientes de la parcela','Sanidad, variedad y manejo'],
+                'basis':'Compatibilidad térmica, GDD, exposición condicional y agua de lluvia frente a demanda teórica; índice relativo de secano.'
+            }
+            if crop['id'] != 'rice':pool[crop['id']].append(candidate)
+            if best is None or candidate['score']>best['score']:best=candidate
+        if best:result.append(best)
+    result.sort(key=lambda r:(not r['eligible_for_rainfed_plan'],-r['score'],r['crop_name']))
+    return result,_rotations(pool,target_year)
+
+
+def build_decision_report(weather_rows,solar_rows,thermal_catalog,*,reference_year=2025,target_year=2027,latitude=-33.05):
     years=sorted({int(r['date'][:4]) for r in weather_rows if len(r.get('date',''))==10})
-    summary=[year_summary(weather_rows, yr) for yr in years if yr<=reference_year]
-    analogues=select_analogue_years(summary, reference_year)
+    summary=[year_summary(weather_rows,yr) for yr in years if yr<=reference_year]
+    analogues=select_analogue_years(summary,reference_year)
     ref=next((r for r in summary if r['year']==reference_year),None)
     historical=[r for r in summary if r['year']<reference_year and r['eligible']]
-    baseline_temp=avg([r['mean_temperature_c'] for r in historical])
-    baseline_rain=avg([r['rainfall_mm'] for r in historical])
+    baseline_temp=avg([r['mean_temperature_c'] for r in historical]);baseline_rain=avg([r['rainfall_mm'] for r in historical])
     recent={'year':reference_year,'available':bool(ref and ref['eligible']),
             'mean_temp_c':ref['mean_temperature_c'] if ref else None,
             'rainfall_mm':ref['rainfall_mm'] if ref else None,
             'temperature_difference_vs_history_c':rnd(ref['mean_temperature_c']-baseline_temp) if ref and ref['eligible'] and real(baseline_temp) else None,
             'rain_difference_vs_history_mm':rnd(ref['rainfall_mm']-baseline_rain) if ref and ref['eligible'] and real(baseline_rain) else None}
-    selected = [r['year'] for r in historical]
-    ranked, rotations = rank_crops(weather_rows,solar_rows,analogues,thermal_catalog,target_year,latitude) if analogues else ([],[])
-    annual_solar={}
-    for r in solar_rows:
-        year = int(r['date'][:4])
-        if real(r.get('solar_radiation_mj_m2_day')):
-            annual_solar.setdefault(year,[]).append(r['solar_radiation_mj_m2_day'])
+    selected=[r['year'] for r in historical]
+    evaluation_years=selected_history_years(summary,reference_year,analogues)
+    ranked,rotations=rank_crops(weather_rows,solar_rows,analogues,thermal_catalog,target_year,latitude,
+                                evaluation_years=evaluation_years) if analogues else ([],[])
+    solar_years={int(r['date'][:4]) for r in solar_rows if real(r.get('solar_radiation_mj_m2_day'))}
     return {
         'status':'evaluated' if ranked else 'insufficient',
-        'method':'observed_year_analogues_and_explainable_agronomic_rules_v2',
+        'method':'historical_climate_quantile_sampling_and_rainfed_suitability_v3',
         'is_trained_ml':False,'is_weather_forecast':False,'is_yield_prediction':False,
-        'reference_year':reference_year,'planning_year':target_year,
+        'reference_year':reference_year,'planning_year':target_year,'planning_years':[target_year+i for i in range(ROTATION_YEARS)],
         'coverage':{'met_years_received':len(summary),'baseline_valid_years':len(historical),
-                    'baseline_first':min(selected) if selected else None,
-                    'baseline_last':max(selected) if selected else None,
-                    'solar_years_with_data':len(annual_solar),
-                    'ndvi_handling':'Sentinel-2 polígono: contexto independiente, no identifica especie ni productividad futura'},
-        'recent_comparison':recent, 'annual_summary':summary,
+                    'baseline_first':min(selected) if selected else None,'baseline_last':max(selected) if selected else None,
+                    'sampled_years':evaluation_years,'solar_years_with_data':len(solar_years),
+                    'ndvi_handling':'NDVI del polígono como contexto: no identifica productividad de cultivos futuros'},
+        'recent_comparison':recent,'annual_summary':summary,
         'seasonal_profile':month_profile(weather_rows,set(selected)),
         'recent_monthly':month_profile(weather_rows,{reference_year}),
-        'analogues':analogues or {}, 'ranked':ranked, 'rotations':rotations,
+        'analogues':analogues or {},'ranked':ranked,'rotations':rotations,
+        'decision_dimensions':['Temperatura','Calor acumulado','Exposición térmica (si existe referencia)','Lluvia frente a ETc en secano'],
+        'planning_assumptions':{'rainfed':True,'soil_measured':False,'irrigation_confirmed':False,
+                                'years':ROTATION_YEARS,'transition_days':TRANSITION_DAYS,
+                                'family_change_between_seasons':True,'three_distinct_crop_species':True,
+                                'stages':'duraciones aproximadas del catálogo, no simulación dinámica de madurez'},
         'limitations':[
-            'Analogías de años observados: no son predicciones del clima futuro.',
-            'Se optimizan fechas dentro de un año calendario; ciclos que cruzan diciembre se excluyen en esta versión.',
-            'La puntuación es relativa y fundamentalmente térmica/GDD. El agua es descriptiva: sin riego, escorrentía y suelo no se infiere estrés hídrico.',
-            'Los umbrales de frío y calor aplican solo a fases aproximadas FAO; cruzarlos no confirma daño.',
-            'La fecha fenológica se aproxima por días fijos, no observación directa; el NDVI observado puede pertenecer a otro cultivo.',
-            'Las secuencias de familias distintas no garantizan beneficios sanitarios ni aptitud del suelo.',
-            'Datos climáticos regionales de NASA POWER, no mediciones dentro de la parcela.',
-            'No hay etiquetas independientes de rendimiento ni validación geográfica para entrenar IA; metodología de reglas transparente.'
+            'Fechas de los próximos tres años: planificación hipotética, no pronóstico meteorológico.',
+            'La compatibilidad hídrica supone secano: 70 % lluvia/ETc del ciclo + 30 % peor etapa Kc. No equivale a estrés hídrico ni conoce infiltración, riego o reservas del suelo.',
+            'Se utilizan hasta doce años históricos elegidos con criterios climáticos y temporales; no una probabilidad de rendimiento.',
+            'Se permiten cultivos entre diciembre y el año siguiente, solo con registros observados completos suficientes.',
+            'El motor NO puntúa pH, nutrientes, VPD o radiación sin referencias comparables y datos locales verificables.',
+            'Las referencias diarias de frío/calor y las duraciones fenológicas no equivalen a pérdidas ni cosechas reales.',
+            'La alternancia de familias, las especies distintas, profundidad radicular y espacio entre campañas son criterios de planificación, no garantía de recuperación del suelo.'
         ]}

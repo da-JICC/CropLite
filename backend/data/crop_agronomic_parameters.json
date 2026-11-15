@@ -1,6 +1,5 @@
 {
   "schema_version": 2,
-  "note": "20 cultivos; vacíos explícitos, no interpolados ni inventados. Límites de GDD no equivalen a daño. Datos locales a validar.",
   "crops": [
     {
       "id": "wheat",

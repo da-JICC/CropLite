@@ -175,6 +175,110 @@
         "coldFloweringSourceUrl": "https://www.fao.org/4/y7223e/y7223e0a.htm",
         "minimumCriticalReferenceC": -1
       }
+    },
+    {
+      "id": "papa",
+      "name": "Papa",
+      "scientificName": "Solanum tuberosum",
+      "csvCropName": "Papa",
+      "image": "/crops/potato.svg",
+      "thermal": {
+        "gddBaseC": 2.0,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 15,
+          "max": 25,
+          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
+        },
+        "heatReproductiveReferenceC": null,
+        "coldFloweringReferenceC": -1.0,
+        "coldFloweringRangeC": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "girasol",
+      "name": "Girasol",
+      "scientificName": "Helianthus annuus",
+      "csvCropName": "Girasol",
+      "image": "/crops/sunflower.svg",
+      "thermal": {
+        "gddBaseC": 8.0,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 17,
+          "max": 34,
+          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
+        },
+        "heatReproductiveReferenceC": null,
+        "coldFloweringReferenceC": -2.0,
+        "coldFloweringRangeC": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "poroto-seco",
+      "name": "Poroto seco",
+      "scientificName": "Phaseolus vulgaris",
+      "csvCropName": "Poroto seco",
+      "image": "/crops/bean.svg",
+      "thermal": {
+        "gddBaseC": 10.0,
+        "gddUpperC": 32.0,
+        "optimumClimateC": {
+          "min": 16,
+          "max": 25,
+          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
+        },
+        "heatReproductiveReferenceC": null,
+        "coldFloweringReferenceC": -2.0,
+        "coldFloweringRangeC": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
+        "minimumCriticalReferenceC": null
+      }
+    },
+    {
+      "id": "repollo",
+      "name": "Repollo",
+      "scientificName": "Brassica oleracea var. capitata",
+      "csvCropName": "Repollo",
+      "image": "/crops/cabbage.svg",
+      "thermal": {
+        "gddBaseC": 4.5,
+        "gddUpperC": 30.0,
+        "optimumClimateC": {
+          "min": 15,
+          "max": 24,
+          "basis": "Temperatura climática favorable FAO ECOCROP; no daño diario ni óptimo fenológico",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/home"
+        },
+        "heatReproductiveReferenceC": null,
+        "coldFloweringReferenceC": -2.0,
+        "coldFloweringRangeC": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "coldFloweringBasis": "Referencia del CSV original; floración real no observada",
+        "coldFloweringSource": "TerraAI_20_Cultivos_Indicadores_Satelitales(1).csv",
+        "minimumCriticalReferenceC": null
+      }
     }
   ]
 }

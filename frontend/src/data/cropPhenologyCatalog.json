@@ -547,6 +547,358 @@
         "Valores de helada provenientes del CSV deben contrastarse localmente, no demuestran daño.",
         "ETc no es medición real de transpiración ni incluye percolación para arroz inundado."
       ]
+    },
+    {
+      "id": "papa",
+      "name": "Papa",
+      "gdd_base_c": 2.0,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1600.0,
+        "max": 2260.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 500.0,
+        "max": 700.0
+      },
+      "cycle_days": 105,
+      "stage_duration_basis": "Distribución aproximada de las cuatro fases del ciclo mínimo ECOCROP; revisar por variedad y región",
+      "stage_duration_source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx; fases FAO-56 (proporciones referenciales)",
+      "cold_reference_source": "CSV original; fechas de daño y duración de exposición no validadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 20,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -3.0,
+            "max_c": -2.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 2.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 30,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 2.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 35,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -2.0,
+            "max_c": -1.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 2.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 20,
+          "kc": 0.85,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 2.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Fases distribuidas aproximadamente dentro de la duración mínima del catálogo; verificar variedad y zona.",
+        "Rangos ECOCROP son climáticos, no umbrales diarios de daño.",
+        "Kc por etapa y GDD por ciclo del Excel original; sin objetivo GDD validado por fase.",
+        "ETc es demanda teórica; no representa agua medida en el suelo."
+      ]
+    },
+    {
+      "id": "girasol",
+      "name": "Girasol",
+      "gdd_base_c": 8.0,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1790.0,
+        "max": 1905.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 600.0,
+        "max": 1000.0
+      },
+      "cycle_days": 125,
+      "stage_duration_basis": "Distribución aproximada de las cuatro fases del ciclo mínimo ECOCROP; revisar por variedad y región",
+      "stage_duration_source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx; fases FAO-56 (proporciones referenciales)",
+      "cold_reference_source": "CSV original; fechas de daño y duración de exposición no validadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 20,
+          "kc": 0.35,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -6.0,
+            "max_c": -5.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 8.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 35,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 8.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 45,
+          "kc": 1.15,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -3.0,
+            "max_c": -2.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 8.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 25,
+          "kc": 0.55,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 8.0,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Fases distribuidas aproximadamente dentro de la duración mínima del catálogo; verificar variedad y zona.",
+        "Rangos ECOCROP son climáticos, no umbrales diarios de daño.",
+        "Kc por etapa y GDD por ciclo del Excel original; sin objetivo GDD validado por fase.",
+        "ETc es demanda teórica; no representa agua medida en el suelo."
+      ]
+    },
+    {
+      "id": "poroto-seco",
+      "name": "Poroto seco",
+      "gdd_base_c": 10.0,
+      "gdd_upper_c": 32.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 960.0,
+        "max": 1350.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 300.0,
+        "max": 500.0
+      },
+      "cycle_days": 95,
+      "stage_duration_basis": "Distribución aproximada de las cuatro fases del ciclo mínimo ECOCROP; revisar por variedad y región",
+      "stage_duration_source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx; fases FAO-56 (proporciones referenciales)",
+      "cold_reference_source": "CSV original; fechas de daño y duración de exposición no validadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 15,
+          "kc": 0.35,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -6.0,
+            "max_c": -5.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 32.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 25,
+          "kc": 0.7,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 32.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 35,
+          "kc": 1.1,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -3.0,
+            "max_c": -2.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 32.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 20,
+          "kc": 0.3,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 10.0,
+          "gdd_upper_c": 32.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Fases distribuidas aproximadamente dentro de la duración mínima del catálogo; verificar variedad y zona.",
+        "Rangos ECOCROP son climáticos, no umbrales diarios de daño.",
+        "Kc por etapa y GDD por ciclo del Excel original; sin objetivo GDD validado por fase.",
+        "ETc es demanda teórica; no representa agua medida en el suelo."
+      ]
+    },
+    {
+      "id": "repollo",
+      "name": "Repollo",
+      "gdd_base_c": 4.5,
+      "gdd_upper_c": 30.0,
+      "gdd_cycle_target_degree_days": {
+        "min": 1710.0,
+        "max": 1710.0
+      },
+      "etc_cycle_reference_mm": {
+        "min": 350.0,
+        "max": 500.0
+      },
+      "cycle_days": 120,
+      "stage_duration_basis": "Distribución aproximada de las cuatro fases del ciclo mínimo ECOCROP; revisar por variedad y región",
+      "stage_duration_source": "TerraAI_20_Cultivos_Indicadores_Satelitales.xlsx; fases FAO-56 (proporciones referenciales)",
+      "cold_reference_source": "CSV original; fechas de daño y duración de exposición no validadas",
+      "stages": [
+        {
+          "id": "initial",
+          "label": "Inicial / emergencia",
+          "duration_days": 20,
+          "kc": 0.45,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -7.0,
+            "max_c": -5.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "development",
+          "label": "Desarrollo de cobertura",
+          "duration_days": 30,
+          "kc": 0.75,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "mid",
+          "label": "Mitad de temporada / reproducción posible",
+          "duration_days": 45,
+          "kc": 1.05,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": {
+            "min_c": -3.0,
+            "max_c": -2.0
+          },
+          "cold_basis": "Valor de referencia del CSV (etapa aproximada, no confirma daño)",
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        },
+        {
+          "id": "late",
+          "label": "Maduración y final",
+          "duration_days": 25,
+          "kc": 0.9,
+          "kc_note": "Kc referencial del CSV, constante dentro de fase (simplificación; FAO-56 recomienda curva continua).",
+          "kc_source": "FAO Table 8 / usuario CSV",
+          "cold_reference_c": null,
+          "cold_basis": null,
+          "gdd_stage_target_degree_days": null,
+          "gdd_base_c": 4.5,
+          "gdd_upper_c": 30.0,
+          "gdd_basis": "Parámetro global de cultivo reutilizado en esta fase; valor específico por fase no disponible."
+        }
+      ],
+      "limitations": [
+        "Fases distribuidas aproximadamente dentro de la duración mínima del catálogo; verificar variedad y zona.",
+        "Rangos ECOCROP son climáticos, no umbrales diarios de daño.",
+        "Kc por etapa y GDD por ciclo del Excel original; sin objetivo GDD validado por fase.",
+        "ETc es demanda teórica; no representa agua medida en el suelo."
+      ]
     }
   ]
 }

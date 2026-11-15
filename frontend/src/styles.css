@@ -582,3 +582,11 @@
 @media(max-width:700px){.terra-ux-decisions .terra-decision-grid{grid-template-columns:1fr}.terra-ux-explanation{padding:14px}.terra-ux-season-card{padding:12px}.terra-ux-season-plot{height:270px}.terra-ux-rotation-evidence{grid-template-columns:1fr}}
 
 .terra-ux-ranking-context{margin:13px 0 0;padding:9px 12px;border-radius:9px;background:#edf5ee;color:#557461;font-size:11px;line-height:1.55}
+
+/* Three-year rotation calendar: keeps the existing simple visual language. */
+.terra-decision-year-head{display:grid;gap:0;margin:0 0 8px;min-height:22px}
+.terra-decision-year-head span{text-align:center;font-weight:650;border-left:1px solid #dce8df;color:#486955;font-size:12px}
+.terra-decision-year-head span:last-child{border-right:1px solid #dce8df}
+.terra-decision-long-calendar{position:relative;overflow:hidden;background:repeating-linear-gradient(to right,transparent 0%,transparent 24.9%,#e6efe9 25%,transparent 25.1%)}
+.terra-decision-long-calendar .terra-decision-year-divider{position:absolute;top:0;bottom:0;border-left:1px dashed #bdd4c2;z-index:1;pointer-events:none}
+.terra-decision-plan-reasons{margin:12px 0 0 20px;padding:0;line-height:1.65;color:#436451;font-size:13px}

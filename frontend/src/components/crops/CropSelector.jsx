@@ -12,7 +12,7 @@ export function CropSelector({selectedId, onSelect}) {
   return <div className="crop-picker">
     <div className="crop-picker-heading">
       <div><span className="crop-picker-eyebrow">CULTIVO DE REFERENCIA</span><h3>¿Qué cultivo quieres observar?</h3></div>
-      <span className="crop-count">6 disponibles</span>
+      <span className="crop-count">{CROPS.length} disponibles</span>
     </div>
     <div className="crop-picker-grid" role="group" aria-label="Seleccionar cultivo">
       {CROPS.map(item => <button type="button" key={item.id}

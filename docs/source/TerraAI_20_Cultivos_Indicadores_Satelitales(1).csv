@@ -1,0 +1,21 @@
+﻿Cultivo,GDD ciclo mín (°C·día),GDD ciclo máx (°C·día),T basal GDD (°C),T superior GDD (°C),ETc ciclo mín (mm),ETc ciclo máx (mm),Kc inicial,Kc desarrollo,Kc medio,Kc final,Agotamiento p (0–1),Raíz mín (m),Raíz máx (m),VPD ref mín (kPa),VPD ref máx (kPa),NDVI ópt. mín,NDVI ópt. máx,EVI ópt. mín,EVI ópt. máx,Daño frío inicio mín (°C),Daño frío inicio máx (°C),Daño frío flor mín (°C),Daño frío flor máx (°C),Daño calor mín (°C),Daño calor máx (°C),Escenario GDD,Origen GDD,Contexto VPD,Observación
+Trigo,1620,2300,0,35,450,650,0.35,0.75,1.15,0.45,0.55,1,1.5,,,,,,,-10,-9,-2,-1,,,Primavera (corto/largo),6.11,,
+Maíz grano,1420,1955,10,32,500,800,0.4,0.8,1.15,0.7,0.55,1,1.7,,,,,,,-3,-2,-2,-1,,,"Corto, Largo",6.11,,
+Soja,1660,1960,10,40,450,700,0.35,0.75,1.1,0.6,0.5,0.6,1.3,,,,,,,-4,-3,-3,-2,,,"Corto, Largo",6.11,,Soja corto: FAO total 1660; etapas suman 1650
+Papa,1600,2260,2,30,500,700,0.45,0.75,1.15,0.85,0.35,0.4,0.6,,,,,,,-3,-2,-2,-1,,,"Corto, Largo",6.11,,
+Girasol,1790,1905,8,30,600,1000,0.35,0.75,1.15,0.55,0.45,0.8,1.5,,,,,,,-6,-5,-3,-2,,,"Corto, Largo",6.11,,
+Arroz (inundado),1660,1805,12,35,450,700,1.1,,1.2,1,0.2,0.5,1,,,,,,,-1,-0.5,-1,-0.5,,,"Corto, Largo",6.11,,Arroz inundado: ETc no incluye percolación
+Cebada,1450,2325,0,30,450,650,0.35,0.75,1.15,0.45,0.55,1,1.5,,,,,,,-8,-7,-2,-1,,,"Corto, Largo",6.11,,
+Sorgo grano,1380,1520,10,30,450,650,0.35,0.75,1.1,0.65,0.55,1,2,,,,,,,-3,-2,-2,-1,,,"Corto, Largo",6.11,,
+Poroto seco,960,1350,10,32,300,500,0.35,0.7,1.1,0.3,0.45,0.6,0.9,,,,,,,-6,-5,-3,-2,,,"Corto, Largo",6.11,,
+Arveja verde,905,1400,5,27,350,500,0.45,0.8,1.15,1.05,0.35,0.6,1,,,,,,,-8,-7,-3,-2,,,"Industrial, Mercado",6.11,,
+Tomate,1900,2065,7,28,400,800,0.45,0.75,1.15,0.8,0.4,0.7,1.5,0.5,1.2,,,,,-1,0,-1,0,,,"Industrial, Mercado",6.11,Invernadero,
+Avena,1850,1850,0,30,450,650,0.35,0.75,1.15,0.45,0.55,1,1.5,,,,,,,-9,-8,-2,-1,,,Común,6.11,,
+Maní,1930,2140,10,35,500,700,0.45,0.75,1.05,0.7,0.5,0.5,1,,,,,,,-1,-0.5,,,,,"Ciclo mínimo, Ciclo máximo",6.12,,
+Cebolla seca,2290,2290,4.5,35,350,550,0.5,0.75,1.05,0.85,0.3,0.3,0.6,,,,,,,,,,,,,Común,6.11,,
+Repollo,1710,1710,4.5,30,350,500,0.45,0.75,1.05,0.9,0.45,0.5,0.8,,,,,,,-7,-5,-3,-2,,,Común,6.12,,
+Pimiento dulce,2415,2415,10,35,600,900,0.35,0.7,1.05,0.9,0.3,0.5,1,,,,,,,,,,,,,Común,6.11,,
+Remolacha azucarera,1900,3070,5,30,550,750,0.45,0.8,1.15,0.8,0.55,0.7,1.2,,,,,,,-7,-6,-3,-2,,,"Ciclo mínimo, Ciclo máximo",6.12,,
+Algodón,1950,2150,12.5,35,700,1300,0.45,0.75,1.15,0.75,0.65,1,1.7,,,,,,,-2,-1,-2,-1,,,"Corto, Largo",6.11,,
+Alfalfa (heno),,,0,30,800,1600,,,,,0.55,1,2,,,,,,,,,,,,,No homologable,,,Perennes/cortes: falta GDD por rebrote
+Melón,1175,1600,10,38,400,600,0.45,0.75,1,0.75,0.4,0.8,1.5,,,,,,,-1,-0.5,-1,-0.5,,,"Corto, Largo",6.11,,

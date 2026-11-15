@@ -102,7 +102,7 @@ export default function App() {
         </div>
         <AgriculturalDecisions region={region} cropId={cropId} onCropSelect={setCropId}/>
         <section className="terra-history-panel" aria-label="Análisis ambiental histórico">
-          <div className="terra-history-heading"><div><span className="overline">02 / AMBIENTE Y DESARROLLO</span><h2>Ambiente y calendario del cultivo</h2><p>Explora un año completo de datos diarios. Elige un cultivo y desplaza la fecha de siembra para ver sus cuatro etapas sobre cada gráfica y compararlas con los indicadores por fase.</p></div></div>
+          <div className="terra-history-heading"><div><span className="overline">03 / AMBIENTE Y DESARROLLO</span><h2>Ambiente y calendario del cultivo</h2><p>Explora un año completo de datos diarios. Elige un cultivo y desplaza la fecha de siembra para ver sus cuatro etapas sobre cada gráfica y compararlas con los indicadores por fase.</p></div></div>
           <CropSelectorBar cropId={cropId} onCropSelect={setCropId}/>
           {message && <div className="field-alert error" role="alert">{message} <button className="terra-text-button" onClick={retry}>Reintentar</button></div>}
           <Daily2025Explorer region={region} analysis={analysis} loading={loading} onRetry={retry} timeline={timeline}/>

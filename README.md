@@ -3,7 +3,7 @@
 **Plataforma de apoyo a decisiones agrícolas con observación terrestre**  
 **NASA Space Apps Challenge 2026 · Adapting Farms with NASA Data**
 
-TerraAI permite delimitar un terreno agrícola, consultar información ambiental de NASA y Copernicus, explorar el desarrollo estimado de seis cultivos y comparar alternativas de siembra y rotación. Combina observaciones de vegetación, estimaciones meteorológicas, parámetros agronómicos y un **motor de reglas explicable**.
+TerraAI permite delimitar un terreno agrícola, consultar información ambiental de NASA y Copernicus, explorar el desarrollo estimado de diez cultivos y comparar alternativas de siembra y rotación. Combina observaciones de vegetación, estimaciones meteorológicas, parámetros agronómicos y un **motor de reglas explicable**.
 
 > **Estado del proyecto:** prototipo de investigación y apoyo exploratorio. El motor de decisiones **no es un modelo de IA entrenado**, y sus puntuaciones no representan probabilidad de supervivencia, rendimiento esperado ni garantía de cosecha. La consulta en vivo depende de las APIs y de la configuración local.
 
@@ -20,29 +20,49 @@ TerraAI permite delimitar un terreno agrícola, consultar información ambiental
 - [Limitaciones y próximos pasos](#limitaciones-y-próximos-pasos)
 - [Referencias](#referencias)
 
+## Corrección HTTP 500 en decisiones agrícolas (15-11-2026)
+
+Se corrigió un `IndexError` en `backend/decision_engine.py`, función `selected_history_years()`: con historiales largos (más de doce años válidos) la selección de temporadas recalculaba índices usando una longitud que cambiaba dentro del bucle. Esto podía provocar **HTTP 500** al invocar `POST /api/regions/decisions/history`. Ahora los índices se calculan con un número fijo de plazas y una lista inmutable. Se añadieron pruebas de regresión con 44 años completos de datos simulados y una prueba de extremo a extremo de FastAPI. No se cambió la interfaz ni el origen de los datos.
+
+**Para instalar la corrección:** descomprime este ZIP en una carpeta nueva o reemplaza el código de la versión anterior conservando tu propio `backend/.env`; reinicia el backend (Uvicorn) y el frontend (Vite), y pulsa *Reintentar*. La presencia de credenciales no es la causa del error corregido. Si aparece un HTTP 500 distinto, revisa la traza de la terminal de Uvicorn.
+
+## Mejoras sobre la versión «Rediseño de decisiones»
+
+Esta entrega parte directamente del ZIP **`TerraAI_Rediseno_Decisiones_Agricolas_UX.zip`**, no de una reconstrucción de la interfaz. Se conserva la página única, el mapa original, la exploración diaria de 2025 y las tarjetas explicativas; se actualizan los catálogos y el motor de decisiones.
+
+- **Cuatro nuevos cultivos:** papa, girasol, poroto seco y repollo, procedentes del Excel original conservado en `docs/source/`. Los cuatro nuevos íconos y las referencias térmicas, fenológicas y agronómicas están conectados con la selección y la recomendación.
+- **Mayor profundidad de evidencia:** evalúa ventanas de siembra cada 14 días, historiales múltiples (hasta 12 temporadas seleccionadas), temperatura favorable, GDD, referencias térmicas y demanda hídrica teórica por fases mediante Kc. Informa lluvia total, razón lluvia/ETc, fase con menor adecuación, máxima racha seca y variables atmosféricas de contexto.
+- **Ranking robusto y transparente:** combinación del percentil 25 y el promedio del índice, con una banda descriptiva P10–P90 del historial observado; no se simulan rendimientos ni probabilidades.
+- **Rotaciones a tres años:** secuencias de tres especies diferentes, familias alternadas en campañas adyacentes, fechas y transiciones sin solapamiento, comparación de familias, presencia de leguminosa y contrastes de profundidad radicular como desempate. No se atribuyen ganancias de nitrógeno o recuperación del suelo sin mediciones.
+- **Documentación consolidada:** un solo `README.md` principal; las matrices originales y documentos técnicos específicos quedan en `docs/`.
+
 ## Qué hace TerraAI
 
 La versión documentada aquí organiza la experiencia en una **página principal**, sin navegación lateral obligatoria, con estos bloques:
 
 1. **Área de estudio.** Un mapa Leaflet permite dibujar, editar y eliminar el polígono agrícola. La selección se conserva como geometría GeoJSON (WGS84); se calcula el área y un punto representativo para las consultas meteorológicas.
-2. **Decisiones agrícolas.** Presenta las alternativas de trigo, maíz, arroz, soja, sorgo y cebada, con puntuaciones relativas, explicaciones comprensibles, evidencia estacional de temperatura y lluvia, y hasta tres propuestas de rotación de dos cultivos. Las explicaciones y gráficas cambian al seleccionar una alternativa.
+2. **Decisiones agrícolas.** Evalúa diez cultivos (trigo, maíz, arroz, soja, sorgo, cebada, papa, girasol, poroto seco y repollo), con explicaciones basadas en las variables ambientales efectivamente usadas y hasta tres secuencias de rotación de tres campañas agrícolas. Las explicaciones y gráficas cambian al seleccionar una alternativa.
 3. **Ambiente y calendario del cultivo.** Muestra **datos diarios de 2025** en un gráfico con siete pestañas: temperatura, humedad atmosférica, precipitación, radiación solar, viento, presión atmosférica y humedad del suelo. Hay un solo gráfico visible a la vez.
-4. **Fenología e indicadores.** El usuario selecciona uno de los seis cultivos y una fecha de siembra en 2025. Se muestran cuatro etapas del ciclo sobre el gráfico y en una línea temporal, junto a indicadores por etapa como GDD, ET₀, ETc orientativa, lluvia y referencias de frío cuando están disponibles.
+4. **Fenología e indicadores.** El usuario selecciona uno de los diez cultivos y una fecha de siembra en 2025. Se muestran cuatro etapas del ciclo sobre el gráfico y en una línea temporal, junto a indicadores por etapa como GDD, ET₀, ETc orientativa, lluvia y referencias de frío cuando están disponibles.
 
 Cambiar el cultivo, la fecha de siembra o la pestaña de una gráfica **reutiliza los datos ya obtenidos**, sin realizar automáticamente una nueva descarga. Al seleccionar o modificar el terreno se solicitan las series correspondientes a esa región.
 
-### Cultivos incorporados
+### Diez cultivos habilitados
 
-| Cultivo | Identificador habitual | Consideraciones |
-|---|---|---|
-| Trigo | `wheat` | Cereal; requerimientos y etapas dependen de la variedad y temporada. |
-| Maíz | `maize` | Cereal; atención a acumulación térmica y etapas reproductivas. |
-| Arroz | `rice` | El escenario de arroz inundado requiere un manejo hídrico particular. |
-| Soja | `soybean` | Leguminosa; familia diferente de los cinco cereales listados. |
-| Sorgo | `sorghum` | Cereal; sensibilidad climática y duración según variedad. |
-| Cebada | `barley` | Cereal; condiciones y calendario particulares por variedad. |
+| Cultivo | Identificador | Familia botánica | Situación de planificación |
+|---|---|---|---|
+| Trigo | `wheat` | Poaceae | Evaluación ambiental de secano |
+| Maíz grano | `maize` | Poaceae | Evaluación ambiental de secano |
+| Arroz inundado | `rice` | Poaceae | **Condicional:** requiere manejo hídrico; no se propone para secano |
+| Soja | `soybean` | Fabaceae | Evaluación ambiental de secano |
+| Sorgo grano | `sorghum` | Poaceae | Evaluación ambiental de secano |
+| Cebada | `barley` | Poaceae | Evaluación ambiental de secano |
+| Papa | `papa` | Solanaceae | Nueva; requisitos del Excel original |
+| Girasol | `girasol` | Asteraceae | Nuevo; requisitos del Excel original |
+| Poroto seco | `poroto-seco` | Fabaceae | Nuevo; requisitos del Excel original |
+| Repollo | `repollo` | Brassicaceae | Nuevo; requisitos del Excel original |
 
-Los parámetros térmicos y fenológicos están en los catálogos de `frontend/src/data/`. El archivo original de **20 cultivos** se utilizó como referencia para las primeras matrices; solo estos seis están habilitados en las tarjetas actuales.
+Los cuatro cultivos nuevos provienen del Excel original proporcionado, `TerraAI_20_cultivos_con_temperaturas.xlsx`, complementado con la matriz de indicadores previamente utilizada. Los originales se conservan en `docs/source/`. En cada especie se reutilizan **temperatura climática favorable EcoCrop, temperatura basal y superior GDD, demanda ETc de referencia, Kc por etapa, profundidad de raíz, rango de pH y rangos de precipitación** cuando están presentes en la matriz. Para las cuatro especies nuevas, la distribución de la duración mínima del ciclo en cuatro fases es una **aproximación de calendario**, no fenología medida ni validada por variedad. El Excel completo original queda en `docs/source/` para trazabilidad.
 
 ## Tecnologías y organización
 
@@ -59,7 +79,7 @@ terra-ai/
 ├── frontend/
 │   ├── package.json
 │   ├── vite.config.js                 # Proxy /api → http://127.0.0.1:8000
-│   ├── public/crops/                 # Ilustraciones SVG de los seis cultivos
+│   ├── public/crops/                 # Ilustraciones SVG de los diez cultivos
 │   ├── src/
 │   │   ├── App.jsx                   # Página única y estado de la región
 │   │   ├── components/
@@ -161,9 +181,9 @@ La primera recuperación de un histórico de varias décadas puede ser lenta y e
 
 ### Decisiones agrícolas
 
-Después de confirmar el polígono, TerraAI consulta datos históricos y aplica reglas de compatibilidad climática para ordenar los seis cultivos. Cada tarjeta permite seleccionar el cultivo y ver **por qué** obtuvo su posición, con frases resumidas y un gráfico de contexto estacional. El gráfico de decisiones ofrece vistas de temperatura y lluvia; sus referencias están relacionadas con el cultivo seleccionado.
+Después de confirmar el polígono, TerraAI consulta datos históricos y aplica reglas de compatibilidad climática para ordenar los diez cultivos. Cada tarjeta permite seleccionar el cultivo y ver **por qué** obtuvo su posición, con frases resumidas y un gráfico de contexto estacional. El gráfico de decisiones ofrece vistas de temperatura y lluvia; sus referencias están relacionadas con el cultivo seleccionado.
 
-Las **rotaciones** proponen, cuando es posible, dos cultivos sucesivos con calendarios compatibles y familias botánicas distintas. El orden de siembra puede diferir del ranking individual: la evaluación de una secuencia considera **los dos ciclos**, sus ventanas climáticas, la transición y la puntuación conjunta, no solamente la posición del primer cultivo.
+Las **rotaciones** planifican tres campañas anuales consecutivas, una principal por año, con familias diferentes entre campañas adyacentes, ventanas sin solapamientos y transición mínima de 14 días. Pueden cruzar diciembre al año siguiente. El orden puede diferir del ranking individual porque se optimiza la compatibilidad del conjunto y se evita superponer campañas; no se está pronosticando el tiempo del futuro.
 
 ### Ambiente y calendario de 2025
 
@@ -179,11 +199,11 @@ Existen **dos horizontes temporales distintos por diseño**: el motor de decisio
 
 | Variable o producto | Fuente | Período usado por el proyecto | Observaciones |
 |---|---|---|---|
-| Temperatura, humedad relativa, viento, presión y lluvia meteorológica | NASA POWER Daily, comunidad AG | Histórico solicitado desde 1981 hasta 2025; y diario 2025 | Estimaciones meteorológicas para un punto representativo del polígono, no lecturas dentro de cada parcela. |
-| Radiación solar | NASA POWER Daily | Histórico solicitado desde 1984; y diario 2025 | Producto de radiación; disponibilidad independiente de meteorología. |
-| Precipitación satelital | GPM IMERG mediante NASA POWER HY, cuando está disponible | Histórico desde aproximadamente 2000 y diario 2025 | Producto con referencia temporal y resolución distintas de la lluvia meteorológica de POWER. |
-| Humedad superficial y de zona radicular | NASA POWER HY (`SFMC`, `RZMC`), cuando está disponible | Histórico desde aproximadamente 2015 y diario 2025 | Estimaciones regionales; confirmar el producto devuelto antes de atribuirlo específicamente a SMAP L4. |
-| NDVI (y productos espectrales cuando corresponda) | Copernicus Sentinel-2 L2A / Statistical API | Contexto histórico NDVI solicitado desde 2017 hasta 2025; integración diaria de 2025 en backend | Estadísticas sobre el polígono; las nubes y ausencia de sobrevuelos dejan observaciones faltantes. |
+| Temperatura, humedad relativa, viento, presión y lluvia meteorológica | NASA POWER Daily, comunidad AG | Histórico desde 1981 hasta el último año completo; diario 2025 | Estimaciones meteorológicas para un punto representativo del polígono, no lecturas dentro de cada parcela. |
+| Radiación solar | NASA POWER Daily | Histórico desde 1984 hasta el último año completo; diario 2025 | Producto de radiación; disponibilidad independiente de meteorología. |
+| Precipitación satelital | GPM IMERG mediante NASA POWER HY, cuando está disponible | Histórico desde aproximadamente 2000 hasta el último año completo; diario 2025 | Producto con referencia temporal y resolución distintas de la lluvia meteorológica de POWER. |
+| Humedad superficial y de zona radicular | NASA POWER HY (`SFMC`, `RZMC`), cuando está disponible | Histórico desde aproximadamente 2015 hasta el último año completo; diario 2025 | Estimaciones regionales; confirmar el producto devuelto antes de atribuirlo específicamente a SMAP L4. |
+| NDVI (y productos espectrales cuando corresponda) | Copernicus Sentinel-2 L2A / Statistical API | Contexto NDVI desde 2017 hasta el último año completo; integración diaria de 2025 en backend | Estadísticas sobre el polígono; las nubes y ausencia de sobrevuelos dejan observaciones faltantes. |
 
 Las fechas indicadas son **inicios de consulta del código**, no garantía de cobertura real o de observaciones completas. Las fuentes tienen diferentes resoluciones, métodos y estándares horarios. La información faltante se conserva como ausente; no se interpola ni se sustituye por cero.
 
@@ -191,20 +211,20 @@ En el módulo de 2025 aparecen las siete pestañas ambientales mencionadas. La i
 
 ## Metodología agronómica y recomendaciones
 
-### Evaluación histórica de cultivos
+### Evaluación histórica de cultivos y rotaciones plurianuales
 
-El motor de `backend/decision_engine.py`:
+El motor está implementado en `backend/decision_engine.py` y usa observaciones históricas regionales NASA POWER:
 
-1. Reúne años históricos con cobertura meteorológica suficiente y **separa 2025** para compararlo como último año completo de referencia.
-2. Selecciona internamente **años históricos reales análogos** de condiciones habituales, cálidas y secas. Estas analogías ya no tienen que mostrarse como tres paneles separados en la interfaz.
-3. Prueba fechas candidatas de siembra cada **14 días**, respetando el calendario por cultivo y sin aceptar ciclos que excedan el año de planificación.
-4. Calcula un índice relativo principalmente con **compatibilidad térmica (45 %), avance térmico frente a GDD (40 %) y referencias térmicas disponibles por etapa (15 %)**, normalizando los pesos cuando faltan referencias comparables.
-5. Combina resultados entre escenarios mediante **60 % del peor escenario + 40 % del promedio**. Es una decisión conservadora del prototipo, no una fórmula universal de productividad.
-6. Propone hasta **tres rotaciones** de dos cultivos con familias botánicas diferentes, ciclos no superpuestos y **14 días de transición** como supuesto de planificación.
+1. Recupera la meteorología diaria hasta el **último año calendario completo**, detectado automáticamente en el servicio histórico. El último año se mantiene como contraste reciente y **se excluye del ajuste histórico de referencias**; en 2026 corresponde a 2025. La sección detallada de observaciones diarias todavía presenta exclusivamente 2025.
+2. Requiere al menos tres años anteriores con datos suficientemente completos. Conserva toda la climatología histórica para las gráficas y selecciona **hasta doce años representativos** de distintas partes de la distribución climática, incluyendo analogías habituales, cálidas y secas, extremos y diversidad temporal; no establece un límite de seis años. Estos años analógicos son internos; ya no se muestra la comparación como tres paneles.
+3. Examina fechas posibles de siembra cada **14 días**. Una siembra puede cruzar el 31 de diciembre: utiliza fechas realmente observadas del año histórico y del siguiente. Si falta un día necesario —por ejemplo, el 29 de febrero al comparar un período bisiesto con uno no bisiesto— **no inventa la medición** y descarta el ciclo sin lluvia completa.
+4. Cada ciclo recibe componentes diferenciados de **temperatura climática favorable (30 %), calor acumulado GDD (25 %), exposición a referencias térmicas específicas cuando existen (15 %) y compatibilidad hídrica potencial para secano (30 %)**. Los pesos disponibles se renormalizan cuando una referencia técnica no está documentada. No se trasladan rangos climáticos EcoCrop como umbrales comprobados de daño diario.
+5. La componente hídrica contrasta la precipitación regional diaria con la **ETc teórica FAO-56 × Kc** del ciclo, o con la referencia ETc del Excel si no existe suficiente radiación para calcular ET₀. Combina **70 % de la relación lluvia/ETc del ciclo y 30 % de la relación más desfavorable entre las cuatro fases fenológicas**. Es un indicador preliminar de aptitud en secano, **no** un balance de humedad real del suelo ni garantía de lluvia efectiva. Los períodos secos prolongados, VPD y radiación se conservan como evidencia contextual; pH y propiedades del suelo no afectan el puntaje cuando no hay observaciones locales válidas.
+6. Para cada fecha se evalúan las temporadas históricas disponibles y se adjunta una banda descriptiva P10–P90 (no probabilística); el puntaje robusto del cultivo combina **60 % del percentil 25 y 40 % del promedio** de puntuaciones históricas, informando cuántos años sostienen la comparación. Así se reduce la dependencia de una sola temporada.
+7. Construye hasta **tres alternativas de rotación de tres años consecutivos**, con un cultivo principal por campaña anual, familias diferentes en campañas adyacentes, especies distintas, fechas compatibles, **14 días de transición**, y prioridad al puntaje conjunto. La diversidad de familias, la presencia de leguminosas y el contraste de raíces del Excel desempatan planes de igual puntaje; **no** simulan mejoras reales de fertilidad, nitrógeno o control de plagas. Los años futuros solo representan un calendario: no se predice su clima.
+8. El **arroz inundado** queda marcado como condicionado a manejo del agua y se excluye del planificador de secano. Sigue disponible para revisar referencias ambientales por separado.
 
-Se requiere cobertura mínima del histórico; si no hay observaciones suficientes, el módulo debe indicar que no puede evaluar, en lugar de inventar puntuaciones. El puntaje actual depende **sobre todo de temperatura y GDD**. Precipitación, VPD, humedad del suelo y ETc complementan la explicación, pero no certifican agua disponible, fertilidad, rendimiento ni viabilidad de una rotación.
-
-**No hay un modelo de machine learning entrenado en esta versión.** Los escenarios son analogías históricas, no predicciones meteorológicas verificadas para el año siguiente.
+El índice representa una **comparación relativa bajo el supuesto de secano**, no una probabilidad de supervivencia ni una estimación de rendimiento. Si faltan suficientes datos, el sistema declara la evaluación insuficiente. Para recomendar con confianza en una parcela real se requerirán al menos antecedentes de riego, suelos y validación local. No se ha entrenado un modelo de aprendizaje automático.
 
 ### Indicadores diarios del cultivo
 
@@ -258,7 +278,7 @@ npm.cmd run build
 
 Si tu versión de PowerShell no expande el patrón `tests/*.test.mjs` en Node, ejecuta los archivos `.test.mjs` individualmente o utiliza un entorno que admita ese patrón.
 
-Las entregas anteriores informaron pruebas unitarias y verificaciones estáticas exitosas. **Esto no sustituye un build completo de Vite ni una prueba de extremo a extremo con APIs reales sobre tu terreno.** No se incluyen respuestas satelitales reales precalculadas en este README.
+Esta entrega pasó **54 pruebas del backend** y **48 pruebas de frontend** con datos sintéticos/controlados, además de un análisis sintáctico de JS/JSX. **Esto no sustituye un build completo de Vite ni una prueba de extremo a extremo con APIs reales sobre tu terreno.** No se incluyen respuestas satelitales reales precalculadas en este README.
 
 ### Problemas frecuentes
 
@@ -291,7 +311,7 @@ Nunca uses `git reset --hard` para solucionar un conflicto sin comprender qué c
 - **Horizonte diario fijo:** el módulo detallado muestra 2025; el motor de decisiones emplea un histórico más amplio. Son funcionalidades complementarias.
 - **Validación pendiente:** pruebas locales de integración real, calibración regional, sensibilidad de ponderaciones, contraste con datos de producción y evaluación de recomendaciones de rotación.
 
-Próximas mejoras posibles: validar el motor de compatibilidad con registros agrícolas independientes, ampliar el catálogo de cultivos, incorporar nuevas variables solo cuando tengan parámetros comparables, y evaluar posteriormente un modelo predictivo entrenado con etiquetas de rendimiento o resultados de campo.
+Próximas mejoras posibles: validar el motor de compatibilidad con registros agrícolas independientes, estudiar su sensibilidad a las ponderaciones, integrar datos confiables del suelo/riego, y evaluar posteriormente un modelo predictivo entrenado con etiquetas de rendimiento o resultados de campo.
 
 ## Referencias
 
@@ -308,6 +328,14 @@ Próximas mejoras posibles: validar el motor de compatibilidad con registros agr
 
 ---
 
-### Acerca de este README único
+### Documentación de esta versión
 
-Este documento **consolida el contenido vigente** de `README.md`, `START_HERE.md` y las guías `START_HERE_*` de las distintas fases. Está pensado para **reemplazar el README de la raíz**. Una vez verificado en tu repositorio, los documentos `START_HERE_*.md` redundantes de la raíz pueden retirarse del control de versiones; las matrices y referencias técnicas de `docs/` pueden permanecer como material complementario.
+Este archivo es el **único README** de la entrega. Los documentos técnicos específicos y las matrices se conservan en `docs/`; se retiraron las guías `START_HERE_*` redundantes y el contenido de arranque obsoleto.
+
+
+## Referencias adicionales para la planificación plurianual
+
+- [UNCCD — Rotación de cultivos y conservación de la tierra](https://www.unccd.int/land-and-life/sds/toolbox/crop-rotation)
+- [USDA NRCS — Rotaciones y fertilidad del suelo](https://www.nrcs.usda.gov/sites/default/files/2022-12/2022-small-scale-solutions-rotations-for-soil-fertility-resized.pdf)
+
+Estas referencias **no** sustituyen datos de laboratorio del suelo ni validación local de especies, fechas y manejo.
