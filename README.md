@@ -1,59 +1,175 @@
 # CropLite
 
-**Explorador satelital y planificador agrícola anual**  
-NASA Space Apps Challenge 2026 — *Adapting Farms with NASA Data*
+**Satellite-informed crop planning and agricultural decision support**
 
-CropLite permite delimitar un campo sobre un mapa con **imágenes satelitales reales**, consultar datos ambientales históricos, comparar diez cultivos y explorar **rotaciones de dos cultivos dentro de un único año**. Conserva el modelo agroclimático basado en reglas de la versión de TerraAI «Rediseño de decisiones», con la corrección de la selección de historiales extensos que podía producir HTTP 500.
+Developed for **NASA Space Apps Challenge 2026 — Adapting Farms with NASA Data**
 
-> **Prototipo orientativo:** no es un modelo de IA entrenado ni pronostica rendimientos, daños o resultados futuros. Las fechas agrícolas usan escenarios de planificación contrastados con climas históricos; no se simula el tiempo del año futuro.
+## Overview
 
-## Identidad visual y rediseño integral (noviembre de 2026)
+CropLite is a web application that helps people explore agricultural land, understand historical environmental conditions, compare crop suitability, and plan crop sequences within a single agricultural year.
 
-La identidad aprobada es **CropLite**: emblema circular con surcos, arco orbital y señal de satélite. El símbolo y el wordmark proceden de **la imagen del logo aprobada por el equipo**, convertida a rutas SVG con sus formas originales y limitada a las dos tintas de marca. No se ha sustituido el emblema ni se ha recompuesto el nombre con una tipografía aproximada.
+Users draw a field on a satellite basemap. CropLite then brings together environmental datasets and crop-specific agronomic references to generate an explainable suitability ranking across **20 crops** and explore possible annual rotations.
 
-- **Solo dos tintas en la iconografía de marca:** verde bosque `#103D28` y verde oliva `#8FAA5A`. Los neutros `#FAF8F3`, `#FFFFFF`, `#E9EDE5` y `#25332B` se usan únicamente como superficie, separación y texto. Los gráficos pueden mantener tonos adicionales si representan variables diferentes o avisos científicos.
-- **Archivos de marca:** `frontend/public/brand/croplite-symbol.svg`, `croplite-horizontal.svg`, `croplite-badge.svg` (variante sobre fondo oscuro) y `croplite-app.svg` (favicon); componente reutilizable `src/components/ui/CropLiteBrand.jsx`.
-- **Diez ilustraciones de cultivos originales restauradas:** `frontend/public/crops/*.svg` coincide con la versión previa al rediseño de marca; se conserva el componente `src/components/crops/CropIcon.jsx` para recomendaciones, selectores y calendarios.
-- **Sistema de diseño compartido:** `frontend/src/brand-system.css` agrupa tokens, tipografía, espaciados, estados interactivos, tablas, paneles y puntos de quiebre; se carga después de la hoja de compatibilidad `styles.css` para preservar la funcionalidad existente.
-- **Diseño adaptable:** mapa y tarjetas refinados, navegación lateral con menú táctil en pantallas pequeñas, foco visible, tamaño de controles apropiado, desplazamiento de tablas y opciones para movimiento reducido.
-- **Inteligencia agrícola sin cambios:** no se tocaron el backend, las fuentes NASA/Copernicus, la puntuación agronómica, la línea temporal fenológica ni el cálculo de rotaciones. La versión vigente **planifica rotaciones anuales de dos cultivos**, tal como se había definido anteriormente, y no vuelve a introducir planes de tres años.
+CropLite is a **decision-support prototype**. It does not predict yields or guarantee that a crop will succeed.
 
-## Qué cambió en la versión satelital (base)
+## Motivation
 
-1. **Nuevo nombre: CropLite.** Título, identidad principal, API y nombre del paquete frontend.
-2. **Layout inspirado en una plataforma de monitoreo agrícola:** barra superior compacta, mapa protagonista, buscador y edición de parcelas sobre la imagen, fichas de estado bajo el mapa y navegación derecha hacia secciones realmente existentes. Conserva la paleta verde, los fondos claros y las tarjetas limpias de la versión anterior. Responsive en móvil.
-3. **Mapa satelital auténtico:** `FieldSelectionMap.jsx` muestra por defecto **Esri World Imagery** mediante teselas geográficas, con atribución en Leaflet. El usuario puede alternar con OpenStreetMap. Es un mosaico multifecha: **no es una imagen de la fecha de hoy, una captura específica de Sentinel‑2, un índice NDVI ni un pronóstico**. Su resolución y antigüedad varían por lugar. El polígono del campo sigue siendo editable en GeoJSON (WGS84).
-4. **Planificación de un año:** ahora el motor compone planes con **dos especies sucesivas** cuyas fechas completas de siembra y cosecha caen en el mismo año calendario. Exige familias botánicas diferentes, sin solapamiento y **al menos 14 días de transición** (supuesto configurable; no regla agronómica universal). Muestra hasta tres alternativas de secuencias distintas. Puede no haber ninguna cuando los ciclos no caben, y lo comunica sin inventar fechas.
-5. **Sin gráfico “Por qué se recomienda”:** se eliminó el gráfico de temperatura/lluvia de la sección de decisiones. Se conserva un resumen textual de razones del ranking y la metodología desplegable para mantener la transparencia científica.
-6. **Diez cultivos y motor de cuatro dimensiones:** trigo, maíz, arroz, soja, sorgo, cebada, papa, girasol, poroto seco y repollo. Las cuatro últimas especies provienen del Excel original incluido en `docs/source/`.
-7. **Regresión HTTP 500 corregida** en `selected_history_years()` para historiales de más de doce años disponibles.
+Agricultural decisions are often made before the growing season begins, when farmers must choose what to plant and how to organize their land under uncertain environmental conditions.
 
-## Cómo se usa
+Organizations such as NASA and the Copernicus programme provide valuable Earth observation and climate information, but the data can be difficult to access, compare, or translate into practical decisions without specialized tools.
 
-1. Abre la web y busca tu localidad o navega sobre el mapa satelital.
-2. Haz clic en **Dibujar campo**, marca tres o más vértices, **Confirmar campo**; después podrás editarlo, redibujarlo o eliminarlo.
-3. El sistema solicita NASA POWER y contexto Copernicus desde FastAPI. El mapa base funciona de forma independiente de las credenciales Copernicus, aunque necesita acceso a internet y que el proveedor de teselas esté disponible.
-4. En **Recomendaciones**, consulta seis alternativas de entrada y pulsa **Ver los 10 cultivos** si necesitas ampliar el ranking. Al seleccionar una especie, se actualizan sus razones textuales.
-5. En **Rotación anual**, compara hasta tres planes de dos cultivos con su calendario de enero a diciembre. No se ofrecen planes si no hay compatibilidad de fechas.
-6. En **Datos ambientales**, revisa los registros diarios de 2025 y una fenología orientativa. Esta sección se refiere a 2025, no al año de planificación de las rotaciones.
+CropLite aims to make that information easier to use. Its purpose is not to replace local agricultural knowledge, but to help users make more informed decisions using accessible maps, historical evidence, and understandable agronomic comparisons.
 
-## Instalación — Windows / VS Code
+## Project Objectives
 
-Requisitos: **Python 3.11+**, **Node.js 20+**, npm, conexión a internet para instalar dependencias y consultar datos. Descomprime el ZIP y abre la carpeta `croplite` en VS Code.
+- **Improve access to environmental information:** connect field locations with relevant satellite observations and historical climate records.
+- **Support crop selection:** compare the requirements of 20 crops against available environmental evidence.
+- **Assist annual planning:** explore two-crop sequences that fit within one calendar year.
+- **Make recommendations understandable:** explain the factors behind rankings and clearly communicate uncertainty.
+- **Encourage informed adaptation:** help users investigate alternatives as growing conditions change.
 
-### Terminal 1 — FastAPI
+## Key Features
+
+### Satellite field explorer
+
+- Locate an area using an interactive geographic map.
+- Draw, edit, or remove a field boundary.
+- View Esri World Imagery satellite basemap tiles or switch to OpenStreetMap.
+- Work with field polygons represented in GeoJSON (WGS84).
+
+**Note:** The Esri basemap is a multi-date imagery mosaic, not a live satellite feed or a dated Sentinel-2 observation.
+
+### Environmental data exploration
+
+- Access historical temperature, precipitation, solar radiation, and related meteorological information through NASA POWER.
+- Explore vegetation conditions using Sentinel-2-derived NDVI when Copernicus credentials and observations are available.
+- Inspect daily environmental records for 2025 and compare them with crop growth stages.
+- Distinguish observed or modeled data from derived estimates and unavailable information.
+
+### Crop suitability recommendations
+
+CropLite screens **20 crops**:
+
+Wheat, maize, flooded rice, soybean, sorghum, barley, potato, sunflower, dry bean, cabbage, green pea, tomato, oats, peanut, dry onion, sweet pepper, sugar beet, cotton, alfalfa (hay), and melon.
+
+The recommendation engine evaluates historical planting windows using four agronomic dimensions:
+
+| Evaluation dimension | Reference weight |
+| --- | ---: |
+| Temperature suitability | 30% |
+| Growing degree days (GDD) and heat accumulation | 25% |
+| Exposure to relevant cold or heat thresholds, when available | 15% |
+| Rainfall relative to estimated rainfed crop water demand | 30% |
+
+Weights are adjusted when a valid reference is unavailable. Scores are **relative suitability indicators, not probabilities of successful harvest**.
+
+### Annual crop rotation planning
+
+- Explore sequences of two crops within **one agricultural year**.
+- Consider planting and harvest timing, growing-cycle duration, and botanical family diversity.
+- Allow at least **14 days of transition** between successive crops as a planning assumption.
+- Compare up to three potential sequences where suitable combinations exist.
+
+The planner may return no valid sequence. It does not assume that a rotation guarantees improved fertility, disease control, or profitability. Flooded rice is excluded from rainfed rotation planning.
+
+## How CropLite Works
+
+1. **Select a field.** Outline an agricultural area on the satellite map.
+2. **Retrieve environmental context.** The backend queries NASA POWER and, when configured, Copernicus services.
+3. **Compare crops.** A rule-based engine evaluates crop requirements against eligible historical climate windows.
+4. **Review the results.** Explore ranked crops, supporting explanations, and data limitations.
+5. **Plan the year.** Compare possible annual crop sequences and planting dates.
+6. **Inspect detailed indicators.** Open the environmental and crop-stage comparisons when more detail is needed.
+
+## Technology Stack
+
+| Layer | Technologies | Role |
+| --- | --- | --- |
+| Frontend | React, JavaScript, Vite | Interactive web application |
+| Interface and maps | CSS, Leaflet, React Leaflet | Responsive layouts, field selection, geographic display |
+| Charts and visuals | Recharts, Lucide | Environmental charts and UI elements |
+| Backend | Python, FastAPI, Uvicorn | APIs, data processing, agronomic evaluation |
+| HTTP and configuration | HTTPX, python-dotenv | External API requests and environment configuration |
+| Spatial representation | GeoJSON, WGS84 coordinates | Field boundaries and geographic queries |
+
+### Data sources
+
+| Source | Role |
+| --- | --- |
+| [NASA POWER](https://power.larc.nasa.gov/) | Historical agroclimatic estimates for a representative field location |
+| [Copernicus Data Space / Sentinel Hub](https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Statistical.html) | Sentinel-2 observations and historical NDVI over the selected polygon |
+| [Esri World Imagery](https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9) | Satellite imagery basemap |
+| [OpenStreetMap](https://www.openstreetmap.org/copyright) | Alternative reference map |
+| [FAO EcoCrop](https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/) and [FAO crop water references](https://www.fao.org/4/s2022e/s2022e07.htm) | Crop requirements, growth-stage coefficients, and agronomic references |
+
+NASA POWER returns gridded climate estimates for a representative location, **not direct measurements of every point inside a field**. Copernicus polygon statistics and vegetation indicators are separate from the satellite basemap.
+
+## Installation
+
+### Requirements
+
+- **Python 3.11+**
+- **Node.js 20+** and npm
+- Git (optional, for cloning the repository)
+- Internet access for dependency installation and external data services
+- Copernicus Data Space OAuth credentials for Copernicus-dependent features
+
+### 1. Obtain the project
+
+Clone the repository or download and extract the project ZIP. Open the project root folder in VS Code or a terminal.
+
+Expected structure:
+
+```text
+croplite/
+├── README.md
+├── backend/
+│   ├── app.py
+│   ├── decision_engine.py
+│   ├── requirements.txt
+│   ├── requirements-dev.txt
+│   ├── .env.example
+│   ├── data/
+│   └── tests/
+├── frontend/
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── public/
+│   ├── src/
+│   └── tests/
+└── docs/
+```
+
+### 2. Start the backend (PowerShell)
+
+From the project root, open **Terminal 1**:
 
 ```powershell
 cd backend
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-Copy-Item .env.example .env
+
+# Create the environment file only if it does not already exist.
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+
 .\.venv\Scripts\python.exe -m uvicorn app:app --reload --port 8000
 ```
 
-Si ya tienes el archivo `backend/.env` de TerraAI, **conserva el existente** en vez de copiar encima `.env.example`. Las credenciales originales de Copernicus siguen siendo compatibles. Se admite tanto `CROPLITE_ALLOWED_ORIGINS` como el nombre anterior `TERRAAI_ALLOWED_ORIGINS`, por compatibilidad. Para la consulta NASA POWER no se necesita credencial.
+The API will run at `http://127.0.0.1:8000`. Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
 
-### Terminal 2 — React
+To use Copernicus features, set the following values in `backend/.env`:
+
+```dotenv
+CDSE_CLIENT_ID=your-client-id
+CDSE_CLIENT_SECRET=your-client-secret
+CROPLITE_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+```
+
+Create an OAuth client through the [Copernicus Data Space dashboard](https://shapps.dataspace.copernicus.eu/dashboard/). **Never commit `.env` or credentials to Git.** NASA POWER does not require API credentials.
+
+### 3. Start the frontend (PowerShell)
+
+Open **Terminal 2** at the project root:
 
 ```powershell
 cd frontend
@@ -61,87 +177,47 @@ npm install
 npm run dev
 ```
 
-Abre `http://localhost:5173/`. El proxy de Vite dirige `/api` a `http://127.0.0.1:8000`.
+Open **http://localhost:5173/** in your browser.
 
-### Pruebas automatizadas
+In local development, the Vite proxy forwards `/api` requests to `http://127.0.0.1:8000`.
+
+### 4. Run tests and create a production build
+
+Backend (from `backend/`):
 
 ```powershell
-# Desde backend: primero instala las dependencias de desarrollo
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
+```
 
-# Desde frontend
-node --test tests/*.mjs
+Frontend (from `frontend/`):
+
+```powershell
+node --test
 npm run build
 ```
 
-**Verificación del rediseño:** las 57 pruebas de FastAPI y las pruebas Node del frontend fueron ejecutadas correctamente. Los SVG fueron validados como XML y el código JS/JSX se analizó con el parser de TypeScript. La compilación Vite no pudo ejecutarse aquí porque npm no completó la instalación de dependencias de red en el plazo de prueba; ejecútala localmente con `npm install && npm run build`. No sustituye la prueba de navegador real.
+The frontend build is generated in `frontend/dist/`. A public deployment requires separate hosting and production API configuration; the steps above run CropLite locally.
 
-## Motor de recomendaciones
+## Scientific Scope and Limitations
 
-`backend/decision_engine.py` evalúa la compatibilidad en ventanas hipotéticas de siembra cada 14 días, mediante hasta 12 años históricos elegibles. Los criterios actualmente ponderados son:
+CropLite uses a **transparent, rule-based agronomic screening engine**, not a trained machine-learning model.
 
-| Dimensión | Peso de referencia |
-|---|---:|
-| Temperatura dentro de banda general del cultivo | 30 % |
-| GDD / calor acumulado frente a ciclo | 25 % |
-| Exposición a referencias de frío/calor cuando se dispone de umbral válido | 15 % |
-| Lluvia frente a demanda ETc orientativa en secano, incluidos Kc por etapa | 30 % |
+- Historical climate analogues are used for planning comparisons, **not future weather forecasts**.
+- Environmental datasets can contain gaps and have different spatial or temporal resolutions.
+- Satellite-derived NDVI describes observed vegetation; it does not identify which future crop will perform best.
+- Water-demand comparisons are simplified and do not establish actual irrigation availability or root-zone water balance.
+- Field-level soil fertility, detailed soil properties, pests, management practices, and measured yields are not comprehensively represented in the suitability score.
+- Annual rotation proposals are preliminary planning options, not validated agronomic prescriptions.
 
-Los pesos se renormalizan cuando la referencia térmica de exposición no es evaluable. El indicador robusto combina un 60 % del percentil 25 y un 40 % del promedio de puntuaciones históricas; **no es probabilidad de éxito**. La radiación y otros datos pueden contribuir a ET₀ y ser contexto, pero no se puntúan de manera independiente si faltan umbrales validados. pH, fertilidad, capacidad real de retención de agua y riego no medidos **no se inventan ni se incluyen** en la puntuación.
+Future research could combine field-verified outcomes, soil and irrigation data, and properly trained and validated machine-learning models. Those methods are **not part of the current recommendation engine**.
 
-Las rotaciones anuales también consideran el cambio de familia, el calendario y (solo como desempate) la presencia de leguminosas y diferencias referenciales de profundidad de raíces. **No cuantifican fijación de nitrógeno, sanidad del suelo ni rentabilidad.** El arroz inundado queda excluido del planificador de secano.
+## Data Attribution and Responsible Use
 
-## Datos y licencias
+CropLite uses external datasets under the terms of their respective providers. Preserve map attributions, review provider conditions before public or commercial deployment, and do not redistribute basemap tiles without permission.
 
-| Fuente | Uso |
-|---|---|
-| [Esri World Imagery](https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9) | Imagen satelital geográfica de fondo; mosaico multifecha, no un producto fenológico ni temporal |
-| [OpenStreetMap](https://www.openstreetmap.org/copyright) | Mapa alternativo de calles |
-| [NASA POWER](https://power.larc.nasa.gov/) | Series meteorológicas en un punto representativo del campo; estimaciones espaciales de baja resolución relativa |
-| [Copernicus Data Space / Sentinel Hub](https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Statistical.html) | NDVI histórico del polígono cuando hay credenciales configuradas |
-| [FAO EcoCrop / FAO-56](https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/) | Parámetros del catálogo de cultivos |
+The `docs/` directory includes project reference material and source matrices used to organize agronomic variables.
 
-La capa de World Imagery requiere atribución, y el acceso/uso está sujeto a las condiciones del proveedor. Para un despliegue público o comercial, **verifica la licencia aplicable a tu proyecto** y utiliza un servicio de mapas con permisos de uso apropiados. No descargues masivamente ni redistribuyas las teselas. La atribución se muestra en el mapa.
+---
 
-La carpeta `docs/source/` conserva las matrices originales con sus nombres históricos para la trazabilidad de las variables. Los catálogos de cultivos están en `backend/data/` y `frontend/src/data/`.
-
-## Arquitectura
-
-```text
-croplite/
-├── README.md
-├── backend/
-│   ├── app.py                           # FastAPI y endpoints
-│   ├── decision_engine.py               # Ranking + rotación anual
-│   ├── decision_history_service.py      # Históricos independientes
-│   ├── data/                             # Catálogos agronómicos
-│   ├── .env.example                     # Variables sin credenciales
-│   └── tests/
-├── frontend/
-│   ├── index.html
-│   ├── public/brand/                    # Logo, emblema y favicon SVG
-│   ├── public/crops/                    # 10 ilustraciones originales restauradas
-│   ├── src/
-│   │   ├── App.jsx                     # Shell CropLite + navegación derecha
-│   │   ├── styles.css                  # Estilos existentes para compatibilidad
-│   │   ├── brand-system.css            # Tokens y componentes del nuevo diseño
-│   │   ├── components/ui/CropLiteBrand.jsx
-│   │   ├── components/crops/CropIcon.jsx
-│   │   ├── components/maps/FieldSelectionMap.jsx
-│   │   ├── components/recommendations/AgriculturalDecisions.jsx
-│   │   ├── components/recommendations/decisionInsights.mjs
-│   │   └── components/historical/       # Datos diarios de 2025
-│   └── tests/
-└── docs/source/                        # Archivos originales con procedencia
-```
-
-## Errores frecuentes
-
-- **HTTP 500**: revisa el detalle en la terminal de Uvicorn; la corrección de historiales largos está incorporada, pero otros problemas de las APIs externas siguen siendo posibles.
-- **Mapa sin imágenes**: prueba el botón **Calles**. Comprueba acceso a internet y restricciones al servidor de World Imagery. El mapa no depende del proxy NASA ni de Copernicus.
-- **Datos incompletos**: la app evita inventar observaciones y avisa cuando faltan históricos.
-- **Copernicus sin configurar**: la imagen satelital base puede verse igualmente; el NDVI específico del polígono requiere credenciales y consultas separadas.
-- **No hay rotaciones**: no es necesariamente un fallo; puede que ninguna pareja elegible complete ambos ciclos dentro del mismo año con el intervalo mínimo.
-
-**Referencias externas:** [NASA POWER](https://power.larc.nasa.gov/), [ESA Copernicus](https://documentation.dataspace.copernicus.eu/), [FAO EcoCrop](https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/en/), [atribución Esri](https://support.esri.com/en-us/knowledge-base/what-is-the-correct-way-to-cite-an-arcgis-online-basema-000012040).
+**CropLite — Plan Smarter. Grow Better.**
