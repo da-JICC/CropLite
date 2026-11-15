@@ -28,9 +28,7 @@ function fieldCenter(polygon, farm) {
 
 function MoveMap({latitude,longitude}) {
   const map=useMap();
-  useEffect(() => {
-  map.setView([latitude, longitude], 13);
-}, [latitude, longitude, map]);
+  useEffect(()=>{map.setView([latitude,longitude],13);},[latitude,longitude,map]);
   return null;
 }
 

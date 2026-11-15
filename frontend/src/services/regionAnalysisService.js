@@ -1,7 +1,7 @@
-export async function analyzeSelectedRegion({geometry,start,end,interval='P10D',heatThreshold=35,coldThreshold=0},signal) {
+export async function analyzeSelectedRegion({geometry,start,end,interval='P10D'},signal) {
   const res=await fetch('/api/regions/analyze',{
     method:'POST', headers:{'Content-Type':'application/json'}, signal,
-    body:JSON.stringify({polygon:geometry,start,end,interval,heat_threshold:heatThreshold,cold_threshold:coldThreshold})
+    body:JSON.stringify({polygon:geometry,start,end,interval})
   });
   const data=await res.json().catch(()=>null);
   if(!res.ok) {
@@ -30,4 +30,35 @@ export function saveDatasetCsv({dataset,analysis,type}) {
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
   const a=document.createElement('a');a.href=url;a.download=`terraai-${type}-${analysis.period.start}-${analysis.period.end}.csv`;a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+/** Six complete years, selected by the backend clock; no manual date parameters. */
+export async function getHistoricalRegion(polygon, signal) {
+  const response = await fetch('/api/regions/history', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({polygon}),
+    signal,
+  });
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    const detail = payload?.detail;
+    throw new Error(typeof detail === 'string' ? detail : `Error del servidor (HTTP ${response.status})`);
+  }
+  if (!payload?.region || !payload?.datasets || !payload?.period?.years) {
+    throw new Error('La respuesta histórica del backend está incompleta.');
+  }
+  return payload;
+}
+
+/** Unified historical environment: one fetch per region, shared across tabs and crops. */
+export async function getEnvironmentalRegion(polygon, signal) {
+  const response = await fetch('/api/regions/environment/daily-2025', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({polygon}), signal,
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok) throw new Error(typeof payload?.detail==='string'?payload.detail:`El servidor respondió HTTP ${response.status}`);
+  if(!payload?.datasets || !payload?.region) throw new Error('El backend devolvió una respuesta ambiental incompleta.');
+  return payload;
 }

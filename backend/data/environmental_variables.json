@@ -1,0 +1,162 @@
+[
+  {
+    "id": "T2M",
+    "name": "Temperatura media 2m",
+    "source": "NASA POWER MET",
+    "unit": "°C",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "mean_c",
+    "note": "2025 completo solicitado"
+  },
+  {
+    "id": "T2M_MIN",
+    "name": "Temperatura mínima 2m",
+    "source": "NASA POWER MET",
+    "unit": "°C",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "min_c",
+    "note": "2025 completo solicitado"
+  },
+  {
+    "id": "T2M_MAX",
+    "name": "Temperatura máxima 2m",
+    "source": "NASA POWER MET",
+    "unit": "°C",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "max_c",
+    "note": "2025 completo solicitado"
+  },
+  {
+    "id": "RH2M",
+    "name": "Humedad relativa media 2m",
+    "source": "NASA POWER MET",
+    "unit": "%",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "relative_humidity_pct",
+    "note": "2025 completo solicitado"
+  },
+  {
+    "id": "T2MDEW",
+    "name": "Temperatura de rocío 2m",
+    "source": "NASA POWER MET",
+    "unit": "°C",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "dewpoint_c",
+    "note": "Para presión vapor real VPD"
+  },
+  {
+    "id": "PRECTOTCORR",
+    "name": "Precipitación corregida",
+    "source": "NASA POWER MET",
+    "unit": "mm/día",
+    "native_temporal": "diaria",
+    "product_type": "modelo/punto",
+    "key": "precipitation_mm",
+    "note": "No equivalente pluviómetro"
+  },
+  {
+    "id": "WS2M",
+    "name": "Viento medio a 2 m",
+    "source": "NASA POWER MET",
+    "unit": "m/s",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "wind_speed_ms",
+    "note": "No rachas ni riesgo mecánico"
+  },
+  {
+    "id": "PS",
+    "name": "Presión superficial",
+    "source": "NASA POWER MET",
+    "unit": "kPa",
+    "native_temporal": "diaria",
+    "product_type": "reanálisis/punto",
+    "key": "surface_pressure_kpa",
+    "note": "Para gamma FAO-56"
+  },
+  {
+    "id": "ALLSKY_SFC_SW_DWN",
+    "name": "Radiación onda corta incidente",
+    "source": "NASA POWER SOL",
+    "unit": "MJ/m²/día",
+    "native_temporal": "diaria",
+    "product_type": "satélite/modelo/punto",
+    "key": "solar_radiation_mj_m2_day",
+    "note": "Verificar unidad API returned"
+  },
+  {
+    "id": "SFMC",
+    "name": "Contenido volumétrico superficial 0–5 cm",
+    "source": "NASA POWER HY / SMAP L4",
+    "unit": "m³/m³",
+    "native_temporal": "diaria agregada",
+    "product_type": "asimilación/punto",
+    "key": "surface_moisture_m3_m3",
+    "note": "Resolución de suelo muy superior al tamaño parcela"
+  },
+  {
+    "id": "RZMC",
+    "name": "Contenido volumétrico raíz 0–100 cm",
+    "source": "NASA POWER HY / SMAP L4",
+    "unit": "m³/m³",
+    "native_temporal": "diaria agregada",
+    "product_type": "asimilación/punto",
+    "key": "rootzone_moisture_m3_m3",
+    "note": "No equivale agua disponible sin FC/PWP"
+  },
+  {
+    "id": "IMERG_PRECTOT",
+    "name": "Precipitación multisatélite",
+    "source": "NASA POWER HY / GPM IMERG",
+    "unit": "mm/día",
+    "native_temporal": "diaria UTC",
+    "product_type": "multisatélite/punto",
+    "key": "imerg_precipitation_mm",
+    "note": "No mezclar con POWER sin etiqueta"
+  },
+  {
+    "id": "B04",
+    "name": "Rojo reflectancia",
+    "source": "Copernicus Sentinel-2 L2A",
+    "unit": "reflectancia",
+    "native_temporal": "fechas de sobrevuelo",
+    "product_type": "satélite/polígono",
+    "key": "NDVI numerador",
+    "note": "SCL=4/5"
+  },
+  {
+    "id": "B08",
+    "name": "Infrarrojo cercano reflectancia",
+    "source": "Copernicus Sentinel-2 L2A",
+    "unit": "reflectancia",
+    "native_temporal": "fechas de sobrevuelo",
+    "product_type": "satélite/polígono",
+    "key": "NDVI NDMI",
+    "note": "10 m"
+  },
+  {
+    "id": "B11",
+    "name": "SWIR reflectancia",
+    "source": "Copernicus Sentinel-2 L2A",
+    "unit": "reflectancia",
+    "native_temporal": "fechas de sobrevuelo",
+    "product_type": "satélite/polígono",
+    "key": "NDMI",
+    "note": "20 m nativos; se remuestrea si salida a 20 m"
+  },
+  {
+    "id": "SCL",
+    "name": "Clasificación escena",
+    "source": "Copernicus Sentinel-2 L2A",
+    "unit": "categoría",
+    "native_temporal": "fechas de sobrevuelo",
+    "product_type": "satélite/polígono",
+    "key": "cloud mask",
+    "note": "Filtrar nubes/sombras/nieve/agua"
+  }
+]

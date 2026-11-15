@@ -16,13 +16,20 @@ from copernicus import CopernicusClient, CopernicusError
 from nasa_power_service import PowerClient, PowerError
 from agroclimate import compute_gdd, summarize_temperature
 from region_service import describe_region, validate_region_polygon
+from historical_service import analyze_history
+from earth_observation_service import EarthObservationClient
+from environment_service import analyze_environment
+from daily2025_service import analyze_daily_2025
+from decision_history_service import historical_decision_climate, historical_ndvi_context
+import json
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-app = FastAPI(title="TerraAI Satellite Data API", version="0.4.0")
+app = FastAPI(title="TerraAI Satellite Data API", version="0.5.0")
 allowed = os.getenv("TERRAAI_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=allowed, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 client = CopernicusClient()
 power_client = PowerClient()
+earth_client = EarthObservationClient()
 
 
 class NDVIRequest(BaseModel):
@@ -163,3 +170,50 @@ async def analyze_region(body: RegionAnalysisRequest):
                   else 'partial' if 'success' in (ndvi_data['status'], climate_data['status']) else 'error',
         'note': 'NDVI samples the field polygon; NASA POWER samples one representative location and is a regional meteorological estimate.',
     }
+
+
+class HistoricalRegionRequest(BaseModel):
+    polygon: dict
+
+    @field_validator('polygon')
+    @classmethod
+    def validate_polygon(cls, polygon: dict) -> dict:
+        return validate_region_polygon(polygon)
+
+
+@app.post('/api/regions/history')
+async def historical_region(body: HistoricalRegionRequest):
+    """Automatically query the six most recent completed calendar years.
+
+    The client supplies a polygon only. Crop / tab changes do not call this route.
+    """
+    return await analyze_history(body.polygon, client, power_client)
+
+
+@app.post('/api/regions/environment')
+async def environmental_history(body: HistoricalRegionRequest):
+    """Historical environmental variables with source-specific coverage, no manual dates."""
+    return await analyze_environment(body.polygon, client, earth_client)
+
+
+@app.post('/api/regions/environment/daily-2025')
+async def daily_environment_2025(body: HistoricalRegionRequest):
+    """2025 daily EO time series, one polygon, no manual dates."""
+    return await analyze_daily_2025(body.polygon, client, earth_client)
+
+
+@app.post('/api/regions/decisions/history')
+async def decision_history(body: HistoricalRegionRequest):
+    """Long historical record; 2025 contrasted with preceding complete years.
+
+    Independent upstream products can fail without inventing observations.
+    """
+    thermal = json.loads((Path(__file__).parent / 'data' / 'decision_thermal_catalog.json').read_text(encoding='utf-8'))['crops']
+    # Deployed backends may not include frontend files: use a backend catalog copy.
+    return await historical_decision_climate(body.polygon, earth_client, thermal)
+
+
+@app.post('/api/regions/decisions/ndvi-history')
+async def decision_ndvi_history(body: HistoricalRegionRequest):
+    """Historical field NDVI context; kept separate from crop suitability."""
+    return await historical_ndvi_context(body.polygon, client)

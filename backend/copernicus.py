@@ -40,6 +40,32 @@ function evaluatePixel(s) {
 """
 
 
+# New analysis includes NDMI. Both outputs use the same valid-pixel mask.
+# B11 has 20m native resolution: request 20m to avoid fake spatial precision.
+EVALSCRIPT_DUAL = """//VERSION=3
+function setup() {
+  return {
+    input: [{bands: ["B04", "B08", "B11", "SCL", "dataMask"]}],
+    output: [
+      {id: "ndvi", bands: 1, sampleType: "FLOAT32"},
+      {id: "ndmi", bands: 1, sampleType: "FLOAT32"},
+      {id: "dataMask", bands: 1, sampleType: "UINT8"}
+    ]
+  };
+}
+function evaluatePixel(s) {
+  let valid = s.dataMask === 1 && (s.SCL === 4 || s.SCL === 5);
+  let sumNDVI = s.B08 + s.B04;
+  let sumNDMI = s.B08 + s.B11;
+  valid = valid && sumNDVI > 0 && sumNDMI > 0;
+  return {
+    ndvi: [valid ? (s.B08 - s.B04) / sumNDVI : 0],
+    ndmi: [valid ? (s.B08 - s.B11) / sumNDMI : 0],
+    dataMask: [valid ? 1 : 0]
+  };
+}
+"""
+
 class CopernicusError(Exception):
     def __init__(self, message: str, status_code: int = 502):
         super().__init__(message)
@@ -53,6 +79,8 @@ class CopernicusClient:
         self._token_lock = asyncio.Lock()
         self._result_cache: dict[str, tuple[float, dict[str, Any]]] = {}
         self._cache_lock = asyncio.Lock()
+        # Shared cap across daily explorer and multi-year decision context.
+        self._request_limit = asyncio.Semaphore(2)
 
     @property
     def configured(self) -> bool:
@@ -83,7 +111,7 @@ class CopernicusClient:
             except (httpx.HTTPError, KeyError, ValueError) as exc:
                 raise CopernicusError("Copernicus authentication failed. Verify your OAuth client credentials.", 502) from exc
 
-    async def statistics(self, polygon: dict, start: date, end: date, interval: str) -> dict:
+    async def statistics(self, polygon: dict, start: date, end: date, interval: str, *, include_ndmi: bool = False) -> dict:
         if not self.configured:
             raise CopernicusError(
                 "Copernicus credentials are not configured on the TerraAI backend. Demo mode is available.", 503
@@ -91,7 +119,7 @@ class CopernicusClient:
         # Stable, rounded polygon + dates is a safe local cache key.
         import hashlib
         import json
-        key = hashlib.sha256(json.dumps([polygon, str(start), str(end), interval], sort_keys=True).encode()).hexdigest()
+        key = hashlib.sha256(json.dumps([polygon, str(start), str(end), interval, include_ndmi], sort_keys=True).encode()).hexdigest()
         cached = self._result_cache.get(key)
         if cached and cached[0] > time.monotonic():
             return {**cached[1], "cache_hit": True}
@@ -114,15 +142,16 @@ class CopernicusClient:
                 },
                 "aggregationInterval": {"of": interval},
                 "lastIntervalBehavior": "SHORTEN",
-                "evalscript": EVALSCRIPT,
-                "resx": 10,
-                "resy": 10,
+                "evalscript": EVALSCRIPT_DUAL if include_ndmi else EVALSCRIPT,
+                "resx": 20 if include_ndmi else 10,
+                "resy": 20 if include_ndmi else 10,
             },
         }
         try:
-            async with httpx.AsyncClient(timeout=80) as http:
-                access_token = await self.token(http)
-                resp = await http.post(STATS_URL, json=payload, headers={
+            async with self._request_limit:
+                async with httpx.AsyncClient(timeout=80) as http:
+                    access_token = await self.token(http)
+                    resp = await http.post(STATS_URL, json=payload, headers={
                     "Authorization": f"Bearer {access_token}",
                     "Accept": "application/json",
                 })
@@ -147,7 +176,11 @@ class CopernicusClient:
             no_data_count = int(stats.get("noDataCount", sample_count))
             valid_pixels = max(0, sample_count - no_data_count)
             mean = stats.get("mean") if valid_pixels else None
+            ndmi_stats = item.get("outputs", {}).get("ndmi", {}).get("bands", {}).get("B0", {}).get("stats", {})
+            ndmi_count = int(ndmi_stats.get("sampleCount", 0)) - int(ndmi_stats.get("noDataCount", 0))
+            ndmi_mean = ndmi_stats.get("mean") if ndmi_count > 0 else None
             observations.append({
+                "mean_ndmi": round(float(ndmi_mean), 4) if ndmi_mean is not None else None,
                 "date": item["interval"]["from"][:10],
                 "end": item["interval"]["to"][:10],
                 "mean_ndvi": round(float(mean), 4) if mean is not None else None,
@@ -165,7 +198,8 @@ class CopernicusClient:
             "start": str(start),
             "end": str(end),
             "cloud_mask": "SCL classes 4, 5 only; other pixels excluded",
-            "resolution_m": 10,
+            "resolution_m": 20 if include_ndmi else 10,
+            "indexes": ["NDVI", "NDMI"] if include_ndmi else ["NDVI"],
             "observations": observations,
             "cache_hit": False,
         }

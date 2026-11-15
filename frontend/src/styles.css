@@ -157,3 +157,428 @@
 @media(max-width:1150px){.field-below-grid{grid-template-columns:1fr}.field-map-toolbar{align-items:stretch}.field-location-search{max-width:100%}.field-main-map{height:460px}}
 @media(max-width:750px){.field-main-map{height:420px}.field-panel-heading{padding:18px 16px 13px}.field-panel-heading h2,.field-dataset-heading h2{font-size:19px}.field-map-toolbar{padding:0 14px 12px}.field-map-actions{gap:5px}.field-map-actions button{font-size:10px;padding:9px 10px}.field-map-tag{display:none}.field-map-attribution{padding:12px 14px}.field-draw-bar{flex-wrap:wrap;justify-content:center;white-space:normal;max-width:calc(100% - 16px);width:calc(100% - 16px)}.field-region-details,.field-form-grid{margin-left:16px;margin-right:16px}.field-analyze-button{margin-left:16px;margin-right:16px;width:calc(100% - 32px)}.field-small-note,.field-input-hint,.field-input-error{margin-left:16px;margin-right:16px}.field-results-grid,.field-source-states{margin-left:16px;margin-right:16px}.field-data-card{padding:17px}.field-dataset-heading{flex-direction:column}.field-metrics-row{grid-template-columns:repeat(2,minmax(0,1fr))}.field-chart{height:260px}}
 @media(max-width:430px){.field-region-details{grid-template-columns:repeat(2,minmax(0,1fr))}.field-form-grid{grid-template-columns:1fr}.field-results-grid{grid-template-columns:1fr}.field-metrics-row{grid-template-columns:1fr 1fr}.field-metric strong{font-size:19px}}
+
+/* Crop selection: six locally illustrated, accessible plant cards. */
+.crop-picker{margin:0 23px 18px;padding:15px;background:#f7faf7;border:1px solid #e0ece5;border-radius:13px}
+.crop-picker-heading{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:13px}
+.crop-picker-eyebrow{display:block;color:#5a8d75;letter-spacing:.11em;font-size:9px;font-weight:800}
+.crop-picker-heading h3{color:#214c39;font-size:14px;letter-spacing:-.025em;margin-top:4px}
+.crop-count{white-space:nowrap;font-size:10px;color:#688e7d;background:#e9f3ec;border-radius:99px;padding:5px 9px}
+.crop-picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.crop-picker-card{position:relative;min-width:0;border:1.5px solid #dce8df;background:#fff;border-radius:11px;overflow:hidden;padding:0;cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s,transform .15s}
+.crop-picker-card:hover{border-color:#7eb498;transform:translateY(-1px);box-shadow:0 4px 12px #2a6e4e1f}
+.crop-picker-card:focus-visible{outline:3px solid #3d9470;outline-offset:3px}
+.crop-picker-card.selected{border:2px solid #218358;box-shadow:0 0 0 2px #cae9d8}
+.crop-picker-card img{display:block;width:100%;height:82px;object-fit:cover}
+.crop-picker-label{display:block;font-size:12px;font-weight:800;color:#345d45;padding:9px 10px 10px}
+.crop-picker-check{position:absolute;top:7px;right:7px;display:grid;place-items:center;background:#168158;border-radius:50%;width:22px;height:22px;color:#fff;font-size:14px;font-weight:900;box-shadow:0 2px 5px #173e2e38}
+.crop-picker-details{border-top:1px solid #dfece3;margin-top:13px;padding-top:13px}
+.crop-picker-selected{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;color:#295a42;font-size:13px}
+.crop-picker-selected small{font-size:10px;color:#7d998a;font-style:italic}
+.crop-thermal-quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.crop-thermal-quick span{background:#fff;border:1px solid #e5eee6;border-radius:9px;padding:9px;display:flex;flex-direction:column;gap:5px}
+.crop-thermal-quick small{font-size:10px;color:#738979}
+.crop-thermal-quick b{font-size:14px;color:#1a674b}
+.crop-picker-details p,.crop-picker-prompt{font-size:10px;line-height:1.55;color:#71897d;margin-top:10px}
+.crop-environment-context{display:flex;align-items:center;gap:15px;border:1px solid #dce9e1;background:#f6faf6;border-radius:12px;padding:11px 14px;margin:14px 0}
+.crop-environment-context img{width:88px;height:86px;object-fit:cover;border-radius:9px;flex-shrink:0}
+.crop-environment-context h3{font-size:17px;color:#254f3c;margin:4px 0 6px}
+.crop-environment-context h3 small{font-style:italic;color:#789184;font-weight:400;font-size:11px}
+.crop-environment-context p{font-size:11px;color:#648072;line-height:1.6}
+.crop-source-links a{color:#25805a;text-decoration:underline;text-underline-offset:2px}
+.crop-temperature-chart{height:370px}
+.crop-reference-legend{display:flex;gap:8px 13px;flex-wrap:wrap;font-size:11px;color:#506d5c;margin:11px 0}
+.crop-reference-legend span{display:inline-flex;align-items:center;gap:7px}
+.crop-reference-legend i{display:inline-block;width:18px;height:0;border-top:2px dashed #889}
+.crop-reference-legend i.optimum{width:15px;height:9px;background:#6aba8340;border:1px solid #6aba83;vertical-align:middle}
+.crop-reference-legend i.gdd{border-color:#857bc3}
+.crop-reference-legend i.cold{border-color:#547eb2}
+.crop-reference-legend i.heat{border-color:#d4634c}
+.crop-temperature-explanation{padding:11px 13px;font-size:11px;line-height:1.65;background:#f6f9f7;color:#657e71;border-radius:9px;margin:12px 0}
+@media(max-width:720px){.crop-picker{margin-left:16px;margin-right:16px}.crop-picker-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.crop-picker-card img{height:72px}.crop-environment-context{align-items:flex-start}.crop-temperature-chart{height:340px}}
+@media(max-width:470px){.crop-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.crop-environment-context img{width:68px;height:68px}.crop-environment-context{gap:10px}.crop-reference-legend{flex-direction:column}}
+
+.crop-reference-legend i.gdd-upper{border-color:#a98cc3}
+
+/* ═══ TERRAAI · FASE 3 — SINGLE PAGE / SIX-YEAR AUTO HISTORY ═══
+   Existing FieldSelectionMap and Leaflet styling are deliberately untouched. */
+.terra-one-page-shell{display:block;min-height:100vh}
+.terra-one-page-main{margin:0;width:100%;min-height:100vh}
+.terra-one-page-content{max-width:1480px;padding:32px 38px 60px}
+.terra-unified-header{padding:0 max(32px,calc((100vw - 1400px)/2));position:relative;z-index:50}
+.terra-brand{display:flex;align-items:center;gap:12px}
+.terra-brand-mark{width:40px;height:40px;display:grid;place-items:center;background:linear-gradient(150deg,#236b53,#69b28a);color:white;border-radius:12px}
+.terra-brand strong{display:block;font-size:24px;letter-spacing:-1.3px;color:#153c32;line-height:1.1}
+.terra-brand strong span{color:#248658}
+.terra-brand small{display:block;font-size:8px;letter-spacing:1.6px;margin-top:4px;font-weight:800;color:#86a092}
+.terra-hero-copy{margin:0 0 22px}
+.terra-hero-copy h1{font-size:clamp(28px,3.3vw,42px);color:#173d33;letter-spacing:-1.4px;margin:3px 0 8px}
+.terra-hero-copy p{font-size:13px;color:#668575;max-width:850px}
+.terra-region-strip{display:grid;grid-template-columns:1fr 1.4fr 1.3fr 1.5fr;gap:11px;margin:14px 0 25px}
+.terra-region-strip>div{background:#fff;border:1px solid #ddebe2;border-radius:12px;padding:14px 17px;min-width:0}
+.terra-region-strip small{font-size:9px;font-weight:800;letter-spacing:1px;color:#76917e;display:block;margin-bottom:7px}
+.terra-region-strip b{display:block;font-size:12px;color:#244f3c;overflow-wrap:anywhere}
+.terra-region-strip .terra-region-activity{background:#eff8f2}
+.terra-history-panel{background:white;border:1px solid #e0e9e5;border-radius:17px;padding:24px;box-shadow:0 6px 22px rgba(13,55,41,.03)}
+.terra-history-heading{margin-bottom:20px}
+.terra-history-heading h2{font-size:24px;color:#183e30;margin:4px 0 5px}
+.terra-history-heading p{font-size:12px;color:#688175}
+.terra-data-tabs{display:flex;gap:9px;border-bottom:1px solid #e0ebe3;margin:0 0 18px;padding-bottom:10px}
+.terra-data-tabs button{border:1px solid #dbe8e0;background:#f8faf8;color:#557564;border-radius:10px;padding:12px 16px;font-weight:800;font-size:12px;display:flex;align-items:center;gap:9px}
+.terra-data-tabs button.active{background:#1e8158;color:#fff;border-color:#1e8158;box-shadow:0 4px 12px #26794d22}
+.terra-state-panel{min-height:260px;display:flex;align-items:center;justify-content:center;gap:13px;flex-direction:column;text-align:center;color:#47875f;border:1px dashed #d3e4d8;border-radius:13px;background:#f8fbf9;padding:25px}
+.terra-state-panel h3{font-size:18px;color:#285e44}
+.terra-state-panel p{max-width:550px;font-size:12px;color:#789087}
+.terra-state-panel button,.terra-export-button{border:1px solid #cce5d5;background:#eef9f1;color:#28734b;border-radius:9px;padding:9px 12px;display:flex;gap:7px;align-items:center;font-size:11px;font-weight:800}
+.terra-text-button{border:0;background:transparent;color:#9e4b35;font-weight:800;text-decoration:underline}
+.terra-year-tools{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:15px 0 10px;flex-wrap:wrap}
+.terra-year-tools b{display:block;font-size:13px;color:#2b5f44}
+.terra-year-tools span{display:block;font-size:11px;color:#7b9486;margin-top:5px}
+.terra-year-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.terra-year-buttons button{border:1px solid #dbe9de;padding:9px 12px;border-radius:8px;background:white;font-weight:800;font-size:11px;color:#5e7f6a}
+.terra-year-buttons button.active{background:#dff3e5;border-color:#86c5a0;color:#1b704d}
+.terra-year-coverage{background:#f3f9f5;border-radius:9px;padding:11px 13px;color:#60816b;font-size:11px;margin-bottom:18px}
+.terra-year-coverage b{color:#25694a}
+.terra-analysis-content{padding:5px 0 16px}
+.terra-analysis-content h3{color:#2c5942;font-size:15px;margin:23px 0 10px}
+.terra-series-meta{display:flex;gap:10px;flex-wrap:wrap;color:#6c8b7b;font-size:10px;margin:6px 0 16px}
+.terra-series-meta span{background:#f2f7f4;border-radius:7px;padding:7px 10px}
+.terra-annual-graph{width:100%;height:220px}
+.terra-explain{font-size:11px;color:#759083;line-height:1.7;margin:10px 0 15px}
+.terra-subsection-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 13px;flex-wrap:wrap}
+.terra-subsection-title h3{margin:0}
+.terra-history-panel .crop-picker{margin:0 0 18px;padding:17px}
+.terra-history-panel .crop-picker-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+.terra-history-panel .crop-picker-card img{height:105px}
+.terra-history-panel .crop-picker-details{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.terra-history-panel .crop-thermal-quick{display:flex;flex-wrap:wrap;margin:0}
+.terra-history-panel .crop-thermal-quick span{min-width:125px}
+.terra-history-panel .crop-picker-details p{margin:0;flex-basis:100%}
+.terra-history-panel .crop-temperature-chart{height:395px}
+.terra-detailed-graph{height:350px}
+.terra-warning-years{font-size:11px;color:#975a2d;background:#fff5e8;padding:14px;border-radius:10px}
+.terra-warning-years p{margin-top:7px}
+.terra-history-panel>.field-alert{margin:10px 0 18px;align-items:center;justify-content:space-between}
+.terra-history-panel>.field-provenance-note{margin-top:18px}
+@media(max-width:1100px){.terra-region-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.terra-history-panel .crop-picker-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.terra-one-page-content{padding:24px 15px 45px}.terra-unified-header{padding:0 15px;height:66px}.terra-brand strong{font-size:21px}.terra-unified-header .mode-pill{font-size:8px;letter-spacing:0;padding:7px}.terra-region-strip{grid-template-columns:1fr 1fr;gap:8px}.terra-region-strip>div{padding:11px}.terra-history-panel{padding:15px}.terra-data-tabs{flex-direction:column}.terra-data-tabs button{width:100%;justify-content:center}.terra-history-panel .crop-picker-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.terra-history-panel .crop-picker-card img{height:70px}}
+@media(max-width:440px){.terra-region-strip{grid-template-columns:1fr}.terra-history-panel .crop-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.terra-hero-copy h1{font-size:27px}}
+
+/* TerraAI phase: compact environmental exploration, one chart at a time */
+.terra-one-page-content{max-width:1440px}
+.terra-hero-copy{margin-bottom:15px}
+.terra-hero-copy h1{font-size:clamp(26px,3vw,37px);margin-bottom:5px}
+.terra-hero-copy p{line-height:1.65}
+.terra-region-strip{margin:13px 0 18px}
+.terra-history-panel{padding:clamp(15px,2.3vw,26px)}
+.terra-history-heading{margin-bottom:16px}
+.terra-history-heading h2{font-size:clamp(19px,2.2vw,25px)}
+.terra-parameter-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding:5px 0 14px;margin-bottom:17px;scroll-snap-type:x proximity}
+.terra-parameter-tabs button{display:flex;gap:8px;align-items:center;white-space:nowrap;flex:none;background:#f7faf8;color:#557668;border:1px solid #dfebe4;border-radius:11px;padding:11px 13px;font-size:12px;font-weight:760;scroll-snap-align:start;transition:background .15s,border-color .15s}
+.terra-parameter-tabs button:hover{background:#edf8f0;border-color:#acd5ba}
+.terra-parameter-tabs button.selected{background:#1e7c56;border-color:#1e7c56;color:white;box-shadow:0 4px 14px #206a4a20}
+.terra-variable-panel{padding:3px 0 8px;min-width:0}
+.terra-variable-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.terra-variable-heading h3{font-size:23px;color:#204d3a;margin:4px 0 3px}
+.terra-variable-heading p{font-size:12px;color:#688a78;margin:0}
+.terra-plot-view{display:flex;gap:4px;background:#f2f7f4;padding:4px;border-radius:10px;border:1px solid #e0eae3}
+.terra-plot-view button{padding:8px 12px;border-radius:8px;border:0;color:#577b68;background:transparent;font-size:11px;font-weight:760;white-space:nowrap}
+.terra-plot-view button.selected{background:white;color:#246d4a;box-shadow:0 1px 6px #1f503313}
+.terra-source-strip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:15px 0 17px;padding:10px 13px;background:#f5f9f5;border:1px solid #e9f0e9;border-radius:10px;color:#688375;font-size:11px}
+.terra-source-strip b{color:#325f48;font-size:12px}
+.terra-source-strip>span:last-child{margin-left:auto}
+.terra-data-dot{width:8px;height:8px;border-radius:50%;background:#31a467;flex:none}
+.terra-data-dot.missing{background:#d3a25f}
+.terra-crop-inline{margin-bottom:15px;padding:15px;border:1px solid #e0eae3;border-radius:12px;background:#f9fbf9}
+.terra-crop-inline-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.terra-crop-inline-heading strong{display:block;font-size:12px;color:#285840}
+.terra-crop-inline-heading span{display:block;font-size:10px;color:#789183;margin-top:3px}
+.terra-crop-inline-items{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.terra-crop-compact{min-width:0;border:1px solid #dce9e0;border-radius:9px;background:white;display:flex;align-items:center;gap:8px;padding:6px 9px;color:#355d43;font-size:11px;font-weight:800;transition:background .15s,border-color .15s}
+.terra-crop-compact img{width:45px;height:38px;object-fit:contain;border-radius:7px;background:#f1f4e9}
+.terra-crop-compact.selected{border:2px solid #2e9c68;background:#eaf6ee;padding:5px 8px;box-shadow:0 2px 8px #23844b1b}
+.terra-crop-compact:hover{background:#f0f9f3}
+.terra-chart-surface{width:100%;height:375px;background:white;border:1px solid #eef1ec;border-radius:12px;padding:10px 4px 0 0}
+.terra-thermal-legend{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 10px}
+.terra-thermal-legend span{display:flex;align-items:center;gap:7px;background:#f6f8f5;border:1px solid #e9eeea;border-radius:8px;color:#5f7a6c;font-size:10px;padding:7px 9px;line-height:1.35}
+.terra-thermal-legend i{display:inline-block;width:17px;height:4px;border-radius:4px;flex:none}
+.terra-thermal-legend .optimal{background:#6aba83;height:8px}
+.terra-thermal-legend .basal{background:#7661ae}
+.terra-thermal-legend .upper{background:#a17fc2}
+.terra-thermal-legend .cold{background:#3d7aab}
+.terra-thermal-legend .heat{background:#c75d4a}
+.terra-chart-caption{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;padding:13px 1px;color:#718c7b;font-size:11px}
+.terra-chart-caption span{max-width:780px;line-height:1.6}
+.terra-chart-caption button,.terra-empty-analysis button{display:inline-flex;align-items:center;gap:7px;border:1px solid #c8e5d2;background:#ecf9f0;border-radius:9px;color:#207c50;padding:9px 12px;font-weight:750;font-size:11px}
+.terra-variable-notes{border-top:1px solid #eaf0eb;padding:13px 3px 3px;color:#769083;font-size:11px;line-height:1.75}
+.terra-variable-notes p{margin:3px 0}
+.terra-variable-notes b{color:#426a52}
+.terra-soil-fineprint{margin-top:14px;font-size:10px;color:#85948b;background:#f9faf7;padding:11px;border-radius:8px}
+.terra-empty-analysis{min-height:230px;border:1px dashed #d9e7dd;border-radius:12px;background:#f8fbf8;color:#7a9381;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;padding:30px}
+.terra-empty-analysis strong{color:#2c6949;font-size:15px}
+.terra-empty-analysis span{font-size:12px;max-width:550px;line-height:1.6}
+.terra-loader{width:26px;height:26px;border:3px solid #c3e7cc;border-top-color:#1f9a5f;border-radius:50%;animation:terra-rotate .8s linear infinite}
+@keyframes terra-rotate{to{transform:rotate(360deg)}}
+@media(max-width:1030px){.terra-crop-inline-items{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.terra-variable-heading{align-items:flex-start}.terra-plot-view{width:100%}.terra-plot-view button{flex:1}.terra-crop-inline-items{grid-template-columns:repeat(3,minmax(0,1fr))}.terra-crop-compact{flex-direction:column;justify-content:center;padding:7px 5px}.terra-crop-compact img{width:60px;height:50px}.terra-chart-surface{height:300px}.terra-source-strip>span:last-child{margin-left:0}}
+@media(max-width:420px){.terra-crop-inline-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.terra-rain-source-switch{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px}
+.terra-rain-source-switch span{font-size:11px;color:#7c907e;margin-right:7px}
+.terra-rain-source-switch button{border:1px solid #dcebe1;background:#fff;color:#688473;border-radius:8px;padding:8px 11px;font-size:11px;font-weight:800}
+.terra-rain-source-switch button.selected{color:#207b52;background:#e8f5eb;border-color:#72b994}
+/* Daily-2025 explorer: extend the existing TerraAI visual language. */
+.terra-daily-chart{height:420px;min-height:380px;margin-top:14px}
+.terra-daily-tooltip{border:1px solid #dce6de;background:#fff;padding:11px 14px;border-radius:10px;box-shadow:0 8px 24px #1b41221c;font-size:12px;max-width:290px}
+.terra-daily-tooltip strong{display:block;color:#24483b;margin-bottom:7px}
+.terra-daily-tooltip div{display:flex;gap:8px;justify-content:space-between;padding:2px 0}
+.terra-daily-tooltip .terra-indicator-flag{margin:5px 0;color:#bd614a;font-size:11px}
+.terra-daily-tooltip small{color:#75877c}
+.terra-period-tag{border:1px solid #d9e8dd;border-radius:11px;background:#f6faf7;padding:10px;color:#3f8060;font-weight:800;letter-spacing:.03em;font-size:12px;white-space:nowrap}
+.terra-daily-legend{margin:14px 0 6px;display:flex;gap:12px 17px;flex-wrap:wrap;align-items:center}
+.terra-daily-legend span{font-size:11px;display:flex;gap:4px;align-items:center}
+.terra-daily-legend b{color:#2e5a44}
+.terra-parameter-tabs{flex-wrap:wrap}
+@media(max-width:700px){.terra-daily-chart{height:335px}.terra-period-tag{font-size:10px}.terra-variable-heading{flex-wrap:wrap}.terra-daily-legend span{font-size:10px}}
+
+/* TerraAI · Fase fenología 2025. El componente de Área de estudio permanece intacto. */
+.terra-phenology-panel,.terra-crop-indicators{background:#fff;border:1px solid #e0e9e5;border-radius:17px;padding:clamp(15px,2.3vw,26px);box-shadow:0 6px 22px #0d372907;margin:0 0 19px}
+.terra-phenology-heading,.terra-indicators-header{display:flex;justify-content:space-between;gap:18px;align-items:start;flex-wrap:wrap}
+.terra-phenology-heading h2,.terra-indicators-header h2{color:#183e30;font-size:clamp(19px,2.2vw,25px);margin:4px 0 5px}
+.terra-phenology-heading p,.terra-indicators-header p{font-size:12px;color:#688175;max-width:820px;line-height:1.65}
+.terra-phenology-tag{background:#edf6ef;color:#37795a;border-radius:9px;padding:10px 12px;letter-spacing:.08em;font-weight:850;font-size:10px}
+.terra-phenology-crops{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin:20px 0}
+.terra-phenology-crop{background:#f9fbf9;border:1px solid #dce9df;border-radius:12px;padding:8px;display:flex;align-items:center;gap:10px;text-align:left;color:#315f46;font-size:12px;font-weight:800;min-width:0}
+.terra-phenology-crop img{width:60px;height:56px;border-radius:9px;object-fit:contain;flex:none;background:#f2f5e9}
+.terra-phenology-crop.active{background:#e9f5ec;outline:2px solid #2b9867;outline-offset:-2px}
+.terra-phenology-crop:hover{border-color:#83b99a}
+.terra-planting-controls{border-top:1px solid #e7eee8;padding-top:18px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.terra-planting-copy{display:flex;align-items:center;gap:12px;color:#317a52}
+.terra-planting-copy strong{display:block;font-size:14px;color:#29543c}
+.terra-planting-copy small{display:block;color:#819188;font-size:11px;margin-top:3px}
+.terra-planting-date{display:flex;align-items:center;gap:10px;color:#496c58;font-size:12px;font-weight:760}
+.terra-planting-date input{min-height:39px;color:#215239;background:#f9fcf9;border:1px solid #cbded0;border-radius:9px;padding:8px 11px;font:inherit}
+.terra-planting-slider{display:flex;align-items:center;gap:13px;margin:12px 0 24px}
+.terra-planting-slider span{font-size:10px;color:#809686;white-space:nowrap;font-weight:750}
+.terra-planting-slider input{width:100%;accent-color:#2f9867;cursor:pointer}
+.terra-timeline-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin:10px 0;color:#456f53;font-size:12px}
+.terra-timeline-head>div{display:flex;align-items:center;gap:9px;color:#2a6946}
+.terra-timeline-head span b{color:#2b6d4d}
+.terra-phenology-track{display:flex;height:26px;overflow:hidden;border-radius:8px;border:1px solid #e2e8e0}
+.terra-phenology-segment{display:flex;justify-content:center;align-items:center;min-width:0;border-right:2px solid white;color:#24473d;font-weight:800;font-size:11px}
+.terra-phenology-segment:last-child{border-right:0}
+.terra-phenology-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:16px 0}
+.terra-phenology-stage{display:flex;align-items:start;gap:9px;min-width:0}
+.terra-phenology-square{width:10px;height:10px;border-radius:3px;flex:none;margin-top:5px}
+.terra-phenology-stage strong{font-size:11px;line-height:1.4;display:block;color:#2a543f}
+.terra-phenology-stage span:not(.terra-phenology-square),.terra-phenology-stage small{display:block;color:#7d9487;font-size:10px;margin-top:4px}
+.terra-phenology-note,.terra-phenology-overflow{display:flex;align-items:flex-start;gap:9px;background:#f4f9f5;border-radius:10px;padding:12px 13px;font-size:11px;line-height:1.6;color:#648573}
+.terra-phenology-note svg,.terra-phenology-overflow svg{flex:none;margin-top:2px}
+.terra-phenology-overflow{margin-top:9px;background:#fff6e8;color:#956a39}
+.terra-crop-indicators{margin-top:20px}
+.terra-indicators-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:19px 0}
+.terra-indicators-summary span{background:#f4f9f5;padding:13px;border-radius:10px;border:1px solid #e0eee5;min-width:0}
+.terra-indicators-summary small{display:block;color:#738e7c;font-size:10px;min-height:30px}
+.terra-indicators-summary strong{display:block;color:#2a674b;font-size:15px;line-height:1.4}
+.terra-indicators-empty{background:#fff9ec;border-radius:10px;padding:14px;color:#936d45;font-size:12px;margin:15px 0}
+.terra-phenology-table-scroll{overflow-x:auto;max-width:100%;border-radius:11px;border:1px solid #e2ebe5}
+.terra-phenology-table{width:100%;min-width:1120px;border-collapse:collapse;text-align:left;font-size:11px}
+.terra-phenology-table th{background:#f1f7f3;color:#4f735d;font-size:10px;letter-spacing:.02em;padding:13px 10px;white-space:nowrap;vertical-align:top}
+.terra-phenology-table th small{font-size:9px;color:#86a18a}
+.terra-phenology-table td{padding:14px 10px;border-top:1px solid #e9f0ea;vertical-align:top;color:#395c48;white-space:nowrap}
+.terra-phenology-table tr:nth-child(even){background:#fbfdfb}
+.terra-phenology-table td:first-child{white-space:normal;min-width:145px}
+.terra-table-stage-dot{width:9px;height:9px;display:inline-block;border-radius:3px;margin-right:7px}
+.terra-phenology-table td:first-child strong{display:inline;color:#29543d}
+.terra-phenology-table td small,.terra-phenology-table td span:not(.terra-table-stage-dot){display:block;margin-top:7px;color:#809488;font-size:10px}
+.terra-indicator-disclaimers{border-top:1px solid #eaf0eb;padding-top:13px;margin-top:16px;color:#748778;font-size:11px;line-height:1.75}
+.terra-indicator-disclaimers p{margin:6px 0}.terra-indicator-disclaimers b{color:#375f47}
+.terra-indicator-disclaimers a{color:#2c8559;text-decoration:underline}
+@media(max-width:1100px){.terra-phenology-crops{grid-template-columns:repeat(3,minmax(0,1fr))}.terra-phenology-stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:690px){.terra-phenology-crop{flex-direction:column;align-items:center;text-align:center}.terra-phenology-crops{grid-template-columns:repeat(3,minmax(0,1fr))}.terra-phenology-stage strong{font-size:10px}.terra-indicators-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.terra-planting-controls{align-items:flex-start}.terra-planting-slider span{font-size:9px}}
+@media(max-width:430px){.terra-phenology-crops{grid-template-columns:repeat(2,minmax(0,1fr))}.terra-phenology-stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* TerraAI · unified daily chart + crop and phenology calendar (2025).
+   No selector/map rules are changed: Área de estudio is the original component. */
+.terra-agro-crop-picker{margin:9px 0 20px;border:1px solid #e2ede5;border-radius:13px;background:#f8fcf9;padding:14px 16px 6px}
+.terra-agro-picker-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:#2a6046;font-size:12px}
+.terra-agro-picker-heading span{font-size:11px;color:#7b9282;line-height:1.5}
+.terra-agro-crop-picker .terra-phenology-crops{margin:13px 0}
+.terra-daily-chart{height:445px}
+.terra-chart-stage-tooltip{display:flex;align-items:center;gap:6px;font-size:10px;color:#4d765d;margin:6px 0 8px;padding:5px 7px;background:#f4f8f5;border-radius:6px}
+.terra-chart-stage-tooltip i{width:10px;height:10px;border-radius:2px;flex:none}
+.terra-sowing-under-chart{border:1px solid #dfece2;border-radius:12px;padding:15px 17px 4px;background:linear-gradient(130deg,#f4faf6,#fff);margin:17px 0 21px}
+.terra-sowing-under-chart .terra-planting-controls{border:0;padding:0}
+.terra-sowing-under-chart .terra-planting-slider{margin:14px 0 15px}
+.terra-inline-timeline{padding:18px 3px 22px;border-bottom:1px solid #e4ede7}
+.terra-inline-timeline .terra-timeline-head{margin:0 0 14px}
+.terra-inline-timeline .terra-phenology-track{height:29px}
+.terra-inline-timeline .terra-phenology-stages{margin:16px 0 13px}
+.terra-indicators-integrated{background:transparent;border:0;box-shadow:none;padding:24px 0 0;margin:0}
+.terra-indicators-integrated .terra-indicators-header{margin:0 0 16px}
+.terra-comparison-legend{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 14px}
+.terra-compare-status{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:800;white-space:normal;line-height:1.35;text-align:center}
+.terra-compare-status.below{color:#a75c24;background:#fff0e1}
+.terra-compare-status.within{color:#1d7550;background:#e4f5eb}
+.terra-compare-status.above{color:#a74b34;background:#fae9e4}
+.terra-compare-status.incomplete{color:#846b3c;background:#f8f0dd}
+.terra-compare-status.unrated{color:#698077;background:#eef3ef}
+.terra-comparison-table{min-width:900px;table-layout:fixed}
+.terra-comparison-table th:first-child{width:155px}
+.terra-comparison-table th:nth-child(2){width:175px}
+.terra-comparison-table th:nth-child(3){width:120px}
+.terra-comparison-table th:nth-child(4){width:260px}
+.terra-comparison-table th:nth-child(5){width:155px}
+.terra-comparison-table th:nth-child(6){width:100px}
+.terra-comparison-table td{white-space:normal;line-height:1.5}
+.terra-comparison-table tr.terra-comparison-stage-start>td{border-top:2px solid #dcebe1}
+.terra-comparison-table .terra-comparison-stage-cell{background:#f5f9f5;color:#2f5c42;font-weight:700;border-top:2px solid #dcebe1;border-right:1px solid #e0ede5;text-align:left;vertical-align:top;padding:13px 10px;white-space:normal}
+.terra-comparison-stage-cell strong{display:inline-block;font-size:12px;line-height:1.4}
+.terra-comparison-stage-cell small{display:block;color:#7b9182;margin-top:7px;font-weight:400;line-height:1.5;font-size:10px}
+.terra-comparison-reference{color:#637c6b!important;line-height:1.5}
+.terra-comparison-table td>b{color:#2e5e45;font-weight:800}
+.terra-comparison-table td>span{color:#80958a}
+@media(max-width:700px){.terra-daily-chart{height:320px}.terra-sowing-under-chart{padding:12px 10px 3px}.terra-inline-timeline{padding:14px 0 20px}.terra-comparison-legend{gap:5px}.terra-agro-crop-picker{padding:12px 10px 5px}}
+
+/* TERRAAI · PLANNING SCREENING (REUSE SELECTED MAP AND 2025 CLIMATE CACHE) */
+.terra-recommendation-section{background:#fff;border:1px solid #dce8e0;border-radius:17px;padding:25px;margin:20px 0;box-shadow:0 6px 24px rgba(13,55,41,.04)}
+.terra-rec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.terra-rec-header h2{color:#183c30;font-size:22px;letter-spacing:-.04em;margin:7px 0}
+.terra-rec-header p{font-size:12px;color:#71877b;line-height:1.6}
+.terra-rec-method-pill{display:inline-flex;align-items:center;gap:6px;background:#f2f7f3;color:#517365;font-size:10px;font-weight:800;border-radius:99px;padding:9px 12px;white-space:nowrap}
+.terra-rec-empty{display:flex;align-items:center;justify-content:center;min-height:170px;flex-direction:column;gap:9px;color:#628f77;text-align:center}
+.terra-rec-empty strong{color:#234d39;font-size:14px}.terra-rec-empty span{font-size:11px;color:#819489;max-width:420px;line-height:1.6}
+.terra-rec-empty button{display:inline-flex;align-items:center;gap:6px;background:#eaf5ee;border:0;border-radius:9px;color:#236e4e;font-weight:800;font-size:11px;padding:10px 13px}
+.terra-rec-warning{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;background:#fff8eb;border:1px solid #eedfbe;border-radius:11px;color:#88612f;font-size:11px;line-height:1.6;margin-bottom:19px}
+.terra-rec-warning svg{flex:none;margin-top:1px}
+.terra-rec-subheading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:13px}
+.terra-rec-subheading h3{font-size:16px;color:#224d3b;letter-spacing:-.025em}
+.terra-rec-subheading p{font-size:11px;line-height:1.6;color:#819489;max-width:730px;margin-top:4px}
+.terra-rec-subheading>span{font-size:10px;color:#769182;white-space:nowrap;font-weight:700}
+.terra-rec-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.terra-rec-card{display:flex;flex-direction:column;gap:11px;text-align:left;padding:15px;background:#fbfdfa;border:1px solid #dde9e0;border-radius:13px;color:#325746;cursor:pointer;min-width:0;transition:border-color .15s,transform .15s,box-shadow .15s}
+.terra-rec-card:hover,.terra-rec-card.active{border-color:#73b58e;box-shadow:0 6px 18px rgba(31,120,75,.11);transform:translateY(-1px)}
+.terra-rec-card:focus-visible{outline:3px solid #2c8555;outline-offset:2px}
+.terra-rec-card-head{display:flex;align-items:center;gap:9px;min-width:0}.terra-rec-card-head img{width:45px;height:45px;object-fit:contain;flex:none}
+.terra-rec-card-head strong{color:#1e5238;font-size:14px;display:block}.terra-rec-card-head small{color:#84988e;font-size:10px;display:block;margin-top:2px}
+.terra-rec-rank{display:inline-flex;align-items:center;justify-content:center;background:#e5f2e7;color:#278153;border-radius:7px;min-width:27px;height:28px;font-size:11px;font-weight:900}
+.terra-rec-card-dates{display:flex;align-items:center;flex-wrap:wrap;gap:6px;color:#667d6f;font-size:10px;font-weight:650}.terra-rec-card-dates>span{margin-left:auto;color:#9aafa1}
+.terra-rec-calendar-track{position:relative;height:12px;border-radius:99px;background:repeating-linear-gradient(90deg,#f0f4f0,#f0f4f0 1px,#e5ebe5 1px,#e5ebe5 2px);overflow:hidden;width:100%}
+.terra-rec-calendar-segment{position:absolute;top:0;bottom:0;border-right:1px solid #fff9;border-radius:2px}
+.terra-rec-card-explain{display:flex;flex-direction:column;gap:6px;flex:1}.terra-rec-card-explain span{display:flex;align-items:flex-start;gap:6px;font-size:10px;line-height:1.5}.terra-rec-card-explain svg{flex:none;margin-top:1px}.terra-rec-card-positive{color:#267c50}.terra-rec-card-caution{color:#9a6e3a}
+.terra-rec-card-action{display:flex;align-items:center;gap:5px;color:#247f52;font-size:10px;font-weight:900;margin-top:auto;border-top:1px solid #e5eee7;padding-top:10px}
+.terra-rec-missing{font-size:11px;color:#9b6c3d;margin-top:12px}
+.terra-rec-rotation-area{border-top:1px solid #e8ede9;margin-top:24px;padding-top:22px}
+.terra-rec-plan-options{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.terra-rec-plan-options button{border:1px solid #d6e4da;background:#f6faf7;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;color:#507562;cursor:pointer}.terra-rec-plan-options button.active{background:#19764e;color:#fff;border-color:#19764e}
+.terra-rec-rotation-display{background:#f8fbf8;border:1px solid #e5eee6;border-radius:12px;padding:17px;overflow:hidden}
+.terra-rec-year-axis{display:flex;justify-content:space-between;gap:2px;color:#7f9586;font-size:9px;font-weight:800;padding:0 136px 7px 0}
+.terra-rec-year-row{display:grid;grid-template-columns:130px minmax(0,1fr) 130px;align-items:center;gap:13px;margin-top:10px}.terra-rec-year-name{display:flex;align-items:center;gap:7px;font-weight:800;color:#275943;font-size:12px}.terra-rec-year-name img{height:29px;width:29px;object-fit:contain}.terra-rec-year-body .terra-rec-calendar-track{height:20px}.terra-rec-year-dates{font-size:10px;color:#678576;text-align:right}
+.terra-rec-rotation-foot,.terra-rec-rotation-notice,.terra-rec-rotation-none{display:flex;gap:9px;align-items:flex-start;color:#71897a;font-size:10px;line-height:1.6;margin-top:15px}.terra-rec-rotation-foot svg,.terra-rec-rotation-notice svg,.terra-rec-rotation-none svg{flex:none}.terra-rec-rotation-notice{color:#936f37}
+.terra-rec-method-toggle{margin-top:19px;display:inline-flex;align-items:center;gap:7px;border:1px solid #cae2d3;background:#f4faf6;color:#20754b;font-size:11px;font-weight:850;padding:11px 13px;border-radius:9px;cursor:pointer}
+.terra-rec-method-details{border:1px solid #e1eae4;border-radius:10px;background:#fafcfb;padding:16px;color:#587466;font-size:11px;line-height:1.75;margin-top:10px}.terra-rec-method-details p{margin-bottom:9px}.terra-rec-method-details ul{margin:10px 0 0 18px;padding:0}
+@media(max-width:1150px){.terra-rec-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.terra-recommendation-section{padding:16px}.terra-rec-cards{grid-template-columns:1fr}.terra-rec-year-row{grid-template-columns:85px minmax(0,1fr);gap:7px}.terra-rec-year-dates{grid-column:2;text-align:left}.terra-rec-year-axis{padding-right:0}.terra-rec-subheading{flex-direction:column}}
+.terra-rec-context{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;border:1px solid #e7eee8;border-radius:9px;background:#f5f9f5;padding:9px}.terra-rec-context span{display:flex;flex-direction:column;gap:2px;color:#7b9383;font-size:9px}.terra-rec-context b{font-size:10px;color:#416954}
+
+/* Field Shift · decisions informed by multiple observed climate seasons.
+   Kept completely separate from the existing Área de estudio map styles. */
+.terra-decision-section{background:#fff;border:1px solid #dce9df;border-radius:19px;padding:clamp(18px,2.7vw,29px);box-shadow:0 7px 27px #153e2b0b;margin:24px 0}
+.terra-decision-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.terra-decision-header h2{font-size:clamp(21px,2.6vw,30px);color:#193f2d;letter-spacing:-.035em;margin:5px 0 8px}
+.terra-decision-header p{font-size:12px;line-height:1.7;color:#758a79;max-width:730px}
+.terra-decision-header-pill{display:flex;align-items:center;gap:6px;background:#eaf5ec;border:1px solid #d9ebdc;color:#317853;padding:9px 13px;border-radius:99px;font-weight:850;font-size:10px;white-space:nowrap}
+.terra-decision-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#f6faf7;border:1px dashed #bfdec8;border-radius:14px;padding:37px 20px;gap:10px;color:#318152}
+.terra-decision-empty strong{color:#234b37;font-size:15px}.terra-decision-empty p{font-size:12px;color:#7d9182;max-width:560px;line-height:1.7}
+.terra-decision-empty button{font-size:12px;font-weight:800;padding:10px 17px;border-radius:9px;color:#fff;background:#267c52}
+.terra-decision-notice{background:#f3f8f3;border-left:3px solid #3b8c5e;border-radius:8px;display:flex;align-items:flex-start;gap:12px;padding:13px 15px;color:#536e5d;font-size:11px;line-height:1.7;margin:13px 0 19px}
+.terra-decision-notice svg{flex:none;margin-top:2px;color:#358653}.terra-decision-notice strong{color:#2d623f}
+.terra-decision-evidence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 28px}
+.terra-decision-evidence>div{display:flex;flex-direction:column;gap:5px;padding:17px 19px;background:#f7faf8;border:1px solid #e4eee6;border-radius:12px;min-width:0}
+.terra-decision-evidence small{color:#72907c;font-size:9px;font-weight:850;letter-spacing:.07em}.terra-decision-evidence strong{font-size:clamp(18px,2.4vw,24px);font-weight:900;color:#1b6646;letter-spacing:-.025em}.terra-decision-evidence span{color:#85998a;font-size:10px}
+.terra-decision-section-head{display:flex;justify-content:space-between;gap:18px;align-items:center;margin:22px 0 13px}.terra-decision-section-head h3{font-size:18px;color:#214b34;margin:0 0 6px}.terra-decision-section-head p{font-size:11px;color:#78917f;line-height:1.65;max-width:780px}
+.terra-decision-scenarios{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.terra-decision-scenarios button{display:inline-flex;align-items:center;gap:8px;padding:11px 14px;background:#f7faf8;color:#547562;border:1px solid #dfebe1;border-radius:10px;font-size:11px;font-weight:850;transition:background .16s,border-color .16s}
+.terra-decision-scenarios button small{color:#88a494;font-weight:800;font-size:10px;padding-left:4px;border-left:1px solid #ccdace}
+.terra-decision-scenarios button.active{background:#267950;color:#fff;border-color:#267950}.terra-decision-scenarios button.active small{color:#cbe9d3;border-color:#88b899}
+.terra-decision-scenario-description{font-size:10px;color:#7d8f80;margin:6px 0 17px}.terra-decision-scenario-description strong{color:#587c61}
+.terra-decision-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.terra-decision-crop{display:flex;flex-direction:column;text-align:left;padding:15px;border:1px solid #e1ebdf;background:#fff;border-radius:13px;min-width:0;gap:14px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s}
+.terra-decision-crop:hover{border-color:#86ba99;transform:translateY(-2px);box-shadow:0 9px 20px #143e2010}.terra-decision-crop.selected{border-color:#36956a;box-shadow:0 0 0 2px #5bb58b44;background:#fbfefb}
+.terra-decision-crop-top{display:flex;align-items:center;gap:8px}.terra-decision-index{font-size:10px;font-weight:900;color:#90aa97;align-self:flex-start;margin-top:5px}.terra-decision-crop-top img{height:46px;width:49px;background:#f0f5ee;object-fit:contain;border-radius:9px}.terra-decision-crop-top strong{display:block;font-size:14px;color:#29583f}.terra-decision-crop-top small{display:block;font-size:10px;color:#96a79c;margin-top:3px}
+.terra-decision-crop-score>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:5px}.terra-decision-crop-score b{font-size:28px;color:#2e8057;line-height:1;font-weight:900}.terra-decision-crop-score b small{font-size:12px;color:#a8b8aa}.terra-decision-crop-score span{font-size:9px;color:#9cae9f;font-weight:750}
+.terra-decision-progress{height:6px;border-radius:10px;background:#e8eee7;overflow:hidden;margin-top:7px}.terra-decision-progress span{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,#72bda2,#257f56)}
+.terra-decision-crop-dates{display:flex;align-items:center;gap:6px;color:#627b68;font-size:10px;font-weight:800}.terra-decision-crop-metrics{display:flex;flex-direction:column;gap:6px;padding:9px 10px;border-radius:9px;background:#f6faf7}.terra-decision-crop-metrics span{display:flex;justify-content:space-between;gap:4px;color:#8b9f91;font-size:10px}.terra-decision-crop-metrics b{color:#3b7654}.terra-decision-crop-explain{font-size:10px;color:#6c8c74;line-height:1.55;margin:0;flex:1}.terra-decision-crop-select{border-top:1px solid #edf2ee;padding-top:10px;color:#348655;font-size:10px;font-weight:900}
+.terra-decision-selected{display:flex;align-items:center;justify-content:space-between;gap:20px;background:#f3faf5;border:1px solid #e0efe3;border-radius:12px;padding:17px 20px;margin:19px 0 22px}.terra-decision-selected strong{font-size:13px;color:#235e3d}.terra-decision-selected p{font-size:11px;line-height:1.65;color:#6f927c;max-width:690px;margin-top:7px}.terra-decision-selected>div:last-child{min-width:150px;text-align:right}.terra-decision-selected b,.terra-decision-selected small{display:block;color:#718b77;font-size:10px}.terra-decision-selected span{display:block;font-size:18px;font-weight:900;color:#347c55;margin:7px 0}
+.terra-decision-profile{border:1px solid #e4ede7;border-radius:13px;padding:18px 18px 8px;background:#fff;margin:16px 0 25px}.terra-decision-profile-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.terra-decision-profile-head strong{font-size:14px;color:#335940}.terra-decision-profile-head p{font-size:10px;color:#879c8c;max-width:670px;line-height:1.6;margin-top:5px}
+.terra-decision-profile-toggle{display:flex;gap:4px;border-radius:9px;background:#f3f8f4;padding:3px}.terra-decision-profile-toggle button{font-size:10px;color:#71917a;padding:8px 11px;border-radius:7px;font-weight:800}.terra-decision-profile-toggle button.active{background:#fff;box-shadow:0 1px 6px #0b3b2615;color:#237648}.terra-decision-profile-chart{height:260px;width:100%;margin-top:15px}
+.terra-decision-rotation-options{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.terra-decision-rotation-options button{padding:10px 12px;border:1px solid #dbeadc;border-radius:9px;background:#f7faf7;color:#4c7c5d;font-size:11px;font-weight:800}.terra-decision-rotation-options button.active{background:#247c4e;color:#fff;border-color:#247c4e}
+.terra-decision-calendar{background:#f8fbf8;border:1px solid #e6eee5;border-radius:12px;padding:19px}.terra-decision-months{display:grid;grid-template-columns:repeat(12,1fr);font-size:9px;color:#87a18c;font-weight:850;padding:0 126px 8px 140px}.terra-decision-months span{text-align:center}
+.terra-decision-calrow{display:grid;grid-template-columns:130px minmax(0,1fr) 126px;align-items:center;gap:10px;margin:12px 0}.terra-decision-calname{display:flex;align-items:center;gap:6px;font-size:12px;color:#315a40}.terra-decision-calname img{width:31px;height:31px;object-fit:contain}.terra-decision-calbody{position:relative;height:21px;background:#eaf2ea;border-radius:6px;overflow:hidden}.terra-decision-calstage{position:absolute;top:0;bottom:0;border-right:1px solid #fff}.terra-decision-calrow small{font-size:10px;color:#81998a;text-align:right}.terra-decision-calfoot{font-size:10px;color:#81978a;margin-top:9px}
+.terra-decision-rotation-warning,.terra-decision-no-rotations{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:#976c43;line-height:1.6;margin:12px 0 16px}.terra-decision-rotation-warning svg,.terra-decision-no-rotations svg{flex:none}
+.terra-decision-method-button{margin:15px 0 4px;border:1px solid #d6e8da;border-radius:9px;padding:11px 14px;background:#f4faf6;color:#2c7a50;font-size:11px;font-weight:850;display:flex;gap:8px;align-items:center}.terra-decision-method-details{border-radius:12px;background:#f9fcf9;border:1px solid #e1eee2;padding:20px 25px;color:#607c66;font-size:11px;line-height:1.75;margin-top:12px}.terra-decision-method-details p{margin:8px 0}.terra-decision-method-details ul{margin:10px 0 12px 18px;list-style:disc}.terra-decision-method-details a{color:#287a53;text-decoration:underline}
+@media(max-width:1100px){.terra-decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.terra-decision-months{padding:0 0 8px 135px}.terra-decision-calrow{grid-template-columns:125px minmax(0,1fr)}.terra-decision-calrow small{grid-column:2;text-align:left}}
+@media(max-width:700px){.terra-decision-section{padding:15px}.terra-decision-evidence{grid-template-columns:1fr}.terra-decision-grid{grid-template-columns:1fr}.terra-decision-selected{flex-direction:column;align-items:flex-start}.terra-decision-selected>div:last-child{text-align:left}.terra-decision-months{padding-left:0;font-size:7px}.terra-decision-calrow{grid-template-columns:90px minmax(0,1fr)}.terra-decision-calname{font-size:10px}.terra-decision-calname img{width:21px;height:21px}}
+.terra-decision-criteria{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.terra-decision-criteria span{background:#f4f8f4;padding:7px 5px;border-radius:6px;text-align:center;color:#5d8268;font-size:9px;line-height:1.5}.terra-decision-criteria b{display:block;font-size:9px;color:#809b84}
+
+/* Field Shift · human-centered decision UX. Overrides only Decisions; never map styles. */
+.terra-ux-decisions{--ux-ink:#244c39;--ux-mute:#6b8574;--ux-line:#e1ebe3;--ux-green:#278054;--ux-amber:#b6803a;}
+.terra-ux-decisions .terra-decision-header{margin-bottom:14px}
+.terra-ux-decisions .terra-decision-header h2{font-size:clamp(23px,2.6vw,29px);letter-spacing:-.035em}
+.terra-ux-decisions .terra-decision-section-head{margin-top:22px}
+.terra-ux-decisions .terra-decision-section-head p{max-width:780px;font-size:12px}
+.terra-ux-decisions .terra-decision-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.terra-ux-decisions .terra-ux-crop-card{gap:11px;padding:15px;min-height:154px;border-radius:14px}
+.terra-ux-decisions .terra-ux-crop-card.selected{border-color:#329262;box-shadow:0 0 0 2px #8ad1a466}
+.terra-ux-card-conclusion{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#3d6950;line-height:1.4;min-height:30px}
+.terra-ux-signal{width:9px;height:9px;border-radius:100%;flex:none;background:#b4c4b8}
+.terra-ux-signal.positive{background:#37986b}.terra-ux-signal.caution{background:#d49a4b}.terra-ux-signal.neutral{background:#8da8a0}
+.terra-ux-card-meta{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:10px;color:#718878}
+.terra-ux-card-meta b{font-size:18px;color:#286c4d}.terra-ux-card-meta small{font-size:10px;font-weight:600;color:#9dab9e}
+.terra-ux-crop-card .terra-decision-progress{margin-top:-8px;height:4px}
+.terra-ux-crop-card .terra-decision-crop-select{margin-top:auto;font-size:11px;padding-top:9px}
+.terra-ux-hint{position:relative;display:inline-flex;align-items:center;margin-left:4px;vertical-align:middle;flex:none;z-index:4}
+.terra-ux-hint summary{display:inline-flex;cursor:pointer;color:#548468;list-style:none;padding:4px;border-radius:50%;background:#edf5ee}
+.terra-ux-hint summary::-webkit-details-marker{display:none}
+.terra-ux-hint summary:focus-visible{outline:2px solid #359865;outline-offset:2px}
+.terra-ux-hint-content{position:absolute;right:0;top:28px;width:min(290px,70vw);color:#355b43;font-size:12px;font-weight:500;line-height:1.5;background:#fff;border:1px solid #d8e6dc;border-radius:10px;padding:12px;box-shadow:0 12px 32px #163e2926;z-index:20}
+.terra-ux-explanation{margin:20px 0 14px;padding:21px;background:#f6faf7;border:1px solid #dfecdf;border-radius:15px}
+.terra-ux-explanation-title{display:flex;gap:13px;align-items:center}
+.terra-ux-explanation-title img{width:60px;height:60px;object-fit:contain;background:#eaf2e9;border-radius:11px}
+.terra-ux-explanation-title h3{font-size:19px;line-height:1.2;margin:3px 0;color:#254c39}
+.terra-ux-explanation-title p{font-size:11px;color:#678473;margin:5px 0}
+.terra-ux-reasons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px}
+.terra-ux-reason{display:flex;gap:8px;padding:12px;background:#fff;border:1px solid #e0eae2;border-radius:10px;align-items:flex-start;min-width:0}
+.terra-ux-reason .terra-ux-signal{margin-top:5px}
+.terra-ux-reason strong{display:block;font-size:12px;line-height:1.45;color:#315840}
+.terra-ux-reason p{font-size:11px;color:#708776;line-height:1.55;margin:5px 0 0}
+.terra-ux-explanation-method{font-size:11px;color:#66816e;margin-top:15px}
+.terra-ux-explanation-method summary{cursor:pointer;color:#32734e;font-weight:750}
+.terra-ux-explanation-method p{margin:9px 0 2px;max-width:950px;line-height:1.65}
+.terra-ux-season-card{background:#fff;border:1px solid #e1ebe3;border-radius:15px;padding:20px;margin:14px 0 30px}
+.terra-ux-season-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap}
+.terra-ux-season-heading h3{font-size:18px;margin:4px 0 5px;color:#254b37}
+.terra-ux-season-heading p{font-size:11px;color:#748c7b;line-height:1.5;max-width:640px}
+.terra-ux-segment{display:inline-flex;align-items:center;gap:2px;background:#f0f5f0;border-radius:10px;padding:4px}
+.terra-ux-segment button{display:flex;align-items:center;gap:5px;font-size:11px;color:#618070;font-weight:750;padding:8px 11px;border-radius:8px;white-space:nowrap}
+.terra-ux-segment button.active{color:#236f49;background:#fff;box-shadow:0 2px 8px #1e4e2817}
+.terra-ux-chart-caption{display:flex;flex-wrap:wrap;align-items:center;gap:7px;font-size:11px;line-height:1.6;color:#5d7e68;margin:18px 0 1px;min-height:25px}
+.terra-ux-legend-chip{width:19px;height:12px;border:1px solid;border-radius:4px;display:inline-block}
+.terra-ux-season-plot{width:100%;height:300px;margin-top:8px}
+.terra-ux-no-profile{padding:55px 16px;text-align:center;color:#889d8b;font-size:12px}
+.terra-ux-stage-legend{display:flex;flex-wrap:wrap;gap:13px;margin:12px 0 5px}
+.terra-ux-stage-legend span{display:flex;align-items:center;gap:6px;font-size:10px;color:#637a69}
+.terra-ux-stage-legend i{width:15px;height:8px;display:inline-block;border-radius:2px}
+.terra-ux-plot-source{font-size:10px;line-height:1.5;color:#95a59a;margin:8px 0 0}
+.terra-ux-rotation-why{border:1px solid #dfe9df;border-radius:13px;background:#fbfdfa;margin-top:12px;padding:17px}
+.terra-ux-rotation-lead{display:flex;gap:10px;align-items:flex-start;color:#368059}
+.terra-ux-rotation-lead strong{color:#28573e;font-size:13px}
+.terra-ux-rotation-lead p{color:#68816f;font-size:12px;line-height:1.6;margin:6px 0 3px}
+.terra-ux-rotation-evidence{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+.terra-ux-rotation-evidence>div{border-radius:9px;padding:11px;background:#f0f6f1;min-width:0}
+.terra-ux-rotation-evidence small{display:block;font-size:10px;color:#789281;margin-bottom:6px}
+.terra-ux-rotation-evidence strong{font-size:11px;color:#345941;line-height:1.4;overflow-wrap:anywhere}
+@media(max-width:1000px){.terra-ux-reasons{grid-template-columns:1fr}.terra-ux-rotation-evidence{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.terra-ux-decisions .terra-decision-grid{grid-template-columns:1fr}.terra-ux-explanation{padding:14px}.terra-ux-season-card{padding:12px}.terra-ux-season-plot{height:270px}.terra-ux-rotation-evidence{grid-template-columns:1fr}}
+
+.terra-ux-ranking-context{margin:13px 0 0;padding:9px 12px;border-radius:9px;background:#edf5ee;color:#557461;font-size:11px;line-height:1.55}

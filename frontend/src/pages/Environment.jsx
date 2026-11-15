@@ -3,12 +3,13 @@ import {ArrowLeft, CheckCircle2, CircleAlert, Download, Leaf, MapPin, Satellite,
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import {SectionHeading} from '../components/ui/Elements.jsx';
 import {saveDatasetCsv} from '../services/regionAnalysisService.js';
+import {CropTemperatureChart} from '../components/crops/CropTemperatureChart.jsx';
 
 const number=(value,digits=1)=>typeof value==='number'&&Number.isFinite(value)?value.toFixed(digits):'—';
 function ChartShell({rows,children}) {return <div className="field-chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={rows} margin={{top:12,right:16,bottom:5,left:-22}}><CartesianGrid stroke="#e6eeea" vertical={false} strokeDasharray="3 5"/><XAxis dataKey="date" minTickGap={42} tick={{fontSize:11,fill:'#739087'}}/><YAxis tick={{fontSize:11,fill:'#739087'}}/><Tooltip labelFormatter={d=>`Fecha: ${d}`} formatter={(v,name)=>[v==null?'Sin datos':number(v,2),name]}/><Legend wrapperStyle={{fontSize:12}}/>{children}</LineChart></ResponsiveContainer></div>}
 function Metric({name,value,unit='',sub}) {return <div className="field-metric"><span>{name}</span><strong>{value}{value==='—'?'':unit&&<small> {unit}</small>}</strong>{sub&&<small>{sub}</small>}</div>}
 function DataStatus({dataset,source}){return <div className={`field-dataset-status ${dataset?.status==='success'?'ok':'warn'}`}>{dataset?.status==='success'?<CheckCircle2 size={16}/>:<CircleAlert size={16}/>} {dataset?.status==='success'?`${source} · Datos disponibles`:dataset?.error||`${source} · Sin resultados`}</div>}
-export function Environment({region,start,end,analysis,loading,navigate}) {
+export function Environment({region,start,end,analysis,loading,navigate,selectedCrop}) {
   const ndvi=analysis?.datasets?.ndvi;
   const temperature=analysis?.datasets?.temperature;
   const ndviRows=ndvi?.data?.observations||[];
@@ -34,8 +35,17 @@ export function Environment({region,start,end,analysis,loading,navigate}) {
       <section className="field-data-card">
         <div className="field-dataset-heading"><div><span className="overline">02 / TEMPERATURE INTELLIGENCE</span><h2><ThermometerSun size={23}/> Temperatura · NASA POWER</h2><p>Estimaciones diarias de temperatura del aire a 2 metros para un punto representativo del terreno, no una media espacial del polígono.</p></div><button type="button" disabled={temperature?.status!=='success'||!tempRows.length} onClick={()=>saveDatasetCsv({dataset:temperature,analysis,type:'temperature'})}><Download size={16}/> Exportar CSV</button></div>
         <DataStatus dataset={temperature} source="NASA POWER"/>
+        {selectedCrop && <div className="crop-environment-context">
+          <img src={selectedCrop.image} alt={`Ilustración de ${selectedCrop.name}`}/>
+          <div><span className="crop-picker-eyebrow">REFERENCIAS TÉRMICAS · CULTIVO SELECCIONADO</span><h3>{selectedCrop.name} <small>{selectedCrop.scientificName}</small></h3>
+            <p>Óptimo climático {selectedCrop.thermal.optimumClimateC.min}–{selectedCrop.thermal.optimumClimateC.max} °C · Base GDD {selectedCrop.thermal.gddBaseC} °C · Tope GDD {selectedCrop.thermal.gddUpperC} °C.</p>
+            <p className="crop-source-links">Fuentes: <a href={selectedCrop.thermal.optimumClimateC.sourceUrl} target="_blank" rel="noreferrer">Óptimo climático</a> · <a href={selectedCrop.thermal.heatReproductiveSourceUrl} target="_blank" rel="noreferrer">Calor reproductivo</a> · <a href={selectedCrop.thermal.coldFloweringSourceUrl} target="_blank" rel="noreferrer">Frío en floración (FAO)</a>, coincidente con el CSV del proyecto.</p>
+          </div>
+        </div>}
+        {!selectedCrop && <p className="field-data-note">Selecciona un cultivo en «My Farm» para superponer referencias térmicas.</p>}
         {temperature?.status==='success'&&<><div className="field-metrics-row"><Metric name="Temperatura media" value={number(tempSummary?.mean_temperature_c)} unit="°C"/><Metric name="Máxima diaria" value={number(tempSummary?.absolute_max_temperature_c)} unit="°C"/><Metric name="Mínima diaria" value={number(tempSummary?.absolute_min_temperature_c)} unit="°C"/><Metric name="Días con datos" value={String(tempSummary?.valid_mean_days??'—')}/></div>
-          {tempRows.length?<><ChartShell rows={tempRows}><Line name="Mínima (°C)" dataKey="min_c" type="monotone" stroke="#3292b9" strokeWidth={1.8} connectNulls={false} dot={false}/><Line name="Media (°C)" dataKey="mean_c" type="monotone" stroke="#288b6b" strokeWidth={2.4} connectNulls={false} dot={false}/><Line name="Máxima (°C)" dataKey="max_c" type="monotone" stroke="#dc923f" strokeWidth={1.8} connectNulls={false} dot={false}/></ChartShell><div className="field-temp-exposures"><div>Exposición a calor ({number(tempSummary?.heat_threshold_c)} °C): <b>{tempSummary?.heat_exposure_days??'—'} días</b></div><div>Exposición a frío ({number(tempSummary?.cold_threshold_c)} °C): <b>{tempSummary?.cold_exposure_days??'—'} días</b></div></div><div className="field-data-note">Fuente: NASA POWER Daily API · Horario solar local (LST). Los umbrales cuantifican exposición y no diagnostican daño de cultivos.</div></>:<div className="field-no-observations">No existen observaciones válidas para el intervalo solicitado.</div>}
+          {tempRows.length?<><CropTemperatureChart rows={tempRows} crop={selectedCrop}/>
+          <div className="field-data-note">Fuente: NASA POWER Daily API · Horario solar local (LST). La comparación visual no demuestra estrés ni daño del cultivo; se desconoce su etapa fenológica y exposición real.</div></>:<div className="field-no-observations">No existen observaciones válidas para el intervalo solicitado.</div>}
         </>}
       </section>
       <div className="field-provenance-note"><Satellite size={18}/><p><b>Interpretación espacial:</b> Copernicus calcula estadísticas del polígono delimitado. NASA POWER utiliza un punto representativo y suministra estimaciones meteorológicas regionales. Ambas series pueden tener distinta resolución espacial, observaciones ausentes y temporalidad distinta. Los resultados presentados no son predicciones.</p></div>

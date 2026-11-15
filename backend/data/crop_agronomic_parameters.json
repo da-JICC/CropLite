@@ -1,0 +1,1575 @@
+{
+  "schema_version": 2,
+  "note": "20 cultivos; vacíos explícitos, no interpolados ni inventados. Límites de GDD no equivalen a daño. Datos locales a validar.",
+  "crops": [
+    {
+      "id": "wheat",
+      "name": "Trigo",
+      "scientific_name": "Triticum aestivum",
+      "thermal": {
+        "gdd_base_c": 0.0,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 1620.0,
+          "max": 2300.0
+        },
+        "optimal_climate_c": {
+          "min": 15,
+          "max": 23,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
+        },
+        "cold_start_reference_c": {
+          "min": -10.0,
+          "max": -9.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": 32,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 650.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.45
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 150
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "maize",
+      "name": "Maíz grano",
+      "scientific_name": "Zea mays",
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 32.0,
+        "gdd_cycle_degree_days": {
+          "min": 1420.0,
+          "max": 1955.0
+        },
+        "optimal_climate_c": {
+          "min": 18,
+          "max": 33,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
+        },
+        "cold_start_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": 35,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 500.0,
+          "max": 800.0
+        },
+        "kc_by_stage": {
+          "initial": 0.4,
+          "development": 0.8,
+          "mid": 1.15,
+          "late": 0.7
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 1.7
+        },
+        "cycle_days": {
+          "min": 125,
+          "max": 180
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12837853/"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "soybean",
+      "name": "Soja",
+      "scientific_name": "Glycine max",
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 40.0,
+        "gdd_cycle_degree_days": {
+          "min": 1660.0,
+          "max": 1960.0
+        },
+        "optimal_climate_c": {
+          "min": 20,
+          "max": 33,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://www.odepa.gob.cl/wp-content/uploads/2010/08/mapasProduccionBiocombustibles.pdf"
+        },
+        "cold_start_reference_c": {
+          "min": -4.0,
+          "max": -3.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": 30,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 700.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.1,
+          "late": 0.6
+        },
+        "allowable_depletion_fraction_p": 0.5,
+        "root_depth_m": {
+          "min": 0.6,
+          "max": 1.3
+        },
+        "cycle_days": {
+          "min": 135,
+          "max": 150
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "papa",
+      "name": "Papa",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 2.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1600.0,
+          "max": 2260.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 500.0,
+          "max": 700.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.85
+        },
+        "allowable_depletion_fraction_p": 0.35,
+        "root_depth_m": {
+          "min": 0.4,
+          "max": 0.6
+        },
+        "cycle_days": {
+          "min": 105,
+          "max": 145
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "girasol",
+      "name": "Girasol",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 8.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1790.0,
+          "max": 1905.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -6.0,
+          "max": -5.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 600.0,
+          "max": 1000.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.55
+        },
+        "allowable_depletion_fraction_p": 0.45,
+        "root_depth_m": {
+          "min": 0.8,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 125,
+          "max": 130
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "rice",
+      "name": "Arroz (inundado)",
+      "scientific_name": "Oryza sativa",
+      "thermal": {
+        "gdd_base_c": 12.0,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 1660.0,
+          "max": 1805.0
+        },
+        "optimal_climate_c": {
+          "min": 25,
+          "max": 35,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://ageconsearch.umn.edu/record/365817"
+        },
+        "cold_start_reference_c": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "cold_flowering_reference_c": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "heat_reference_c": 35,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 700.0
+        },
+        "kc_by_stage": {
+          "initial": 1.1,
+          "development": null,
+          "mid": 1.2,
+          "late": 1.0
+        },
+        "allowable_depletion_fraction_p": 0.2,
+        "root_depth_m": {
+          "min": 0.5,
+          "max": 1.0
+        },
+        "cycle_days": {
+          "min": 90,
+          "max": 150
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "barley",
+      "name": "Cebada",
+      "scientific_name": "Hordeum vulgare",
+      "thermal": {
+        "gdd_base_c": 0.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1450.0,
+          "max": 2325.0
+        },
+        "optimal_climate_c": {
+          "min": 15,
+          "max": 20,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
+        },
+        "cold_start_reference_c": {
+          "min": -8.0,
+          "max": -7.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": 30,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 650.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.45
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 150
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "sorghum",
+      "name": "Sorgo grano",
+      "scientific_name": "Sorghum bicolor",
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1380.0,
+          "max": 1520.0
+        },
+        "optimal_climate_c": {
+          "min": 24,
+          "max": 35,
+          "basis": "Rango climático orientativo (no equivale al óptimo de todas las etapas)",
+          "sourceUrl": "https://www.mdpi.com/2073-4395/16/8/829"
+        },
+        "cold_start_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": 37.4,
+        "heat_reference_stage": "reproductiva (referencia orientativa)"
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 650.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.1,
+          "late": 0.65
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 2.0
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 130
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": "https://academic.oup.com/jxb/article/71/2/555/5574893"
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "poroto-seco",
+      "name": "Poroto seco",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 32.0,
+        "gdd_cycle_degree_days": {
+          "min": 960.0,
+          "max": 1350.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -6.0,
+          "max": -5.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 300.0,
+          "max": 500.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.7,
+          "mid": 1.1,
+          "late": 0.3
+        },
+        "allowable_depletion_fraction_p": 0.45,
+        "root_depth_m": {
+          "min": 0.6,
+          "max": 0.9
+        },
+        "cycle_days": {
+          "min": 95,
+          "max": 110
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "arveja-verde",
+      "name": "Arveja verde",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 5.0,
+        "gdd_upper_c": 27.0,
+        "gdd_cycle_degree_days": {
+          "min": 905.0,
+          "max": 1400.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -8.0,
+          "max": -7.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 350.0,
+          "max": 500.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.8,
+          "mid": 1.15,
+          "late": 1.05
+        },
+        "allowable_depletion_fraction_p": 0.35,
+        "root_depth_m": {
+          "min": 0.6,
+          "max": 1.0
+        },
+        "cycle_days": {
+          "min": 90,
+          "max": 100
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "tomate",
+      "name": "Tomate",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 7.0,
+        "gdd_upper_c": 28.0,
+        "gdd_cycle_degree_days": {
+          "min": 1900.0,
+          "max": 2065.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -1.0,
+          "max": 0.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -1.0,
+          "max": 0.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 400.0,
+          "max": 800.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.8
+        },
+        "allowable_depletion_fraction_p": 0.4,
+        "root_depth_m": {
+          "min": 0.7,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 135,
+          "max": 180
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": {
+          "min": 0.5,
+          "max": 1.2
+        },
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "avena",
+      "name": "Avena",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 0.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1850.0,
+          "max": 1850.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -9.0,
+          "max": -8.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 450.0,
+          "max": 650.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.45
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 150
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "mani",
+      "name": "Maní",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 1930.0,
+          "max": 2140.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "cold_flowering_reference_c": null,
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 500.0,
+          "max": 700.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.05,
+          "late": 0.7
+        },
+        "allowable_depletion_fraction_p": 0.5,
+        "root_depth_m": {
+          "min": 0.5,
+          "max": 1.0
+        },
+        "cycle_days": {
+          "min": 130,
+          "max": 140
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "cebolla-seca",
+      "name": "Cebolla seca",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 4.5,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 2290.0,
+          "max": 2290.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": null,
+        "cold_flowering_reference_c": null,
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 350.0,
+          "max": 550.0
+        },
+        "kc_by_stage": {
+          "initial": 0.5,
+          "development": 0.75,
+          "mid": 1.05,
+          "late": 0.85
+        },
+        "allowable_depletion_fraction_p": 0.3,
+        "root_depth_m": {
+          "min": 0.3,
+          "max": 0.6
+        },
+        "cycle_days": {
+          "min": 150,
+          "max": 210
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "repollo",
+      "name": "Repollo",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 4.5,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1710.0,
+          "max": 1710.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -7.0,
+          "max": -5.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 350.0,
+          "max": 500.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.05,
+          "late": 0.9
+        },
+        "allowable_depletion_fraction_p": 0.45,
+        "root_depth_m": {
+          "min": 0.5,
+          "max": 0.8
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 140
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "pimiento-dulce",
+      "name": "Pimiento dulce",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 2415.0,
+          "max": 2415.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": null,
+        "cold_flowering_reference_c": null,
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 600.0,
+          "max": 900.0
+        },
+        "kc_by_stage": {
+          "initial": 0.35,
+          "development": 0.7,
+          "mid": 1.05,
+          "late": 0.9
+        },
+        "allowable_depletion_fraction_p": 0.3,
+        "root_depth_m": {
+          "min": 0.5,
+          "max": 1.0
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 210
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "remolacha-azucarera",
+      "name": "Remolacha azucarera",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 5.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": {
+          "min": 1900.0,
+          "max": 3070.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -7.0,
+          "max": -6.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -3.0,
+          "max": -2.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 550.0,
+          "max": 750.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.8,
+          "mid": 1.15,
+          "late": 0.8
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 0.7,
+          "max": 1.2
+        },
+        "cycle_days": {
+          "min": 160,
+          "max": 230
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "algodon",
+      "name": "Algodón",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 12.5,
+        "gdd_upper_c": 35.0,
+        "gdd_cycle_degree_days": {
+          "min": 1950.0,
+          "max": 2150.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "cold_flowering_reference_c": {
+          "min": -2.0,
+          "max": -1.0
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 700.0,
+          "max": 1300.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.15,
+          "late": 0.75
+        },
+        "allowable_depletion_fraction_p": 0.65,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 1.7
+        },
+        "cycle_days": {
+          "min": 180,
+          "max": 195
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "alfalfa-heno",
+      "name": "Alfalfa (heno)",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 0.0,
+        "gdd_upper_c": 30.0,
+        "gdd_cycle_degree_days": null,
+        "optimal_climate_c": null,
+        "cold_start_reference_c": null,
+        "cold_flowering_reference_c": null,
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 800.0,
+          "max": 1600.0
+        },
+        "kc_by_stage": {
+          "initial": null,
+          "development": null,
+          "mid": null,
+          "late": null
+        },
+        "allowable_depletion_fraction_p": 0.55,
+        "root_depth_m": {
+          "min": 1.0,
+          "max": 2.0
+        },
+        "cycle_days": {
+          "min": 100,
+          "max": 365
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    },
+    {
+      "id": "melon",
+      "name": "Melón",
+      "scientific_name": null,
+      "thermal": {
+        "gdd_base_c": 10.0,
+        "gdd_upper_c": 38.0,
+        "gdd_cycle_degree_days": {
+          "min": 1175.0,
+          "max": 1600.0
+        },
+        "optimal_climate_c": null,
+        "cold_start_reference_c": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "cold_flowering_reference_c": {
+          "min": -1.0,
+          "max": -0.5
+        },
+        "heat_reference_c": null,
+        "heat_reference_stage": null
+      },
+      "water": {
+        "etc_cycle_mm": {
+          "min": 400.0,
+          "max": 600.0
+        },
+        "kc_by_stage": {
+          "initial": 0.45,
+          "development": 0.75,
+          "mid": 1.0,
+          "late": 0.75
+        },
+        "allowable_depletion_fraction_p": 0.4,
+        "root_depth_m": {
+          "min": 0.8,
+          "max": 1.5
+        },
+        "cycle_days": {
+          "min": 120,
+          "max": 160
+        },
+        "soil_moisture_threshold_m3_m3": null
+      },
+      "atmosphere": {
+        "vpd_reference_kpa": null,
+        "relative_humidity_optimum_pct": null,
+        "solar_radiation_optimum_mj_m2_day": null,
+        "wind_damage_threshold_ms": null
+      },
+      "vegetation": {
+        "ndvi_reference": null,
+        "ndmi_reference": null
+      },
+      "soil": {
+        "ph_optimum": null,
+        "soil_texture_classes": null,
+        "soil_salinity_tolerance_ds_m": null,
+        "field_capacity_m3_m3": null,
+        "wilting_point_m3_m3": null,
+        "organic_carbon_g_kg": null,
+        "nitrogen_kg_ha": null,
+        "phosphorus_kg_ha": null,
+        "potassium_kg_ha": null
+      },
+      "sources": {
+        "thermal_and_kc": "TerraAI_20_Cultivos_Indicadores_Satelitales.csv (supuestos por cultivo; revisar contexto local)",
+        "crop_cycle_days": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "crop_cycle_water": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "thermal_references": null
+      },
+      "warnings": [
+        "Kc requiere etapa fenológica y fecha de siembra para ETc operativo.",
+        "Agotamiento p requiere capacidad de campo y punto de marchitez específicos del suelo.",
+        "No hay umbrales universales verificados de HR, radiación, viento, VPD, NDVI o NDMI para todos los cultivos."
+      ]
+    }
+  ]
+}

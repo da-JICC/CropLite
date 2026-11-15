@@ -1,0 +1,13 @@
+﻿id,name,unit,dependencies,formula_or_method,status,limitation
+VPD,Déficit de presión de vapor,kPa,T2M_MAX T2M_MIN T2MDEW,"FAO-56 presión de saturación media, e_a a partir de punto de rocío",calculable,Aproximado por punto de rocío diario; no VPD horario ni promedio exacto
+ET0,Evapotranspiración referencia FAO-56,mm/día,T2M T2M_MIN T2M_MAX T2MDEW WS2M PS ALLSKY_SFC_SW_DWN latitud,FAO56 Penman-Monteith + geometría solar,calculable,Estimación con radiación diaria y elevación derivada de PS; no es producto ET0 observado
+ETc,Evapotranspiración del cultivo,mm/día,ET0 Kc etapa fenológica,ET0 × Kc según etapa,escenario,"Sin siembra/fenología: solo escenario Kc medio, no ETc real"
+GDD,Grados día crecimiento,°C·día,T2M Tbase Tupper,"máx(0,min(Tmedia,Tupper)-Tbase)",calculable,No implica conocer ciclo o fecha de siembra
+Precipitación acumulada,Lluvia desde 1 enero,mm,PRECTOTCORR o IMERG_PRECTOT,suma progresiva diaria validada,calculable,"Si falta día, acumulado queda null a partir de ese día"
+Indicador térmico,Cruce de referencia térmica,booleano,T2M_MIN T2M_MAX umbrales cultivo,comparación diaria por etapa no conocida,condicional,"Advertencia visual, no prueba daño"
+Indicador de demanda climática,P - ETc de escenario,mm/día,PRECTOTCORR ETc escenario,diferencia diaria,escenario,No equivale estrés hídrico real: falta riego/almacenamiento
+Indicador humedad raíz,Humedad volumétrica radicular,m³/m³,RZMC,variable modelada,observable,No convertir m³/m³ a estrés sin capacidad de campo
+NDVI,Índice vegetación,adimensional,B08 B04 SCL,(B08-B04)/(B08+B04),observado,Ausente sin paso libre de nubes; no diario interpolado
+NDMI,Índice humedad vegetación,adimensional,B08 B11 SCL,(B08-B11)/(B08+B11),observado,"No mide humedad suelo, distinto de SMAP; B11 nativo 20 m"
+Estrés hídrico real,Agotamiento de agua del cultivo,adimensional,RZMC capacidad de campo punto marchitez profundidad riego etapa,balance hídrico raíz y TAW,no calculable,"No hay textura/FC/PWP, riego ni fenología del terreno"
+Estrés por viento,Daño mecánico,adimensional,racha viento especie etapa,referencia umbral específico,no calculable,WS2M medio no es racha ni umbral de daño

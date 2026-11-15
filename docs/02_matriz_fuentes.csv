@@ -1,0 +1,17 @@
+﻿id,name,source,unit,native_temporal,product_type,key,note
+T2M,Temperatura media 2m,NASA POWER MET,°C,diaria,reanálisis/punto,mean_c,2025 completo solicitado
+T2M_MIN,Temperatura mínima 2m,NASA POWER MET,°C,diaria,reanálisis/punto,min_c,2025 completo solicitado
+T2M_MAX,Temperatura máxima 2m,NASA POWER MET,°C,diaria,reanálisis/punto,max_c,2025 completo solicitado
+RH2M,Humedad relativa media 2m,NASA POWER MET,%,diaria,reanálisis/punto,relative_humidity_pct,2025 completo solicitado
+T2MDEW,Temperatura de rocío 2m,NASA POWER MET,°C,diaria,reanálisis/punto,dewpoint_c,Para presión vapor real VPD
+PRECTOTCORR,Precipitación corregida,NASA POWER MET,mm/día,diaria,modelo/punto,precipitation_mm,No equivalente pluviómetro
+WS2M,Viento medio a 2 m,NASA POWER MET,m/s,diaria,reanálisis/punto,wind_speed_ms,No rachas ni riesgo mecánico
+PS,Presión superficial,NASA POWER MET,kPa,diaria,reanálisis/punto,surface_pressure_kpa,Para gamma FAO-56
+ALLSKY_SFC_SW_DWN,Radiación onda corta incidente,NASA POWER SOL,MJ/m²/día,diaria,satélite/modelo/punto,solar_radiation_mj_m2_day,Verificar unidad API returned
+SFMC,Contenido volumétrico superficial 0–5 cm,NASA POWER HY / SMAP L4,m³/m³,diaria agregada,asimilación/punto,surface_moisture_m3_m3,Resolución de suelo muy superior al tamaño parcela
+RZMC,Contenido volumétrico raíz 0–100 cm,NASA POWER HY / SMAP L4,m³/m³,diaria agregada,asimilación/punto,rootzone_moisture_m3_m3,No equivale agua disponible sin FC/PWP
+IMERG_PRECTOT,Precipitación multisatélite,NASA POWER HY / GPM IMERG,mm/día,diaria UTC,multisatélite/punto,imerg_precipitation_mm,No mezclar con POWER sin etiqueta
+B04,Rojo reflectancia,Copernicus Sentinel-2 L2A,reflectancia,fechas de sobrevuelo,satélite/polígono,NDVI numerador,SCL=4/5
+B08,Infrarrojo cercano reflectancia,Copernicus Sentinel-2 L2A,reflectancia,fechas de sobrevuelo,satélite/polígono,NDVI NDMI,10 m
+B11,SWIR reflectancia,Copernicus Sentinel-2 L2A,reflectancia,fechas de sobrevuelo,satélite/polígono,NDMI,20 m nativos; se remuestrea si salida a 20 m
+SCL,Clasificación escena,Copernicus Sentinel-2 L2A,categoría,fechas de sobrevuelo,satélite/polígono,cloud mask,Filtrar nubes/sombras/nieve/agua

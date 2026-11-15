@@ -59,12 +59,12 @@ class PowerClient:
                 'format': 'JSON', 'time-standard': 'LST',
             }
             try:
-                async with httpx.AsyncClient(timeout=40, follow_redirects=False) as session:
+                async with httpx.AsyncClient(timeout=120, follow_redirects=False) as session:
                     response = await session.get(POWER_URL, params=params)
                     response.raise_for_status()
                     payload = response.json()
             except httpx.TimeoutException as exc:
-                raise PowerError('NASA POWER timed out. Retry with a shorter date range.', 504) from exc
+                raise PowerError('NASA POWER no respondió a tiempo al solicitar el histórico. Intenta de nuevo.', 504) from exc
             except httpx.HTTPStatusError as exc:
                 raise PowerError(f'NASA POWER returned HTTP {exc.response.status_code}.', 502) from exc
             except (httpx.HTTPError, ValueError) as exc:
