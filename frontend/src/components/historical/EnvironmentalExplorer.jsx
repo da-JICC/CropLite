@@ -29,7 +29,7 @@ function exportCsv(series, region) {
   const csv = '\ufeff' + meta.map(x=>x.map(quote).join(',')).join('\r\n') + '\r\n' + keys.join(',') + '\r\n' +
     series.monthly.map(r=>keys.map(k=>quote(r[k])).join(',')).join('\r\n');
   const href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  const a=document.createElement('a');a.href=href;a.download=`terraai-${series.source.toLowerCase().includes('copernicus')?'ndvi':'ambiental'}-${series.coverage.start}.csv`;a.click();
+  const a=document.createElement('a');a.href=href;a.download=`croplite-${series.source.toLowerCase().includes('copernicus')?'ndvi':'ambiental'}-${series.coverage.start}.csv`;a.click();
   setTimeout(()=>URL.revokeObjectURL(href),1000);
 }
 

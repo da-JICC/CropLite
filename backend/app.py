@@ -1,4 +1,4 @@
-"""Small TerraAI Copernicus API backend. Run `uvicorn app:app --reload --port 8000`."""
+"""Small CropLite Copernicus API backend. Run `uvicorn app:app --reload --port 8000`."""
 from __future__ import annotations
 
 import os
@@ -24,8 +24,8 @@ from decision_history_service import historical_decision_climate, historical_ndv
 import json
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-app = FastAPI(title="TerraAI Satellite Data API", version="0.5.0")
-allowed = os.getenv("TERRAAI_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+app = FastAPI(title="CropLite Satellite Data API", version="0.5.0")
+allowed = os.getenv("CROPLITE_ALLOWED_ORIGINS", os.getenv("TERRAAI_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")).split(",")
 app.add_middleware(CORSMiddleware, allow_origins=allowed, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 client = CopernicusClient()
 power_client = PowerClient()
@@ -58,7 +58,7 @@ class NDVIRequest(BaseModel):
 
 @app.get("/api/status")
 async def status():
-    return {"service": "TerraAI Satellite Data API", "copernicus_configured": client.configured,
+    return {"service": "CropLite Satellite Data API", "copernicus_configured": client.configured,
             "nasa_power_available": True,
             "note": "NASA POWER requires no API credentials; live climate values are gridded model estimates. Copernicus needs backend OAuth credentials."}
 

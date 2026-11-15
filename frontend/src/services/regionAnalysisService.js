@@ -28,7 +28,7 @@ export function saveDatasetCsv({dataset,analysis,type}) {
   const quote=v=>`"${String(v??'').replaceAll('"','""')}"`;
   const csv='\ufeff'+[header,...values].map(row=>row.map(quote).join(',')).join('\r\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  const a=document.createElement('a');a.href=url;a.download=`terraai-${type}-${analysis.period.start}-${analysis.period.end}.csv`;a.click();
+  const a=document.createElement('a');a.href=url;a.download=`croplite-${type}-${analysis.period.start}-${analysis.period.end}.csv`;a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 

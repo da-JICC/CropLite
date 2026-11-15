@@ -67,8 +67,8 @@ export function rotationInsights(plan, ranked = []) {
   const plannedYears = [...new Set(crops.map(c=>c.planning_year || c.sow_date?.slice(0,4)))];
   const isMultiYear = plannedYears.length > 1;
   const whyOrder = leader && leader.crop_id !== first.crop_id
-    ? `${leader.crop_name} lidera la evaluación individual, pero esta secuencia comienza con ${first.crop_name}. El planificador evalúa el conjunto de ${crops.length} campañas, evita superponer ciclos, no repite especies en tres campañas y prioriza la alternancia de familias.`
-    : `Esta secuencia prioriza ${crops.length} ciclos compatibles, alterna familias de cultivos consecutivos, evita repetir especies en tres campañas y conserva un tiempo de transición entre cada cosecha y nueva siembra.`;
+    ? `${leader.crop_name} lidera la evaluación individual, pero esta secuencia comienza con ${first.crop_name}. El planificador evalúa el conjunto de ${crops.length} campañas, evita superponer ciclos, no repite la especie dentro del año y prioriza la alternancia de familias.`
+    : `Esta secuencia prioriza ${crops.length} ciclos compatibles dentro del año, alterna familias botánicas, evita repetir especies y conserva un tiempo de transición entre cada cosecha y nueva siembra.`;
   return {
     headline: crops.map(c=>c.crop_name).join(' → '),
     whyOrder,

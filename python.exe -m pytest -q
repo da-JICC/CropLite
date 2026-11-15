@@ -1,0 +1,23 @@
+ README.md                                          | 381 [32m+++++[m[31m----------------[m
+ backend/app.py                                     |   8 [32m+[m[31m-[m
+ backend/decision_engine.py                         | 135 [32m++++[m[31m----[m
+ backend/tests/test_decision_history.py             |  43 [32m++[m[31m-[m
+ frontend/index.html                                |   4 [32m+[m[31m-[m
+ frontend/package.json                              |   2 [32m+[m[31m-[m
+ frontend/src/App.jsx                               |  65 [32m++[m[31m--[m
+ frontend/src/ErrorBoundary.jsx                     |   6 [32m+[m[31m-[m
+ .../src/components/climate/TemperatureExplorer.jsx |   4 [32m+[m[31m-[m
+ .../components/historical/Daily2025Explorer.jsx    |   2 [32m+[m[31m-[m
+ .../historical/EnvironmentalExplorer.jsx           |   2 [32m+[m[31m-[m
+ frontend/src/components/layout/Sidebar.jsx         |   4 [32m+[m[31m-[m
+ frontend/src/components/maps/FieldSelectionMap.jsx |  82 [32m+++[m[31m--[m
+ frontend/src/components/ndvi/NDVIExplorer.jsx      |   4 [32m+[m[31m-[m
+ .../recommendations/AgriculturalDecisions.jsx      | 123 [32m++[m[31m-----[m
+ .../recommendations/decisionInsights.mjs           |   4 [32m+[m[31m-[m
+ frontend/src/pages/Reports.jsx                     |   4 [32m+[m[31m-[m
+ frontend/src/services/climateService.js            |   2 [32m+[m[31m-[m
+ frontend/src/services/ndviService.js               |   4 [32m+[m[31m-[m
+ frontend/src/services/regionAnalysisService.js     |   2 [32m+[m[31m-[m
+ frontend/src/styles.css                            | 135 [32m++++++++[m
+ frontend/tests/decision-insights.test.mjs          |  24 [32m+[m[31m-[m
+ 22 files changed, 483 insertions(+), 557 deletions(-)

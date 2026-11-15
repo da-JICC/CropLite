@@ -30,9 +30,11 @@ test('rotation explanation is based on actual dates, crop family, interval and s
 
 test('UI keeps one map, live sources, tabs and no redundant ranking jargon',()=>{
   assert.match(app,/<FieldSelectionMap region=\{region\} onRegionChange=\{setRegion\}/);
-  assert.match(component,/SeasonalEvidence/);
-  assert.match(component,/role="group" aria-label="Variable del gráfico"/);
-  assert.match(component,/Clima y temporada/);
+  assert.doesNotMatch(component,/SeasonalEvidence/);
+  assert.doesNotMatch(component,/POR QUÉ SE RECOMIENDA/);
+  assert.match(component,/Ver los \$\{report.ranked.length\} cultivos/);
+  assert.match(map,/World_Imagery\/MapServer\/tile/);
+  assert.match(map,/basemap==='satellite'/);
   assert.match(component,/¿Por qué este orden\?/);
   assert.doesNotMatch(component,/terra-decision-crop-metrics/);
   assert.doesNotMatch(component,/terra-decision-criteria/);
@@ -41,15 +43,15 @@ test('UI keeps one map, live sources, tabs and no redundant ranking jargon',()=>
 });
 
 
-test('multiyear rotation explanation reports the actual three-year sequence',()=>{
-  const plan={score:78.3,gap_days:[90,75],reasons:['Alterna familias reales.'],crops:[
-    {crop_id:'wheat',crop_name:'Trigo',sow_date:'2027-05-01',harvest_date:'2027-09-01',family:'Poaceae',planning_year:2027},
-    {crop_id:'papa',crop_name:'Papa',sow_date:'2028-01-01',harvest_date:'2028-04-15',family:'Solanaceae',planning_year:2028},
-    {crop_id:'girasol',crop_name:'Girasol',sow_date:'2029-01-01',harvest_date:'2029-05-01',family:'Asteraceae',planning_year:2029},
+test('annual rotation explanation reports two consecutive crops within one year',()=>{
+  const plan={score:78.3,gap_days:[19],reasons:['Alterna familias reales.'],crops:[
+    {crop_id:'wheat',crop_name:'Trigo',sow_date:'2027-01-01',harvest_date:'2027-04-30',family:'Poaceae',planning_year:2027},
+    {crop_id:'papa',crop_name:'Papa',sow_date:'2027-05-20',harvest_date:'2027-09-15',family:'Solanaceae',planning_year:2027},
   ]};
   const info=rotationInsights(plan,[plan.crops[0]]);
-  assert.equal(info.planningYears.length,3);
-  assert.match(info.evidence.find(x=>x.key==='calendar').value,/2029/);
-  assert.match(info.evidence.find(x=>x.key==='transition').value,/90 días y 75 días/);
+  assert.equal(info.planningYears.length,1);
+  assert.match(info.evidence.find(x=>x.key==='calendar').value,/2027/);
+  assert.match(info.evidence.find(x=>x.key==='transition').value,/19 días/);
+  assert.match(info.whyOrder,/dentro del año/);
   assert.ok(info.reasons.length);
 });

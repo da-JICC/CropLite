@@ -4,7 +4,7 @@ import ndviDemo from '../mocks/ndvi.json';
 export function getDemoNdvi(farmId, start, end) {
   const obs = ndviDemo[farmId] || ndviDemo.casablanca;
   return {
-    source: 'TerraAI synthetic illustration', status: 'simulated', index: 'NDVI',
+    source: 'CropLite synthetic illustration', status: 'simulated', index: 'NDVI',
     resolution_m: null, interval: 'P1M', start, end,
     observations: obs.filter(o => o.date >= start && o.date <= end),
   };
@@ -12,7 +12,7 @@ export function getDemoNdvi(farmId, start, end) {
 
 export async function getNdviStatus(signal) {
   const response = await fetch('/api/status', {signal});
-  if (!response.ok) throw new Error('TerraAI backend status unavailable');
+  if (!response.ok) throw new Error('CropLite backend status unavailable');
   return response.json();
 }
 

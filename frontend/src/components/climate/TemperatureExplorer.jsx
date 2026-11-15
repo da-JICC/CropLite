@@ -57,7 +57,7 @@ function saveCSV(data, point, start, end) {
   });
   const csv='\ufeff'+[header.join(','),...rows.map(r=>r.join(','))].join('\r\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  const link=document.createElement('a');link.href=url;link.download=`terraai-nasa-power-${start}-${end}.csv`;link.click();
+  const link=document.createElement('a');link.href=url;link.download=`croplite-nasa-power-${start}-${end}.csv`;link.click();
   window.setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
@@ -89,7 +89,7 @@ export default function TemperatureExplorer({farm,polygon}) {
     active.current?.abort();const controller=new AbortController();active.current=controller;
     setLoading(true);setError('');setData(null);
     try{const result=await getClimateTemperature(config,controller.signal);if(!controller.signal.aborted)setData(result);}
-    catch(e){if(!controller.signal.aborted)setError(e.name==='TypeError'?'Could not reach TerraAI backend. Start FastAPI on port 8000.':e.message);}
+    catch(e){if(!controller.signal.aborted)setError(e.name==='TypeError'?'Could not reach CropLite backend. Start FastAPI on port 8000.':e.message);}
     finally{if(!controller.signal.aborted)setLoading(false);}
   };
   const summary=data?.summary;

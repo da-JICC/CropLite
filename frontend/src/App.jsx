@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Leaf, Satellite} from 'lucide-react';
+import {Leaf, Satellite, MapPinned, Sprout, CalendarRange, ChartNoAxesCombined, ChevronRight, CircleHelp, LayoutDashboard, ExternalLink} from 'lucide-react';
 import FieldSelectionMap from './components/maps/FieldSelectionMap.jsx';
 import {Daily2025Explorer} from './components/historical/Daily2025Explorer.jsx';
 import {AgriculturalDecisions} from './components/recommendations/AgriculturalDecisions.jsx';
@@ -78,40 +78,51 @@ export default function App() {
     setAttempt(value => value + 1);
   }
 
-  return <div className="app-shell terra-one-page-shell">
-    <div className="app-main terra-one-page-main">
-      <header className="topbar terra-unified-header">
-        <div className="terra-brand"><span className="terra-brand-mark"><Leaf size={23}/></span><div><strong>Terra<span>AI</span></strong><small>INTELIGENCIA AMBIENTAL AGRÍCOLA</small></div></div>
-        <div className="topbar-right"><span className={`mode-pill ${backend?'':'offline'}`}><span/>{backend?'BACKEND CONECTADO':'BACKEND DESCONECTADO'}</span></div>
+  return <div className="croplite-app app-shell">
+    <div className="croplite-workspace app-main">
+      <header className="croplite-topbar topbar" id="inicio">
+        <a className="croplite-brand" href="#inicio" aria-label="CropLite, inicio"><span className="croplite-brand-icon"><Leaf size={21}/></span><span><strong>crop<span>lite</span></strong><small>AGRICULTURA INTELIGENTE</small></span></a>
+        <div className="croplite-topbar-center"><span className="croplite-topbar-divider"/><span>Espacio de análisis</span><ChevronRight size={13}/><strong>{region?'Campo seleccionado':'Explorar terreno'}</strong></div>
+        <div className="croplite-topbar-right"><span className="croplite-topbar-year"><CalendarRange size={15}/> Planificación anual</span><span className={`mode-pill ${backend?'':'offline'}`}><span/>{backend?'API conectada':'Sin conexión a API'}</span></div>
       </header>
-      <main className="page-body terra-one-page-content">
-        <div className="terra-hero-copy"><span className="overline">OBSERVACIÓN TERRESTRE · TERRAAI</span><h1>Tu campo, sus condiciones ambientales.</h1><p>Delimita tu terreno, explora decisiones agrícolas basadas en temporadas históricas y revisa los indicadores diarios de 2025.</p></div>
-        <div className="field-status-row">
-          <span className={`field-status-pill ${backend?.copernicus_configured?'ok':'warn'}`}><Satellite size={14}/> Copernicus: {backend?.copernicus_configured?'configurado':'sin credenciales o backend desconectado'}</span>
-          <span className={`field-status-pill ${backend?'ok':'warn'}`}>NASA POWER: {backend?'disponible para consulta':'requiere backend'}</span>
-        </div>
-        <section className="field-map-panel" aria-label="Selección geográfica">
-          <div className="field-panel-heading"><div><span className="overline">01 / ÁREA DE ESTUDIO</span><h2>Selecciona tu región de cultivo</h2><p>Dibuja o modifica el polígono. Al confirmarlo se consultan automáticamente las fuentes ambientales.</p></div><div className="field-map-tag">GeoJSON · WGS84</div></div>
-          <FieldSelectionMap region={region} onRegionChange={setRegion}/>
+      <main className="croplite-content page-body">
+        <section id="mapa" className="croplite-map-section" aria-label="Mapa satelital del campo">
+          <div className="croplite-section-top"><div><span className="overline">01 · TERRITORIO</span><h1>Explora tu campo <span>desde el espacio.</span></h1><p>Ubica y delimita tu parcela sobre imágenes reales para comenzar el análisis.</p></div><div className="croplite-data-pill"><Satellite size={15}/> Mapa satelital · Esri World Imagery</div></div>
+          <div className="croplite-map-frame"><FieldSelectionMap region={region} onRegionChange={setRegion}/></div>
+          <div className="croplite-context-strip" role="status" aria-live="polite">
+            <div className="croplite-context-primary"><span className="croplite-context-icon"><MapPinned size={18}/></span><span><small>PARCELA ACTUAL</small><strong>{region?`${region.areaHectares?.toFixed(2) ?? '—'} hectáreas`:'Sin delimitar'}</strong></span></div>
+            <div><small>COORDENADAS</small><strong>{region?`${region.representativePoint.latitude.toFixed(4)}, ${region.representativePoint.longitude.toFixed(4)}`:'Selecciona tu región'}</strong></div>
+            <div><small>DATOS AMBIENTALES</small><strong>{loading?'Consultando fuentes…':analysis?(analysis.status==='error'?'Fuentes no disponibles':analysis.status==='partial'?'Datos parciales':'Datos 2025 disponibles'):region?'Pendiente de consulta':'Esperando polígono'}</strong></div>
+            <div><small>FUENTES DE INFORMACIÓN</small><strong>{backend?(backend.copernicus_configured?'NASA POWER · Copernicus':'NASA POWER · Copernicus sin configurar'):'Conecta el backend'}</strong></div>
+          </div>
         </section>
-        <div className="terra-region-strip">
-          <div><small>REGIÓN</small><b>{region ? `${region.areaHectares?.toFixed(2) ?? '—'} ha` : 'Sin terreno seleccionado'}</b></div>
-          <div><small>UBICACIÓN REPRESENTATIVA</small><b>{region ? `${region.representativePoint.latitude.toFixed(5)}, ${region.representativePoint.longitude.toFixed(5)}` : '—'}</b></div>
-          <div><small>PERÍODO</small><b>{analysis ? '2025 · 365 días' : 'Consulta automática'}</b></div>
-          <div className="terra-region-activity"><small>RECUPERACIÓN</small><b>{loading?'Consultando NASA y Copernicus…':analysis?(analysis.status==='error'?'Fuentes no disponibles':analysis.status==='partial'?'Datos parciales disponibles':'Datos 2025 disponibles'):region?'Sin consulta activa':'Selecciona un campo'}</b></div>
-        </div>
-        <AgriculturalDecisions region={region} cropId={cropId} onCropSelect={setCropId}/>
-        <section className="terra-history-panel" aria-label="Análisis ambiental histórico">
-          <div className="terra-history-heading"><div><span className="overline">03 / AMBIENTE Y DESARROLLO</span><h2>Ambiente y calendario del cultivo</h2><p>Explora un año completo de datos diarios. Elige un cultivo y desplaza la fecha de siembra para ver sus cuatro etapas sobre cada gráfica y compararlas con los indicadores por fase.</p></div></div>
+        <section className="croplite-decision-wrap" id="decisiones"><AgriculturalDecisions region={region} cropId={cropId} onCropSelect={setCropId}/></section>
+        <section className="terra-history-panel croplite-environment-section" id="ambiente" aria-label="Histórico ambiental y fenología">
+          <div className="terra-history-heading"><span className="overline">03 · OBSERVACIÓN HISTÓRICA</span><h2>Ambiente y desarrollo del cultivo</h2><p>Explora observaciones de 2025 y consulta indicadores por fase de crecimiento. Esta sección no representa un pronóstico.</p></div>
           <CropSelectorBar cropId={cropId} onCropSelect={setCropId}/>
           {message && <div className="field-alert error" role="alert">{message} <button className="terra-text-button" onClick={retry}>Reintentar</button></div>}
           <Daily2025Explorer region={region} analysis={analysis} loading={loading} onRetry={retry} timeline={timeline}/>
-          <PlantingDateControl sowDate={sowDate} onSowDateChange={setSowDate}/>
-          <PhenologyTimeline crop={crop} sowDate={sowDate} timeline={timeline}/>
+          <div className="croplite-phenology-grid">
+            <PlantingDateControl sowDate={sowDate} onSowDateChange={setSowDate}/>
+            <PhenologyTimeline crop={crop} sowDate={sowDate} timeline={timeline}/>
+          </div>
           <CropIndicatorsTable analysis={analysis} cropId={cropId} sowDate={sowDate} loading={loading}/>
         </section>
       </main>
-      <footer className="app-footer"><span>TerraAI · NASA Space Apps Challenge 2026</span><span>NASA POWER: estimaciones regionales diarias de 2025 · Copernicus sigue disponible en el backend · Desarrollo fenológico y ETc son estimaciones condicionadas.</span></footer>
+      <footer className="app-footer croplite-footer"><span>CropLite · NASA Space Apps Challenge 2026</span><span>Datos estimados de NASA POWER y Copernicus · Imagen base satelital de Esri (no en tiempo real) · Planes orientativos sin predicción de rendimiento.</span></footer>
     </div>
+    <aside className="croplite-rail" aria-label="Navegación de CropLite">
+      <div className="croplite-rail-header"><span className="croplite-rail-leaf"><Sprout size={18}/></span><span><strong>CropLite</strong><small>Monitor agrícola</small></span></div>
+      <div className="croplite-rail-section-label">ÁREA DE TRABAJO</div>
+      <nav className="croplite-rail-nav" aria-label="Secciones de la aplicación">
+        <a href="#mapa" className="croplite-rail-link"><MapPinned size={17}/><span>Mapa y parcela</span></a>
+        <a href="#decisiones" className="croplite-rail-link"><LayoutDashboard size={17}/><span>Recomendaciones</span></a>
+        <a href="#rotaciones" className="croplite-rail-link"><CalendarRange size={17}/><span>Rotación anual</span></a>
+        <a href="#ambiente" className="croplite-rail-link"><ChartNoAxesCombined size={17}/><span>Datos ambientales</span></a>
+      </nav>
+      <div className="croplite-rail-spacer"/>
+      <div className="croplite-rail-note"><CircleHelp size={17}/><strong>¿Cómo funciona?</strong><p>Selecciona una parcela, consulta el clima histórico y revisa recomendaciones explicadas.</p><a href="https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/" target="_blank" rel="noopener noreferrer">Sobre el desafío <ExternalLink size={13}/></a></div>
+      <div className="croplite-rail-foot"><span className={`croplite-rail-dot${backend?' is-online':''}`}/>{backend?'Servicios conectados':'Revisar conexión de datos'}</div>
+    </aside>
   </div>;
 }

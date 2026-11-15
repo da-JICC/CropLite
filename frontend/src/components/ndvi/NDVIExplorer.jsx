@@ -64,7 +64,7 @@ export default function NDVIExplorer({farm, polygon, onPolygonChange}) {
       }
     } catch(e) {
       if(e.name!=='AbortError' && !controller.signal.aborted) {
-        setError(e instanceof TypeError ? 'Cannot reach the TerraAI backend. Start FastAPI on port 8000.' : e.message);
+        setError(e instanceof TypeError ? 'Cannot reach the CropLite backend. Start FastAPI on port 8000.' : e.message);
       }
     } finally {if(!controller.signal.aborted) setLoading(false);}
   };
@@ -79,7 +79,7 @@ export default function NDVIExplorer({farm, polygon, onPolygonChange}) {
     if(!rows.length) return;
     const csv = formatCSV(rows, result.source);
     const url = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-    const a = document.createElement('a');a.href=url;a.download=`terraai-ndvi-${farm.id}-${start}-${end}.csv`;a.click();
+    const a = document.createElement('a');a.href=url;a.download=`croplite-ndvi-${farm.id}-${start}-${end}.csv`;a.click();
     URL.revokeObjectURL(url);
   }
 

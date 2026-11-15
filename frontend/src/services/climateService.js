@@ -1,4 +1,4 @@
-// NASA POWER is called via TerraAI's FastAPI proxy; no NASA credentials are required.
+// NASA POWER is called via CropLite's FastAPI proxy; no NASA credentials are required.
 export async function getClimateTemperature(options, signal) {
   const params = new URLSearchParams();
   Object.entries(options).forEach(([key, value]) => {

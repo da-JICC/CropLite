@@ -40,7 +40,7 @@ def test_history_uses_all_eligible_years_not_six():
     assert len(report['ranked'])==10
     assert all(0 <= item['score'] <= 100 for item in report['ranked'])
     assert all(item['sow_date'].startswith('2027') for item in report['ranked'])
-    assert report['planning_years']==[2027,2028,2029]
+    assert report['planning_years']==[2027]
     assert all(item['history_sample_years']>=3 for item in report['ranked'])
 
 
@@ -84,20 +84,41 @@ def test_only_real_comparable_crop_parameters_are_used():
     assert value is None  # no invented temperature optimum
 
 
-def test_rotations_do_not_overlap_or_repeat_families():
+def test_rotations_fit_into_one_year_and_do_not_repeat_families():
     weather,solar=synthetic()
     result=build_decision_report(weather,solar,THERMAL)
+    assert result['planning_years']==[result['planning_year']]
+    assert result['planning_assumptions']['years']==1
     assert result['rotations']
     for rotation in result['rotations']:
-        assert len(rotation['crops'])==3
-        a,b,c=rotation['crops']
-        assert a['family']!=b['family']!=c['family']
-        assert len({a['crop_id'],b['crop_id'],c['crop_id']})==3
-        assert rotation['species_count']==3
-        assert rotation['legume_present']==any(item['family']=='Fabaceae' for item in rotation['crops'])
-        assert [x['planning_year'] for x in (a,b,c)]==result['planning_years']
-        for previous,next_crop in zip(rotation['crops'],rotation['crops'][1:]):
-            assert date.fromisoformat(previous['harvest_date'])+timedelta(days=15)<=date.fromisoformat(next_crop['sow_date'])
+        assert len(rotation['crops'])==2
+        a,b=rotation['crops']
+        assert a['family'] != b['family']
+        assert a['crop_id'] != b['crop_id']
+        assert rotation['species_count']==2
+        assert rotation['years']==[result['planning_year']]
+        assert rotation['legume_present']==any(c['family']=='Fabaceae' for c in rotation['crops'])
+        assert all(date.fromisoformat(c['sow_date']).year==result['planning_year'] and
+                   date.fromisoformat(c['harvest_date']).year==result['planning_year'] for c in rotation['crops'])
+        assert date.fromisoformat(a['harvest_date'])+timedelta(days=15) <= date.fromisoformat(b['sow_date'])
+
+
+def test_one_year_planner_excludes_cross_year_and_same_family():
+    from decision_engine import _rotations
+    def candidate(cid,family,sow,cycle,score=80):
+        return {'crop_id':cid,'crop_name':cid,'family':family,
+                'sow_date':sow,'harvest_date':str(date.fromisoformat(sow)+timedelta(days=cycle-1)),
+                'cycle_days':cycle,'score':score,'sow_day_offset':(date.fromisoformat(sow)-date(2027,1,1)).days}
+    pool={
+      'a':[candidate('wheat','Poaceae','2027-01-10',120)],
+      'b':[candidate('papa','Solanaceae','2027-06-01',110)],
+      'c':[candidate('maize','Poaceae','2027-08-01',145)],
+      'd':[candidate('girasol','Asteraceae','2027-11-01',120)]
+    }
+    plans=_rotations(pool,2027)
+    assert any([c['crop_id'] for c in p['crops']]==['wheat','papa'] for p in plans)
+    assert all(c['harvest_date']<='2027-12-31' for p in plans for c in p['crops'])
+    assert all(p['crops'][0]['family']!=p['crops'][1]['family'] for p in plans)
 
 
 def test_eto_is_missing_not_invented_without_radiation():

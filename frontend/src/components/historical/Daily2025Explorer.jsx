@@ -26,7 +26,7 @@ function downloadDaily(dataset,region){
  const csv='\ufeff'+metadata.map(row=>row.map(quote).join(',')).join('\r\n')+'\r\n'+fields.join(',')+'\r\n'+
  dataset.daily.map(row=>fields.map(k=>quote(row[k])).join(',')).join('\r\n');
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
- const a=document.createElement('a');a.href=url;a.download=`terraai-2025-${dataset.id}.csv`;a.click();
+ const a=document.createElement('a');a.href=url;a.download=`croplite-2025-${dataset.id}.csv`;a.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function Plot({dataset,option,timeline}){

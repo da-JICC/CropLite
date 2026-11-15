@@ -1,4 +1,4 @@
-"""Explainable historical-analogue agronomic SCREENING for TerraAI.
+"""Explainable historical-analogue agronomic SCREENING for CropLite.
 
 NO trained ML, NO probability of survival, NO yield model. Scenario years are
 observed climate analogues; projected dates are planning examples, not forecasts.
@@ -114,7 +114,7 @@ def month_profile(rows, years):
 # and potential rainfall adequacy for UNIRRIGATED systems. No hidden soil values.
 WEIGHTS = {'temperature': .30, 'heat_accumulation': .25, 'exposure': .15, 'rainfed_water': .30}
 HISTORY_SAMPLE_MAX = 12
-ROTATION_YEARS = 3
+ROTATION_YEARS = 1
 
 
 def _mapped_annual_day(year, day_index):
@@ -307,75 +307,76 @@ def _scenario_cycle(crop, thermal, by_date, year, sow_offset, target_year, latit
 
 
 def _rotations(candidate_by_crop, planning_year):
-    """One main growing cycle per year for three years; no calendar truncation.
+    """Plan consecutive, non-overlapping crops WITHIN ONE calendar year.
 
-    This is a sequencing screen, NOT a nutrient/pest/soil improvement forecast.
-    Family and available rooting-depth contrast act as tie-breakers, not fake
-    measured soil effects. Each annual season uses the SAME observed climate
-    evidence: planning dates are hypothetical, never meteorological predictions.
+    Offer at most three two-crop sequences. Each crop must be fully planted and
+    harvested inside the same planning year, with a minimum 14-day transition
+    and different adjacent botanical families. This is a scheduling comparison,
+    NOT proof of agronomic benefits, nutrient restoration, or a future forecast.
     """
-    # Up to three substantially different sowing windows per crop to avoid
-    # rejecting a valid succession merely because its best solo date is late.
+    # Keep diverse planting windows rather than only the crop's top-scoring date.
+    # Catalog cycles are generic; these windows remain hypothetical.
     options=[]
-    for crop,entries in candidate_by_crop.items():
-        entries.sort(key=lambda x:-x['score'])
+    for entries in candidate_by_crop.values():
         picked=[]
-        for item in entries:
-            if all(abs(item['sow_day_offset']-p['sow_day_offset']) >= 49 for p in picked):
+        for item in sorted(entries,key=lambda x:(-x['score'],x['sow_day_offset'])):
+            if all(abs(item['sow_day_offset']-prev['sow_day_offset'])>=28 for prev in picked):
                 picked.append(item)
-            if len(picked)==3:break
+            if len(picked)==7:break
         options.extend(picked)
-    options.sort(key=lambda x:-x['score'])
-    candidates=options[:36]
-    def shifted(item,year):
-        sow=date.fromisoformat(item['sow_date'])
-        try: new_sow=date(year,sow.month,sow.day)
-        except ValueError: new_sow=date(year,sow.month,28)
-        copy={**item,'sow_date':str(new_sow),
-              'harvest_date':str(new_sow+timedelta(days=item['cycle_days']-1)),
-              'planning_year':year}
-        return copy
+
+    end_of_year=date(planning_year,12,31)
+    by_start=[]
+    for candidate in options:
+        sow=date.fromisoformat(candidate['sow_date'])
+        # Scenarios have dates in the target year; discard next-year harvests.
+        harvest=sow+timedelta(days=candidate['cycle_days']-1)
+        if sow.year != planning_year or harvest > end_of_year:
+            continue
+        by_start.append({**candidate,'sow_date':str(sow),'harvest_date':str(harvest),
+                         'planning_year':planning_year})
+    by_start.sort(key=lambda x:(x['sow_date'],-x['score']))
+
     plans=[]
-    for i in candidates:
-        first=shifted(i,planning_year)
-        for j in candidates:
-            if i['family']==j['family']:continue
-            second=shifted(j,planning_year+1)
-            gap1=(date.fromisoformat(second['sow_date'])-date.fromisoformat(first['harvest_date'])).days-1
-            if gap1 < TRANSITION_DAYS:continue
-            for k in candidates:
-                if j['family']==k['family'] or i['crop_id']==k['crop_id']:continue
-                third=shifted(k,planning_year+2)
-                gap2=(date.fromisoformat(third['sow_date'])-date.fromisoformat(second['harvest_date'])).days-1
-                if gap2 < TRANSITION_DAYS:continue
-                trio=[first,second,third]
-                values=[item['score'] for item in trio]
-                families=[item['family'] for item in trio]
-                root=[(AGRONOMY.get(item['crop_id']) or {}).get('root_depth_m',{}).get('max') for item in trio]
-                root_contrast=sum(1 for a,b in zip(root,root[1:]) if real(a) and real(b) and abs(a-b)>=.4)
-                score=rnd(.5*min(values)+.5*mean(values),1)
-                plans.append({'id':'-'.join(f"{item['crop_id']}-{item['planning_year']}" for item in trio),
-                              'crops':trio,'score':score,'gap_days':[gap1,gap2],
-                              'years':[planning_year,planning_year+1,planning_year+2],
-                              'families_count':len(set(families)), 'root_contrast_count':root_contrast,
-                              'legume_present': 'Fabaceae' in families, 'species_count':len({item['crop_id'] for item in trio}),
-                              'basis':'Tres campañas anuales con especies distintas; compatibilidad de fechas, alternancia de familia y respaldo climático de cada cultivo.',
-                              'reasons':[
-                                  f"Cada cultivo dispone de una ventana de siembra y cosecha sin superponerse con la siguiente campaña.",
-                                  f"La secuencia alterna familias: {' → '.join(families)}, y no repite especies en tres campañas.",
-                                  f"Deja {gap1} y {gap2} días entre cosecha y nueva siembra.",
-                                  f"Comparación de profundidad radicular referencial en {root_contrast} transiciones (no demuestra mejoras reales del suelo)."
-                              ]})
-    # Distinct sequences first. More diverse families/rooting patterns win ties;
-    # these are secondary rules, never assumed measured soil benefits.
-    plans.sort(key=lambda p:(-p['score'],-p['families_count'],-int(p['legume_present']),-p['root_contrast_count'],p['id']))
-    unique=[];seen=set()
-    for item in plans:
-        signature=tuple(c['crop_id'] for c in item['crops'])
-        if signature in seen:continue
-        seen.add(signature);unique.append(item)
-        if len(unique)==3:break
-    return unique
+    for first in by_start:
+        first_end=date.fromisoformat(first['harvest_date'])
+        for second in by_start:
+            if first['crop_id']==second['crop_id'] or first['family']==second['family']:
+                continue
+            gap=(date.fromisoformat(second['sow_date'])-first_end).days-1
+            if gap < TRANSITION_DAYS:
+                continue
+            duo=[first,second]
+            scores=[x['score'] for x in duo]
+            root=[(AGRONOMY.get(x['crop_id']) or {}).get('root_depth_m',{}).get('max') for x in duo]
+            root_contrast=int(all(real(x) for x in root) and abs(root[0]-root[1])>=.4)
+            # Combine the weaker crop and the average to avoid masking poor fit.
+            score=rnd(.5*min(scores)+.5*mean(scores),1)
+            plans.append({
+                'id':f"{first['crop_id']}-{second['crop_id']}-{planning_year}-{first['sow_day_offset']}-{second['sow_day_offset']}",
+                'crops':duo,'score':score,'gap_days':[gap],
+                'years':[planning_year], 'families_count':2,
+                'root_contrast_count':root_contrast,
+                'legume_present':any(x['family']=='Fabaceae' for x in duo),
+                'species_count':2,
+                'basis':'Dos cultivos sucesivos dentro del mismo año calendario, con distinta familia y sin solapamientos.',
+                'reasons':[
+                    f"Ambos ciclos de siembra y cosecha caben en {planning_year}, sin cruzar al año siguiente.",
+                    f"Se alternan las familias {first['family']} y {second['family']}.",
+                    f"Hay {gap} días entre cosecha y siguiente siembra (mínimo supuesto: {TRANSITION_DAYS}).",
+                    'La diversidad de raíces es orientativa; no se han medido los efectos sobre el suelo.'
+                ]
+            })
+    # Distinct crop orders; avoid a list of duplicates differing only in weeks.
+    plans.sort(key=lambda p:(-p['score'],-int(p['legume_present']),-p['root_contrast_count'],p['id']))
+    selected=[];seen=set()
+    for plan in plans:
+        key=tuple(c['crop_id'] for c in plan['crops'])
+        if key in seen:continue
+        seen.add(key)
+        selected.append(plan)
+        if len(selected)==3:break
+    return selected
 
 
 def rank_crops(rows, solar_rows, scenarios, thermal_catalog, target_year, latitude, *, evaluation_years=None):
@@ -472,13 +473,13 @@ def build_decision_report(weather_rows,solar_rows,thermal_catalog,*,reference_ye
         'decision_dimensions':['Temperatura','Calor acumulado','Exposición térmica (si existe referencia)','Lluvia frente a ETc en secano'],
         'planning_assumptions':{'rainfed':True,'soil_measured':False,'irrigation_confirmed':False,
                                 'years':ROTATION_YEARS,'transition_days':TRANSITION_DAYS,
-                                'family_change_between_seasons':True,'three_distinct_crop_species':True,
+                                'family_change_between_seasons':True,'distinct_crop_species_in_same_year':True,
                                 'stages':'duraciones aproximadas del catálogo, no simulación dinámica de madurez'},
         'limitations':[
-            'Fechas de los próximos tres años: planificación hipotética, no pronóstico meteorológico.',
+            'El próximo año agrícola se planifica con ciclos completos dentro del mismo año calendario; no es un pronóstico meteorológico.',
             'La compatibilidad hídrica supone secano: 70 % lluvia/ETc del ciclo + 30 % peor etapa Kc. No equivale a estrés hídrico ni conoce infiltración, riego o reservas del suelo.',
             'Se utilizan hasta doce años históricos elegidos con criterios climáticos y temporales; no una probabilidad de rendimiento.',
-            'Se permiten cultivos entre diciembre y el año siguiente, solo con registros observados completos suficientes.',
+            'La evaluación individual puede mostrar ciclos que cruzan de año; el plan de rotación anual excluye esos cruces.',
             'El motor NO puntúa pH, nutrientes, VPD o radiación sin referencias comparables y datos locales verificables.',
             'Las referencias diarias de frío/calor y las duraciones fenológicas no equivalen a pérdidas ni cosechas reales.',
             'La alternancia de familias, las especies distintas, profundidad radicular y espacio entre campañas son criterios de planificación, no garantía de recuperación del suelo.'
