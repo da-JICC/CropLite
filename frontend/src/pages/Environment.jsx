@@ -1,33 +1,44 @@
-import React, { useState, useMemo } from 'react';
-import {
-  ArrowRight, ArrowUpRight, ArrowDownRight, ArrowLeft, Sprout, Waves, CloudRain, ThermometerSun, Leaf,
-  MapPin, Layers3, CircleAlert, ShieldCheck, Lightbulb, TrendingUp, CalendarDays, Droplets, FlaskConical,
-  RefreshCw, SlidersHorizontal, Gauge, Sun, CheckCircle2, ChevronDown, ChevronRight, ExternalLink,
-  ChartNoAxesCombined, FileDown, FileText, Building2, TreePine, Info, Search, Filter, Clock3,
-  CircleDot, CircleCheck, Wind, LandPlot, Tractor, PackageCheck, Target, Database, CircleHelp,
-  BadgeCheck, Activity, ShieldAlert, Settings2, Sparkles, Scale, Copy, Download, Printer
-} from 'lucide-react';
-import { TrendChart, ProjectionChart } from '../components/charts/TrendChart.jsx';
-import FarmMap from '../components/maps/FarmMap.jsx';
-import NDVIExplorer from '../components/ndvi/NDVIExplorer.jsx';
-import { MockFlag, SectionHeading, Panel, Stat, Bar, SoftButton, Disclaimer, Chip, Explain } from '../components/ui/Elements.jsx';
-import { priorities, weightedScore, criteria, strategyPalette } from '../utils/strategy.js';
+import React from 'react';
+import {ArrowLeft, CheckCircle2, CircleAlert, Download, Leaf, MapPin, Satellite, ThermometerSun} from 'lucide-react';
+import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {SectionHeading} from '../components/ui/Elements.jsx';
+import {saveDatasetCsv} from '../services/regionAnalysisService.js';
 
-import { CAT_COLORS, cropEmoji, FARM_LABEL, monthsBySeason, clean, fmt, currentMonth, FarmChooser, PriorityChooser, CropPill, Timeline, ScoreBar, RotationCard, PriorityButtons } from './shared.jsx';
-const metricOptions = [ {id:'moisture',label:'Soil moisture',icon:Droplets,unit:'%'},{id:'rain',label:'Rainfall',icon:CloudRain,unit:'mm'},{id:'temp',label:'Temperature',icon:ThermometerSun,unit:'°C'},{id:'ndvi',label:'Vegetation health',icon:Leaf,unit:'NDVI'},{id:'et',label:'Evapotranspiration',icon:Waves,unit:'mm/day'} ];
-const definitions=[['Soil moisture anomaly','Difference from a typical soil-water level for the same time of year; negative values may indicate drier-than-normal conditions.'],['NDVI','Normalized Difference Vegetation Index: a vegetation greenness indicator derived from spectral reflectance; not a direct measurement of crop yield.'],['Evapotranspiration','Combined water movement from soil evaporation and plant transpiration.'],['Water balance','Simplified difference between water input, storage and atmospheric demand.'],['Frost risk','Potential for cold temperatures to damage sensitive crop stages.']];
-export function Environment({farm,environment,layer,setLayer,season,setSeason}){
-  const [metric,setMetric] = useState('moisture');
-  const [definition,setDefinition]=useState(0);
-  const filtered=useMemo(()=>environment.monthly.filter(row=>!monthsBySeason[season]||monthsBySeason[season].includes(row.month)),[environment,season]);
-  return <>
-    <SectionHeading overline="ENVIRONMENTAL INTELLIGENCE" title="Understand the conditions." description={`Environmental indicators for ${farm.region}. Explore simulated conditions and optional live Sentinel-2 NDVI.`} action={<MockFlag/>}/>
-    <div className="environment-pills">{metricOptions.map(({id,label,icon:Icon})=><button key={id} type="button" className={`environment-pill ${metric===id?'active':''}`} onClick={()=>{setMetric(id);setLayer(id==='temp'?'heat':id==='rain'?'rain':id==='ndvi'?'vegetation':'moisture');}}><Icon size={18}/>{label}</button>)}</div>
-    <div className="environment-grid"><Panel title="Spatial context" subtitle="Schematic field vicinity over base map" action={<label className="small-select"><Layers3 size={14}/><select aria-label="Map overlay" value={layer} onChange={e=>setLayer(e.target.value)}><option value="moisture">Moisture</option><option value="rain">Rainfall</option><option value="heat">Heat stress</option><option value="vegetation">Vegetation</option></select></label>}><FarmMap farm={farm} layer={layer} height={332}/><div className="map-legend"><span><i style={{background:layer==='rain'?'#478eb9':layer==='heat'?'#d9903e':'#368d69'}}/> Illustrative field indicator</span><span>Not remote sensing output</span></div></Panel><Panel title="Environmental history" subtitle="Illustrative monthly time series" action={<label className="small-select"><CalendarDays size={15}/><select value={season} onChange={e=>setSeason(e.target.value)} aria-label="Filter season"><option value="all">Full year</option><option value="summer">Summer</option><option value="autumn">Autumn</option><option value="winter">Winter</option><option value="spring">Spring</option></select></label>}><div className="chart-header-unit">{metricOptions.find(m=>m.id===metric)?.label}<span>{filtered.length} simulated months</span></div><TrendChart key={`${metric}-${season}`} data={filtered} metric={metric} height={274}/></Panel></div>
-    <NDVIExplorer farm={farm}/>
-    <div className="env-summary-grid"><div className="condition-card"><Waves size={22}/><span>WATER BALANCE</span><strong>{environment.summary.waterBalance}</strong><small>Illustrative regional context</small></div><div className="condition-card"><Sun size={22}/><span>HEAT STRESS</span><strong>{environment.summary.heat}</strong><small>Hypothetical seasonal exposure</small></div><div className="condition-card"><ThermometerSun size={22}/><span>FROST RISK</span><strong>{environment.summary.frost}</strong><small>Not a weather alert</small></div><div className="condition-card"><TreePine size={22}/><span>EROSION RISK</span><strong>{environment.summary.erosion}</strong><small>Field survey required</small></div></div>
-    <Panel title="Understanding your environmental indicators" subtitle="Agricultural terminology in plain language"><div className="definition-list">{definitions.map(([term,description],i)=><button type="button" key={term} className={`definition ${definition===i?'expanded':''}`} onClick={()=>setDefinition(definition===i?-1:i)}><span><CircleHelp size={17}/><strong>{term}</strong></span><ChevronDown size={17}/>{definition===i&&<p>{description}</p>}</button>)}</div></Panel>
-    <Disclaimer>Maps indicate illustrative farm vicinities; indicators and time series were constructed for this prototype. NASA observations are only available in the explicitly labelled Live NDVI field explorer after backend configuration; other dashboard indicators remain simulated.</Disclaimer>
-  </>;
+const number=(value,digits=1)=>typeof value==='number'&&Number.isFinite(value)?value.toFixed(digits):'—';
+function ChartShell({rows,children}) {return <div className="field-chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={rows} margin={{top:12,right:16,bottom:5,left:-22}}><CartesianGrid stroke="#e6eeea" vertical={false} strokeDasharray="3 5"/><XAxis dataKey="date" minTickGap={42} tick={{fontSize:11,fill:'#739087'}}/><YAxis tick={{fontSize:11,fill:'#739087'}}/><Tooltip labelFormatter={d=>`Fecha: ${d}`} formatter={(v,name)=>[v==null?'Sin datos':number(v,2),name]}/><Legend wrapperStyle={{fontSize:12}}/>{children}</LineChart></ResponsiveContainer></div>}
+function Metric({name,value,unit='',sub}) {return <div className="field-metric"><span>{name}</span><strong>{value}{value==='—'?'':unit&&<small> {unit}</small>}</strong>{sub&&<small>{sub}</small>}</div>}
+function DataStatus({dataset,source}){return <div className={`field-dataset-status ${dataset?.status==='success'?'ok':'warn'}`}>{dataset?.status==='success'?<CheckCircle2 size={16}/>:<CircleAlert size={16}/>} {dataset?.status==='success'?`${source} · Datos disponibles`:dataset?.error||`${source} · Sin resultados`}</div>}
+export function Environment({region,start,end,analysis,loading,navigate}) {
+  const ndvi=analysis?.datasets?.ndvi;
+  const temperature=analysis?.datasets?.temperature;
+  const ndviRows=ndvi?.data?.observations||[];
+  const validNDVI=ndviRows.filter(r=>typeof r.mean_ndvi==='number');
+  const meanNDVI=validNDVI.length?validNDVI.reduce((s,r)=>s+r.mean_ndvi,0)/validNDVI.length:null;
+  const latest=validNDVI.at(-1);
+  const validShare=ndviRows.length?ndviRows.reduce((s,r)=>s+(Number(r.valid_percent)||0),0)/ndviRows.length:null;
+  const tempRows=temperature?.data?.observations||[];
+  const tempSummary=temperature?.data?.summary;
+  const representativePoint=analysis?.region?.representative_point||region?.representativePoint;
+  return <div className="field-environment-page">
+    <SectionHeading overline="ENVIRONMENT / OBSERVATIONS" title="Environmental Intelligence" description="Datos históricos para la región seleccionada en My Farm. Cada fuente conserva su método de medición y sus límites de resolución." action={<button className="field-back-button" onClick={()=>navigate('overview')}><ArrowLeft size={16}/> Cambiar región</button>}/>
+    <div className="field-environment-context"><div><MapPin size={18}/><span><b>{analysis?'Región analizada':'Región seleccionada'}</b><small>{representativePoint?`${number(representativePoint.latitude,5)}, ${number(representativePoint.longitude,5)} · ${number(analysis?.region?.area_hectares??region?.areaHectares,2)} ha`:'No has seleccionado un terreno'}</small></span></div><span>{analysis?`${analysis.period.start} — ${analysis.period.end}`:`Período configurado: ${start} — ${end}`}</span></div>
+    {!analysis&&<div className="field-environment-empty"><Satellite size={38}/><h2>{loading?'Analizando el campo…':'Todavía no hay observaciones cargadas'}</h2><p>Abre «Overview — My Farm», delimita tu campo en el mapa y selecciona «Analizar región». Los resultados NDVI y temperatura aparecerán aquí.</p><button onClick={()=>navigate('overview')}>Ir al mapa <ArrowLeft size={16}/></button></div>}
+    {analysis&&<div className="field-environment-stack">
+      <section className="field-data-card">
+        <div className="field-dataset-heading"><div><span className="overline">01 / VEGETATION INTELLIGENCE</span><h2><Leaf size={23}/> NDVI · Copernicus Sentinel-2</h2><p>NDVI calculado sobre el polígono completo utilizando observaciones Sentinel-2 L2A y enmascaramiento de píxeles inválidos.</p></div><button type="button" disabled={ndvi?.status!=='success'||!ndviRows.length} onClick={()=>saveDatasetCsv({dataset:ndvi,analysis,type:'ndvi'})}><Download size={16}/> Exportar CSV</button></div>
+        <DataStatus dataset={ndvi} source="Copernicus"/>
+        {ndvi?.status==='success'&&<><div className="field-metrics-row"><Metric name="NDVI temporal medio" value={number(meanNDVI,3)}/><Metric name="Último NDVI válido" value={number(latest?.mean_ndvi,3)} sub={latest?.date||''}/><Metric name="Píxeles válidos (media)" value={number(validShare,0)} unit="%"/><Metric name="Intervalos con datos" value={String(validNDVI.length)}/></div>
+          {ndviRows.length?<><ChartShell rows={ndviRows}><Line name="NDVI medio" dataKey="mean_ndvi" type="monotone" stroke="#238d62" strokeWidth={2.5} connectNulls={false} dot={{r:2}}/></ChartShell><div className="field-data-note">NDVI es un índice de verdor vegetal, no una estimación directa de rendimiento. Los huecos del gráfico representan intervalos sin píxeles válidos.</div></>:<div className="field-no-observations">La API respondió correctamente, pero no entregó observaciones para este período.</div>}
+        </>}
+      </section>
+      <section className="field-data-card">
+        <div className="field-dataset-heading"><div><span className="overline">02 / TEMPERATURE INTELLIGENCE</span><h2><ThermometerSun size={23}/> Temperatura · NASA POWER</h2><p>Estimaciones diarias de temperatura del aire a 2 metros para un punto representativo del terreno, no una media espacial del polígono.</p></div><button type="button" disabled={temperature?.status!=='success'||!tempRows.length} onClick={()=>saveDatasetCsv({dataset:temperature,analysis,type:'temperature'})}><Download size={16}/> Exportar CSV</button></div>
+        <DataStatus dataset={temperature} source="NASA POWER"/>
+        {temperature?.status==='success'&&<><div className="field-metrics-row"><Metric name="Temperatura media" value={number(tempSummary?.mean_temperature_c)} unit="°C"/><Metric name="Máxima diaria" value={number(tempSummary?.absolute_max_temperature_c)} unit="°C"/><Metric name="Mínima diaria" value={number(tempSummary?.absolute_min_temperature_c)} unit="°C"/><Metric name="Días con datos" value={String(tempSummary?.valid_mean_days??'—')}/></div>
+          {tempRows.length?<><ChartShell rows={tempRows}><Line name="Mínima (°C)" dataKey="min_c" type="monotone" stroke="#3292b9" strokeWidth={1.8} connectNulls={false} dot={false}/><Line name="Media (°C)" dataKey="mean_c" type="monotone" stroke="#288b6b" strokeWidth={2.4} connectNulls={false} dot={false}/><Line name="Máxima (°C)" dataKey="max_c" type="monotone" stroke="#dc923f" strokeWidth={1.8} connectNulls={false} dot={false}/></ChartShell><div className="field-temp-exposures"><div>Exposición a calor ({number(tempSummary?.heat_threshold_c)} °C): <b>{tempSummary?.heat_exposure_days??'—'} días</b></div><div>Exposición a frío ({number(tempSummary?.cold_threshold_c)} °C): <b>{tempSummary?.cold_exposure_days??'—'} días</b></div></div><div className="field-data-note">Fuente: NASA POWER Daily API · Horario solar local (LST). Los umbrales cuantifican exposición y no diagnostican daño de cultivos.</div></>:<div className="field-no-observations">No existen observaciones válidas para el intervalo solicitado.</div>}
+        </>}
+      </section>
+      <div className="field-provenance-note"><Satellite size={18}/><p><b>Interpretación espacial:</b> Copernicus calcula estadísticas del polígono delimitado. NASA POWER utiliza un punto representativo y suministra estimaciones meteorológicas regionales. Ambas series pueden tener distinta resolución espacial, observaciones ausentes y temporalidad distinta. Los resultados presentados no son predicciones.</p></div>
+    </div>}
+  </div>;
 }
-

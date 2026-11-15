@@ -1,28 +1,65 @@
-import React, { useState, useMemo } from 'react';
-import {
-  ArrowRight, ArrowUpRight, ArrowDownRight, ArrowLeft, Sprout, Waves, CloudRain, ThermometerSun, Leaf,
-  MapPin, Layers3, CircleAlert, ShieldCheck, Lightbulb, TrendingUp, CalendarDays, Droplets, FlaskConical,
-  RefreshCw, SlidersHorizontal, Gauge, Sun, CheckCircle2, ChevronDown, ChevronRight, ExternalLink,
-  ChartNoAxesCombined, FileDown, FileText, Building2, TreePine, Info, Search, Filter, Clock3,
-  CircleDot, CircleCheck, Wind, LandPlot, Tractor, PackageCheck, Target, Database, CircleHelp,
-  BadgeCheck, Activity, ShieldAlert, Settings2, Sparkles, Scale, Copy, Download, Printer
-} from 'lucide-react';
-import { TrendChart, ProjectionChart } from '../components/charts/TrendChart.jsx';
-import FarmMap from '../components/maps/FarmMap.jsx';
-import { MockFlag, SectionHeading, Panel, Stat, Bar, SoftButton, Disclaimer, Chip, Explain } from '../components/ui/Elements.jsx';
-import { priorities, weightedScore, criteria, strategyPalette } from '../utils/strategy.js';
+import React from 'react';
+import {ArrowRight, CalendarDays, CheckCircle2, CircleAlert, CloudSun, Crosshair, Database, Leaf, LoaderCircle, MapPin, Satellite, ThermometerSun} from 'lucide-react';
+import FieldSelectionMap from '../components/maps/FieldSelectionMap.jsx';
+import {Panel, SectionHeading} from '../components/ui/Elements.jsx';
 
-import { CAT_COLORS, cropEmoji, FARM_LABEL, monthsBySeason, clean, fmt, currentMonth, FarmChooser, PriorityChooser, CropPill, Timeline, ScoreBar, RotationCard, PriorityButtons } from './shared.jsx';
-export function MyFarm({farm,farms,farmId,setFarmId,setLayer,layer,showToast}) {
-  const [selected, setSelected] = useState('profile');
-  const [notes,setNotes] = useState({});
-  const [water,setWater] = useState({});
-  const [market,setMarket] = useState({});
-  return <>
-    <SectionHeading overline="YOUR FARM / PROFILE" title="Know your land." description="Select a representative farm, review its conditions and capture practical constraints." action={<FarmChooser farms={farms} farmId={farmId} setFarmId={setFarmId}/>}/>
-    <div className="farm-top-grid"><Panel title="Farm location" subtitle="Click the field marker for the illustrative farm vicinity" action={<Chip variant="neutral">DEMO AREA</Chip>}><FarmMap farm={farm} layer={layer} height={300}/><div className="farm-map-switch"><button className="tiny-btn active">Farm vicinity</button><span>{farm.coordinates} · Not a cadastral boundary</span></div></Panel><Panel title="Field profile" subtitle="Representative farm attributes"><div className="profile-list">{[['FARM NAME',farm.name],['REGION',`${farm.region}, ${farm.country}`],['CULTIVATED AREA',`${farm.hectares} hectares`],['SOIL TEXTURE',farm.soil],['SOIL COMPOSITION',farm.texture],['SOIL pH',farm.ph],['ORGANIC MATTER',`${farm.organicMatter}%`],['CURRENT CROP',farm.crop],['ROTATION STAGE',farm.rotationStage]].map(([k,v])=><div key={k}><small>{k}</small><strong>{v}</strong></div>)}</div></Panel></div>
-    <div className="farm-bottom-grid"><Panel title="Operational constraints" subtitle="Capture decisions that impact feasibility"><div className="form-grid"><label>Water and irrigation<select value={water[farmId]??farm.irrigation} onChange={e=>setWater(v=>({...v,[farmId]:e.target.value}))}><option>{farm.irrigation}</option><option>Rainfed only</option><option>Limited drip irrigation</option><option>Canal irrigation</option><option>Full irrigation access</option></select></label><label>Market focus<select value={market[farmId]??'Current regional outlets'} onChange={e=>setMarket(v=>({...v,[farmId]:e.target.value}))}><option>Current regional outlets</option><option>Prioritize local market</option><option>Explore forage buyers</option><option>Diversify crops</option></select></label><label className="full">Field notes<textarea rows="4" placeholder="Equipment limitations, crop preferences, growing windows…" value={notes[farmId]??''} onChange={e=>setNotes(v=>({...v,[farmId]:e.target.value}))}/></label></div><div className="form-actions"><span><Info size={14}/> Changes are session-only draft inputs.</span><button className="primary-button" onClick={()=>showToast('Farm planning notes saved for this session')}>Save draft notes <CheckCircle2 size={16}/></button></div></Panel><Panel title="Current crop history" subtitle="Previous four illustrative seasons"><div className="history-rail">{farm.history.map((crop,i)=><div className="history-node" key={i}><span>YEAR {i+1}</span><strong>{crop}</strong><small>{i===farm.history.length-1?'Most recent':'Recorded crop'}</small></div>)}</div><div className="surface-note"><Sprout size={19}/><div><strong>Why history matters</strong><p>A repeated crop can affect nutrient cycling, erosion, and pest pressure. Rotations should consider the full seasonal sequence.</p></div></div></Panel></div>
-    <Disclaimer>Farm details are representative examples, not surveyed parcels. Field notes and selections are not stored remotely.</Disclaimer>
-  </>;
+const n=(x,d=1)=>typeof x==='number'&&Number.isFinite(x)?x.toFixed(d):'—';
+function ndviAverage(dataset){const rows=dataset?.data?.observations||[];const valid=rows.filter(r=>typeof r.mean_ndvi==='number');return valid.length?valid.reduce((s,r)=>s+r.mean_ndvi,0)/valid.length:null;}
+export function MyFarm({region,onRegionChange,start,end,interval,heatThreshold,coldThreshold,onDateChange,onOptionChange,onAnalyze,canAnalyze,rangeError,thresholdsOk,analysis,loading,error,backend,navigate,maxDate}) {
+  const point=region?.representativePoint;
+  const successful=analysis?.datasets||{};
+  const ndvi=successful.ndvi;
+  const temperature=successful.temperature;
+  const tempSummary=temperature?.data?.summary;
+  const area=analysis?.region?.area_hectares??region?.areaHectares;
+  const backendReady=backend?.copernicus_configured;
+  return <div className="field-overview-page">
+    <SectionHeading overline="OVERVIEW / MY FARM" title="Tu terreno, bajo observación." description="Delimita una región en el mapa y analiza sus datos de vegetación y temperatura utilizando Copernicus y NASA POWER."/>
+    <div className="field-status-row">
+      <span className={`field-status-pill ${backendReady?'ok':'warn'}`}><Satellite size={14}/> Copernicus: {backendReady?'configurado':'sin credenciales o backend desconectado'}</span>
+      <span className={`field-status-pill ${backend?'ok':'warn'}`}><CloudSun size={14}/> NASA POWER: {backend?'consulta disponible':'inicia el backend para consultar'}</span>
+    </div>
+    <section className="field-map-panel">
+      <div className="field-panel-heading"><div><span className="overline">01 / SELECCIÓN GEOGRÁFICA</span><h2>Mapa del cultivo</h2><p>Busca tu localidad, delimita el campo y confirma el polígono. La región se compartirá con Environment.</p></div><div className="field-map-tag"><MapPin size={15}/> GeoJSON · WGS84</div></div>
+      <FieldSelectionMap region={region} onRegionChange={onRegionChange}/>
+    </section>
+    <div className="field-below-grid">
+      <section className="field-config-panel">
+        <div className="field-panel-heading"><div><span className="overline">02 / CONFIGURACIÓN</span><h2>Analizar región</h2><p>Las dos APIs recibirán el mismo período.</p></div></div>
+        <div className="field-region-details">
+          <div><span>SUPERFICIE</span><strong>{region?n(area,2):'—'} <small>ha</small></strong></div>
+          <div><span>LATITUD</span><strong>{point?n(point.latitude,5):'—'}</strong></div>
+          <div><span>LONGITUD</span><strong>{point?n(point.longitude,5):'—'}</strong></div>
+        </div>
+        <div className="field-form-grid">
+          <label>Fecha inicial<input type="date" min="2017-01-01" value={start} max={end} onChange={e=>onDateChange('start',e.target.value)}/></label>
+          <label>Fecha final<input type="date" min={start} max={maxDate} value={end} onChange={e=>onDateChange('end',e.target.value)}/></label>
+          <label>Intervalos NDVI<select value={interval} onChange={e=>onOptionChange('interval',e.target.value)}><option value="P10D">10 días</option><option value="P1M">Mensual</option></select></label>
+          <label>Umbral calor (°C)<input type="number" value={heatThreshold} min="-20" max="70" step="0.5" onChange={e=>onOptionChange('heatThreshold',e.target.value)}/></label>
+          <label>Umbral frío (°C)<input type="number" value={coldThreshold} min="-70" max="50" step="0.5" onChange={e=>onOptionChange('coldThreshold',e.target.value)}/></label>
+        </div>
+        {rangeError&&<p className="field-input-error"><CircleAlert size={15}/>{rangeError}</p>}
+        {!thresholdsOk&&<p className="field-input-error"><CircleAlert size={15}/> Los umbrales de temperatura deben ser números válidos.</p>}
+        <button className="field-analyze-button" onClick={onAnalyze} disabled={!canAnalyze}>{loading?<LoaderCircle size={18} className="ndvi-spin"/>:<Satellite size={18}/>} {loading?'Consultando fuentes satelitales…':'Analizar región'} <ArrowRight size={18}/></button>
+        {!region&&<p className="field-input-hint">Primero dibuja o delimita una región de cultivo en el mapa.</p>}
+        {error&&<div role="alert" className="field-alert error"><CircleAlert size={18}/>{error}</div>}
+        <p className="field-small-note">NDVI: estadística de todo el polígono. NASA POWER: estimación meteorológica regional en el punto representativo del campo; no es una medición in situ.</p>
+      </section>
+      <section className="field-config-panel field-summary-panel">
+        <div className="field-panel-heading"><div><span className="overline">03 / RESULTADO</span><h2>Resumen ambiental</h2><p>{analysis?`${analysis.period.start} — ${analysis.period.end}`:'Los datos aparecerán después de consultar las APIs.'}</p></div></div>
+        {!analysis?<div className="field-summary-empty"><Leaf size={33}/><strong>Todo comienza por el mapa</strong><p>{loading?'Esperando respuestas de Copernicus y NASA POWER…':'Selecciona tu campo y presiona «Analizar región» para obtener observaciones reales.'}</p></div>:<>
+          <div className="field-results-grid">
+            <div><span><Leaf size={15}/> NDVI temporal medio</span><strong>{ndvi?.status==='success'?n(ndviAverage(ndvi),3):'—'}</strong><small>{ndvi?.status==='success'?'Copernicus Sentinel-2':'No disponible'}</small></div>
+            <div><span><ThermometerSun size={15}/> Temperatura media</span><strong>{temperature?.status==='success'?`${n(tempSummary?.mean_temperature_c)} °C`:'—'}</strong><small>{temperature?.status==='success'?'NASA POWER':'No disponible'}</small></div>
+            <div><span>Máxima diaria</span><strong>{temperature?.status==='success'?`${n(tempSummary?.absolute_max_temperature_c)} °C`:'—'}</strong></div>
+            <div><span>Mínima diaria</span><strong>{temperature?.status==='success'?`${n(tempSummary?.absolute_min_temperature_c)} °C`:'—'}</strong></div>
+          </div>
+          <div className="field-source-states">
+            {Object.entries(successful).map(([key,dataset])=><div key={key} className={dataset?.status==='success'?'ok':'warn'}>{dataset?.status==='success'?<CheckCircle2 size={16}/>:<CircleAlert size={16}/>}<div><b>{key==='ndvi'?'Copernicus · NDVI':'NASA POWER · Temperatura'}</b><small>{dataset?.status==='success'?'Datos recibidos':dataset?.error||'Sin datos'}</small></div></div>)}
+          </div>
+          <button className="field-secondary-button" onClick={()=>navigate('environment')}>Ver gráficos detallados en Environment <ArrowRight size={17}/></button>
+        </>}
+      </section>
+    </div>
+  </div>;
 }
-

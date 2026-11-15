@@ -17,8 +17,8 @@ function formatCSV(rows, source) {
   return [header,...values].join('\n');
 }
 
-export default function NDVIExplorer({farm}) {
-  const [polygon,setPolygon] = useState(()=>sampleBoundary(farm));
+export default function NDVIExplorer({farm, polygon, onPolygonChange}) {
+  const setPolygon = onPolygonChange;
   const [mode,setMode] = useState('demo');
   const [start,setStart] = useState(defaultStart);
   const [end,setEnd] = useState(defaultEnd);
@@ -38,7 +38,6 @@ export default function NDVIExplorer({farm}) {
   useEffect(()=>{
     abortRef.current?.abort();
     setLoading(false);setError('');setResult(null);
-    setPolygon(sampleBoundary(farm));
   },[farm.id]);
 
   useEffect(()=>()=>abortRef.current?.abort(),[]);
